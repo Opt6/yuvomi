@@ -567,7 +567,8 @@
     "loginButton": "Log in",
     "loggingIn": "Logging in…",
     "tooManyAttempts": "Too many attempts. Please wait a moment.",
-    "invalidCredentials": "Invalid credentials."
+    "invalidCredentials": "Invalid credentials.",
+    "version": "v{{version}}"
   },
   "install": {
     "title": "Install Oikos",

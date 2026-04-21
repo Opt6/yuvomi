@@ -618,7 +618,8 @@
     "loginButton": "Anmelden",
     "loggingIn": "Wird angemeldet …",
     "tooManyAttempts": "Zu viele Versuche. Bitte warte kurz.",
-    "invalidCredentials": "Ungültige Anmeldedaten."
+    "invalidCredentials": "Ungültige Anmeldedaten.",
+    "version": "v{{version}}"
   },
   "install": {
     "title": "Oikos installieren",

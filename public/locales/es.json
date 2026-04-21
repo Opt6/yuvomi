@@ -567,7 +567,8 @@
     "loginButton": "Iniciar sesión",
     "loggingIn": "Iniciando sesión…",
     "tooManyAttempts": "Demasiados intentos. Por favor, espera un momento.",
-    "invalidCredentials": "Credenciales incorrectas."
+    "invalidCredentials": "Credenciales incorrectas.",
+    "version": "v{{version}}"
   },
   "install": {
     "title": "Instalar Oikos",

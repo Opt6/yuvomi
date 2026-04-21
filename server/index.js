@@ -8,6 +8,7 @@ import express from 'express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
+import { readFileSync } from 'node:fs';
 import { createLogger } from './logger.js';
 import * as db from './db.js';
 import { router as authRouter, sessionMiddleware, requireAuth } from './auth.js';
@@ -31,6 +32,10 @@ import searchRouter from './routes/search.js';
 const log     = createLogger('Server');
 const logSync = createLogger('Sync');
 const logOikos = createLogger('Oikos');
+
+const { version: APP_VERSION } = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf-8')
+);
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -154,6 +159,11 @@ app.use('/api/', apiLimiter);
 // API-Routen
 // --------------------------------------------------------
 app.use('/api/v1/auth', authRouter);
+
+// Versionsinformation - keine Authentifizierung erforderlich (Login-Seite benötigt diese)
+app.get('/api/v1/version', (req, res) => {
+  res.json({ version: APP_VERSION });
+});
 
 // Alle weiteren API-Routen erfordern Authentifizierung + CSRF-Schutz
 app.use('/api/v1', requireAuth);

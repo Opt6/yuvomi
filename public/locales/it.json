@@ -567,7 +567,8 @@
     "loginButton": "Accedi",
     "loggingIn": "Accesso in corso…",
     "tooManyAttempts": "Troppi tentativi. Attendi un momento.",
-    "invalidCredentials": "Credenziali non valide."
+    "invalidCredentials": "Credenziali non valide.",
+    "version": "v{{version}}"
   },
   "install": {
     "title": "Installa Oikos",

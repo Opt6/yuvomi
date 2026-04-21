@@ -567,7 +567,8 @@
     "loginButton": "Giriş yap",
     "loggingIn": "Giriş yapılıyor…",
     "tooManyAttempts": "Çok fazla deneme. Lütfen bir süre bekleyin.",
-    "invalidCredentials": "Geçersiz kimlik bilgileri."
+    "invalidCredentials": "Geçersiz kimlik bilgileri.",
+    "version": "v{{version}}"
   },
   "install": {
     "title": "Oikos'u Yükle",

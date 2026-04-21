@@ -567,7 +567,8 @@
     "loginButton": "लॉग इन",
     "loggingIn": "लॉग इन हो रहा है…",
     "tooManyAttempts": "बहुत अधिक प्रयास। कृपया थोड़ा प्रतीक्षा करें।",
-    "invalidCredentials": "अमान्य क्रेडेंशियल।"
+    "invalidCredentials": "अमान्य क्रेडेंशियल।",
+    "version": "v{{version}}"
   },
   "install": {
     "title": "Oikos इंस्टॉल करें",

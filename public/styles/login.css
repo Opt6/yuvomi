@@ -55,3 +55,11 @@
   font-size: var(--text-sm);
   margin-bottom: var(--space-4);
 }
+
+.login-version {
+  margin-top: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary, var(--color-text-secondary));
+  text-align: center;
+  opacity: 0.6;
+}

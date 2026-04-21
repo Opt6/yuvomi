@@ -171,6 +171,10 @@ async function navigate(path, userOrPushState = true, pushState = true) {
       } catch {
         currentPath = null; // Reset damit navigate('/login') nicht geblockt wird
         isNavigating = false;
+        // _pendingLoginRedirect leeren: der catch ruft navigate('/login') direkt auf,
+        // der finally soll keinen zweiten Aufruf starten (würde isNavigating=true setzen,
+        // während die Login-Seite rendert, und so post-login navigate blockieren).
+        _pendingLoginRedirect = false;
         navigate('/login');
         return;
       }

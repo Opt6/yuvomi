@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.20.41] - 2026-04-21
+
+### Fixed
+- Race condition in `router.js`: when `auth.me()` failed during initial navigation, `_pendingLoginRedirect` was not cleared before calling `navigate('/login')` from the catch block, causing the `finally` handler to launch a second concurrent navigation. If the second navigation was still in progress when the user submitted the login form, `navigate('/', user)` was silently blocked — login appeared to succeed but the dashboard never loaded (most noticeable on iOS Safari PWA with iCloud Keychain autofill)
+
+### Added
+- Version number displayed on the login page (fetched from new `GET /api/v1/version` endpoint, no auth required), so users can verify which release their PWA is running
+
 ## [0.20.40] - 2026-04-21
 
 ### Changed

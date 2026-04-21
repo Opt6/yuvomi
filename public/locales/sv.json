@@ -567,7 +567,8 @@
     "loginButton": "Logga in",
     "loggingIn": "Loggar in...",
     "tooManyAttempts": "För många försök. Vänta ett ögonblick.",
-    "invalidCredentials": "Ogiltiga användaruppgifter."
+    "invalidCredentials": "Ogiltiga användaruppgifter.",
+    "version": "v{{version}}"
   },
   "install": {
     "title": "Installera Oikos",

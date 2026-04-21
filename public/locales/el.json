@@ -567,7 +567,8 @@
     "loginButton": "Σύνδεση",
     "loggingIn": "Σύνδεση…",
     "tooManyAttempts": "Πολλές προσπάθειες. Παρακαλώ περιμένετε λίγο.",
-    "invalidCredentials": "Λανθασμένα στοιχεία σύνδεσης."
+    "invalidCredentials": "Λανθασμένα στοιχεία σύνδεσης.",
+    "version": "v{{version}}"
   },
   "install": {
     "title": "Εγκατάσταση Oikos",

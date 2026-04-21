@@ -567,7 +567,8 @@
     "loginButton": "Войти",
     "loggingIn": "Вход…",
     "tooManyAttempts": "Слишком много попыток. Подождите немного.",
-    "invalidCredentials": "Неверные данные для входа."
+    "invalidCredentials": "Неверные данные для входа.",
+    "version": "v{{version}}"
   },
   "install": {
     "title": "Установить Oikos",

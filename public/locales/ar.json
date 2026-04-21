@@ -567,7 +567,8 @@
     "loginButton": "تسجيل الدخول",
     "loggingIn": "جارٍ تسجيل الدخول…",
     "tooManyAttempts": "محاولات كثيرة جداً. يرجى الانتظار قليلاً.",
-    "invalidCredentials": "بيانات اعتماد غير صالحة."
+    "invalidCredentials": "بيانات اعتماد غير صالحة.",
+    "version": "v{{version}}"
   },
   "install": {
     "title": "تثبيت Oikos",

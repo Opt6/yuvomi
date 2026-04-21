@@ -7,6 +7,8 @@
 import { auth } from '/api.js';
 import { t } from '/i18n.js';
 
+const VERSION_URL = '/api/v1/version';
+
 /**
  * Rendert die Login-Seite in den gegebenen Container.
  * @param {HTMLElement} container
@@ -56,12 +58,19 @@ export async function render(container) {
           </button>
         </form>
       </div>
+      <p class="login-version" id="login-version"></p>
     </main>
   `;
 
   const form = container.querySelector('#login-form');
   const errorEl = container.querySelector('#login-error');
   const submitBtn = container.querySelector('#login-btn');
+  const versionEl = container.querySelector('#login-version');
+
+  fetch(VERSION_URL)
+    .then((r) => r.json())
+    .then((d) => { versionEl.textContent = t('login.version', { version: d.version }); })
+    .catch(() => {});
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
