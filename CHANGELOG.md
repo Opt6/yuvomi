@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.20.44] - 2026-04-21
+
+### Added
+- `install.sh`: interactive CLI wizard that guides users from a blank server to a running Oikos instance, covering prerequisites check, basic config, secret generation, optional weather/calendar integrations, Docker startup, and admin account creation via the setup endpoint. Supports `--env-file` for non-interactive/CI use.
+
 ## [0.20.43] - 2026-04-21
 
 ### Added
