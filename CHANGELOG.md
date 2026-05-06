@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.48.1] - 2026-05-06
+
+### Fixed
+- **Settings**: CalDAV and CardDAV "Add Account" modals now correctly display Cancel and Save buttons. Previously, the `onSave` callback ran immediately on modal open, triggering a required-fields validation error against empty fields and leaving the form with no way to submit.
+
 ## [0.48.0] - 2026-05-06
 
 ### Added
