@@ -456,9 +456,85 @@ export async function render(container, { user }) {
 
       <!-- Panel: Synchronisation -->
       <div class="settings-tab-panel" data-panel="sync" role="tabpanel"${panelHidden('sync')}>
-        <!-- Sektion: Kalender-Synchronisation -->
+
+        <!-- Sektion: Offene Standards (CalDAV · CardDAV · ICS) -->
         <section class="settings-section">
-          <h2 class="settings-section__title">${t('settings.sectionCalendarSync')}</h2>
+          <h2 class="settings-section__title">${t('settings.sectionOpenStandards')}</h2>
+
+          <!-- CalDAV Kalender -->
+          <div class="settings-card">
+            <h3 class="settings-card__title">${t('settings.caldavTitle')}</h3>
+            <p class="settings-card-description">${t('settings.caldavDescription')}</p>
+
+            <div id="caldav-accounts-list"></div>
+            <div id="caldav-empty-state" class="caldav-empty-state" style="display: none;">
+              <p>${t('settings.caldavEmptyState')}</p>
+            </div>
+
+            ${user?.role === 'admin' ? `
+              <button class="btn btn--primary" id="caldav-add-account-btn">
+                ${t('settings.caldavAddAccount')}
+              </button>
+            ` : ''}
+          </div>
+
+          <!-- CardDAV Kontakte -->
+          <div class="settings-card">
+            <h3 class="settings-card__title">${t('settings.cardavTitle')}</h3>
+            <p class="settings-card-description">${t('settings.cardavDescription')}</p>
+
+            <div id="cardav-accounts-list"></div>
+            <div id="cardav-empty-state" class="caldav-empty-state" style="display: none;">
+              <p>${t('settings.cardavEmptyState')}</p>
+            </div>
+
+            ${user?.role === 'admin' ? `
+              <button class="btn btn--primary" id="cardav-add-account-btn">
+                ${t('settings.cardavAddAccount')}
+              </button>
+            ` : ''}
+          </div>
+
+          <!-- ICS-Abonnements -->
+          <div class="settings-card" id="ics-card">
+            <h3 class="settings-card__title">${t('settings.ics.title')}</h3>
+            <div id="ics-list-container"></div>
+            <div id="ics-add-form-wrapper" hidden>
+              <form id="ics-add-form" class="settings-form settings-form--compact" novalidate autocomplete="off">
+                <div class="form-group">
+                  <label class="form-label" for="ics-url">${t('settings.ics.form.url')}</label>
+                  <input class="form-input" type="url" id="ics-url" required placeholder="https://..." />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="ics-name">${t('settings.ics.form.name')}</label>
+                  <input class="form-input" type="text" id="ics-name" required maxlength="100" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="ics-color">${t('settings.ics.form.color')}</label>
+                  <input class="form-input form-input--color" type="color" id="ics-color" value="#6366f1" />
+                </div>
+                <div class="form-group">
+                  <label class="toggle-row">
+                    <input type="checkbox" id="ics-shared" />
+                    <span>${t('settings.ics.form.shared')}</span>
+                  </label>
+                </div>
+                <div id="ics-add-error" class="form-error" hidden></div>
+                <div class="settings-form-actions">
+                  <button type="submit" class="btn btn--primary" id="ics-submit-btn">${t('settings.ics.actions.submit')}</button>
+                  <button type="button" class="btn btn--secondary" id="ics-cancel-btn">${t('settings.ics.actions.cancel')}</button>
+                </div>
+              </form>
+            </div>
+            <div class="settings-sync-actions">
+              <button class="btn btn--secondary" id="ics-add-btn">${t('settings.ics.add')}</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sektion: Cloud-Dienste (Google · Apple) -->
+        <section class="settings-section">
+          <h2 class="settings-section__title">${t('settings.sectionCloudServices')}</h2>
 
           <!-- Google Calendar -->
           <div class="settings-card">
@@ -529,84 +605,6 @@ export async function render(container, { user }) {
                 <button type="submit" class="btn btn--primary" id="apple-connect-btn">${t('settings.appleConnectBtn')}</button>
               </form>
             ` : `<span class="form-hint">${t('settings.appleOnlyAdmin')}</span>`}
-          </div>
-
-          <!-- CalDAV Kalender -->
-          <div class="settings-card">
-            <h2>${t('settings.caldavTitle')}</h2>
-            <p class="settings-card-description">${t('settings.caldavDescription')}</p>
-
-            <div id="caldav-accounts-list"></div>
-            <div id="caldav-empty-state" class="caldav-empty-state" style="display: none;">
-              <p>${t('settings.caldavEmptyState')}</p>
-            </div>
-
-            ${user?.role === 'admin' ? `
-              <button class="btn btn--primary" id="caldav-add-account-btn">
-                ${t('settings.caldavAddAccount')}
-              </button>
-            ` : ''}
-          </div>
-
-          <!-- ICS-Abonnements -->
-          <div class="settings-card" id="ics-card">
-            <div class="settings-sync-header">
-              <div class="settings-sync-info">
-                <div class="settings-sync-info__name">${t('settings.ics.title')}</div>
-              </div>
-            </div>
-            <div id="ics-list-container"></div>
-            <div id="ics-add-form-wrapper" hidden>
-              <form id="ics-add-form" class="settings-form settings-form--compact" novalidate autocomplete="off">
-                <div class="form-group">
-                  <label class="form-label" for="ics-url">${t('settings.ics.form.url')}</label>
-                  <input class="form-input" type="url" id="ics-url" required placeholder="https://..." />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="ics-name">${t('settings.ics.form.name')}</label>
-                  <input class="form-input" type="text" id="ics-name" required maxlength="100" />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="ics-color">${t('settings.ics.form.color')}</label>
-                  <input class="form-input form-input--color" type="color" id="ics-color" value="#6366f1" />
-                </div>
-                <div class="form-group">
-                  <label class="toggle-row">
-                    <input type="checkbox" id="ics-shared" />
-                    <span>${t('settings.ics.form.shared')}</span>
-                  </label>
-                </div>
-                <div id="ics-add-error" class="form-error" hidden></div>
-                <div class="settings-form-actions">
-                  <button type="submit" class="btn btn--primary" id="ics-submit-btn">${t('settings.ics.actions.submit')}</button>
-                  <button type="button" class="btn btn--secondary" id="ics-cancel-btn">${t('settings.ics.actions.cancel')}</button>
-                </div>
-              </form>
-            </div>
-            <div class="settings-sync-actions">
-              <button class="btn btn--secondary" id="ics-add-btn">${t('settings.ics.add')}</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Sektion: Kontakt-Synchronisation (CardDAV) -->
-        <section class="settings-section">
-          <h2 class="settings-section__title">${t('settings.sectionContactSync')}</h2>
-
-          <div class="settings-card">
-            <h3 class="settings-card__title">${t('settings.cardavTitle')}</h3>
-            <p class="settings-card-description">${t('settings.cardavDescription')}</p>
-
-            <div id="cardav-accounts-list"></div>
-            <div id="cardav-empty-state" class="caldav-empty-state" style="display: none;">
-              <p>${t('settings.cardavEmptyState')}</p>
-            </div>
-
-            ${user?.role === 'admin' ? `
-              <button class="btn btn--primary" id="cardav-add-account-btn">
-                ${t('settings.cardavAddAccount')}
-              </button>
-            ` : ''}
           </div>
         </section>
       </div>
