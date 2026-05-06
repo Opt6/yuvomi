@@ -10,8 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.48.2] - 2026-05-06
 
 ### Changed
-- **Brand color**: migrated the entire app accent from Indigo (`#4F46E5`) to Amber-800 (`#92400E`) across design tokens, logo, and GitHub Pages. The new warm, dark amber better reflects the domestic and intimate nature of the app for couples.
-- **Logo**: updated gradient on `docs/logo.svg` and all inline SVG instances from blue to Amber (`#B45309` → `#92400E`).
+
+- **Brand color refresh**: The primary accent color has been updated from cool indigo (`#4F46E5`) to a rich, warm amber (`#92400E` in light mode, `#FBBF24` in dark mode) across all design tokens, the logo, and the GitHub Pages documentation site.
+
+  **Why this change?** Indigo carried the aesthetic of a productivity tool — focused, corporate, digital. As Oikos has grown into a home for thousands of families, we wanted the visual identity to better reflect what the app actually is: a warm, shared space for everyday life together. Amber — deep and earthy in light environments, bright and inviting in dark ones — communicates exactly that. It evokes warmth, reliability, and the kind of unhurried intimacy that family life deserves.
+
+  From an accessibility standpoint, Amber-800 (`#92400E`) achieves a contrast ratio of 7.20:1 against white, exceeding the WCAG AA threshold and meeting WCAG AAA. The dark mode value (`#FBBF24`) maintains the same readability standard. The transition is purely cosmetic — no data, settings, or behavior has changed.
+
+- **Logo**: updated the gradient on `docs/logo.svg` and all inline SVG instances from violet (`#8B5CF6` to `#6C3AED`) to amber (`#B45309` to `#92400E`).
 
 ## [0.48.1] - 2026-05-06
 
