@@ -66,8 +66,11 @@ function localDayContext(source = {}) {
 }
 
 function localDayRange(context = localDayContext()) {
-  const [year, monthValue, day] = context.localDate.split('-').map(Number);
-  const startMs = Date.UTC(year, monthValue - 1, day) + (context.timezoneOffsetMinutes * 60_000);
+  const normalized = context && typeof context === 'object' && typeof context.localDate === 'string'
+    ? context
+    : localDayContext();
+  const [year, monthValue, day] = normalized.localDate.split('-').map(Number);
+  const startMs = Date.UTC(year, monthValue - 1, day) + (normalized.timezoneOffsetMinutes * 60_000);
   const start = new Date(startMs);
   const end = new Date(startMs + 86_400_000);
   return { start: start.toISOString(), end: end.toISOString() };
@@ -357,7 +360,8 @@ function monthlySummary(monthValue = currentMonth()) {
 function housekeepingDashboard() {
   reconcilePaymentTasks();
   const monthValue = currentMonth();
-  const workers = loadWorkers().map(publicWorker);
+  const context = localDayContext();
+  const workers = loadWorkers().map((row) => publicWorker(row, context));
   const worker = workers[0] ?? null;
   const summary = monthlySummary(monthValue);
   const lastVisit = db.get().prepare(`
