@@ -334,6 +334,17 @@
   font-weight: 600 !important;
 }
 
+.split-participant-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(96px, 140px);
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.split-split-value[hidden] {
+  display: none;
+}
+
 .split-empty-inline {
   padding: var(--space-4) var(--space-2);
 }
@@ -391,5 +402,9 @@
 
   .split-header-actions .btn {
     flex: 1;
+  }
+
+  .split-participant-row {
+    grid-template-columns: 1fr;
   }
 }

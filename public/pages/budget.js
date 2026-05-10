@@ -236,7 +236,7 @@ export async function render(container, { user }) {
             ${t('budget.loansTab')}
           </button>
           <button class="budget-tab" id="budget-tab-split-expenses" type="button" role="tab" aria-selected="false" data-tab="split-expenses">
-            ${t('nav.splitExpenses')}
+            ${t('splitExpenses.tabLabel')}
           </button>
         </div>
         <button class="btn btn--primary btn--icon" id="budget-add" aria-label="${t('budget.addEntryLabel')}">

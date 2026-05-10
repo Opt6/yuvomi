@@ -56,7 +56,7 @@
     "kitchen": "Kitchen",
     "search": "Search",
     "housekeeping": "Housekeeping",
-    "splitExpenses": "Shared expenses"
+    "splitExpenses": "Split"
   },
   "dashboard": {
     "title": "Overview",
@@ -1538,6 +1538,7 @@
       "group_updated": "Group updated",
       "group_archived": "Group archived",
       "member_added": "Member added",
+      "guest_created": "Guest created",
       "expense_created": "Expense created",
       "expense_edited": "Expense edited",
       "expense_deleted": "Expense deleted",
@@ -1547,6 +1548,31 @@
       "recurring_paused": "Recurring expense paused",
       "recurring_resumed": "Recurring expense resumed",
       "recurring_generated": "Recurring expense generated"
+    },
+    "splitPercentage": "Percentage",
+    "splitExact": "Exact amount",
+    "splitValue": "Split value",
+    "createGuest": "Create guest",
+    "displayName": "Display name",
+    "usernameOptional": "Username (optional)",
+    "temporaryPassword": "Temporary password",
+    "familyRole": "Family role",
+    "familyRoleOther": "Other",
+    "familyRoleRelative": "Relative",
+    "familyRoleParent": "Parent",
+    "familyRoleChild": "Child",
+    "familyRoleGrandparent": "Grandparent",
+    "phone": "Phone",
+    "email": "Email",
+    "birthDate": "Birth date",
+    "guestSyncHint": "This guest is added to Family Management, Contacts, and Birthdays when provided.",
+    "createAndAddGuest": "Create and add",
+    "tabLabel": "Split",
+    "splitHint": {
+      "equal": "Everyone pays the same share.",
+      "percentage": "Enter each selected member percentage. Total must be 100%.",
+      "exact": "Enter the exact amount for each selected member. Total must match the expense.",
+      "shares": "Enter whole-number shares for each selected member."
     }
   }
 }

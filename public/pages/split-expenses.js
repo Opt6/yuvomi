@@ -354,12 +354,42 @@ function groupMemberCheckboxes() {
   return members.map((member) => {
     const id = member.id ?? member.user_id;
     return `
-    <label class="split-check">
-      <input type="checkbox" name="participants" value="${id}" checked>
-      <span>${esc(member.display_name)}</span>
-    </label>
+    <div class="split-participant-row" data-participant-row="${id}">
+      <label class="split-check">
+        <input type="checkbox" name="participants" value="${id}" checked>
+        <span>${esc(member.display_name)}</span>
+      </label>
+      <input class="input split-split-value" name="split_value_${id}" inputmode="decimal" aria-label="${esc(member.display_name)} ${t('splitExpenses.splitValue')}" placeholder="">
+    </div>
   `;
   }).join('');
+}
+
+function updateSplitInputs(panel) {
+  const method = panel.querySelector('[name="split_method"]')?.value || 'equal';
+  panel.querySelectorAll('.split-split-value').forEach((input) => {
+    input.hidden = method === 'equal';
+    input.required = method !== 'equal';
+    if (method === 'percentage') input.placeholder = '30';
+    else if (method === 'exact') input.placeholder = '70.00';
+    else if (method === 'shares') input.placeholder = '1';
+    else input.placeholder = '';
+  });
+  const hint = panel.querySelector('#split-method-hint');
+  if (hint) hint.textContent = t(`splitExpenses.splitHint.${method}`);
+}
+
+function collectSplitPayload(form) {
+  const method = form.querySelector('[name="split_method"]')?.value || 'equal';
+  const participants = [...form.querySelectorAll('input[name="participants"]:checked')].map((input) => Number(input.value));
+  if (method === 'equal') return { participants, splits: [] };
+  const splits = participants.map((userId) => {
+    const value = form.querySelector(`[name="split_value_${userId}"]`)?.value.trim() || '';
+    if (method === 'percentage') return { user_id: userId, percentage: value };
+    if (method === 'exact') return { user_id: userId, amount: value };
+    return { user_id: userId, shares: Number(value) };
+  });
+  return { participants, splits };
 }
 
 function openGroupModal() {
@@ -411,7 +441,13 @@ function openExpenseModal(prefill = {}) {
           <label>${t('splitExpenses.paidBy')}<select class="input" name="payer_id">${memberOptions()}</select></label>
           <label>${t('splitExpenses.categoryLabel')}<select class="input" name="category">${state.meta.categories.map((cat) => `<option value="${cat}" ${cat === prefill.category ? 'selected' : ''}>${t(`splitExpenses.category.${cat}`)}</option>`).join('')}</select></label>
         </div>
-        <label>${t('splitExpenses.splitMethod')}<select class="input" name="split_method"><option value="equal">${t('splitExpenses.splitEqual')}</option><option value="shares">${t('splitExpenses.splitShares')}</option></select></label>
+        <label>${t('splitExpenses.splitMethod')}<select class="input" name="split_method">
+          <option value="equal">${t('splitExpenses.splitEqual')}</option>
+          <option value="percentage">${t('splitExpenses.splitPercentage')}</option>
+          <option value="exact">${t('splitExpenses.splitExact')}</option>
+          <option value="shares">${t('splitExpenses.splitShares')}</option>
+        </select></label>
+        <p class="form-hint" id="split-method-hint">${t('splitExpenses.splitHint.equal')}</p>
         <fieldset class="split-participants"><legend>${t('splitExpenses.participants')}</legend>${groupMemberCheckboxes()}</fieldset>
         <label>${t('splitExpenses.notes')}<textarea class="input" name="description" rows="3" maxlength="5000"></textarea></label>
         <div class="modal-actions">
@@ -422,12 +458,21 @@ function openExpenseModal(prefill = {}) {
     `,
     onSave(panel) {
       panel.querySelector('#split-cancel-expense')?.addEventListener('click', () => closeModal());
+      panel.querySelector('[name="split_method"]')?.addEventListener('change', () => updateSplitInputs(panel));
+      panel.querySelectorAll('input[name="participants"]').forEach((input) => {
+        input.addEventListener('change', () => {
+          const row = input.closest('.split-participant-row');
+          const valueInput = row?.querySelector('.split-split-value');
+          if (valueInput) valueInput.disabled = !input.checked;
+        });
+      });
+      updateSplitInputs(panel);
       panel.querySelector('#split-expense-form')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const form = panel.querySelector('#split-expense-form');
         const data = Object.fromEntries(new FormData(form));
-        const participants = [...form.querySelectorAll('input[name="participants"]:checked')].map((input) => Number(input.value));
-        await api.post(`/split-expenses/groups/${state.activeGroupId}/expenses`, { ...data, participants });
+        const { participants, splits } = collectSplitPayload(form);
+        await api.post(`/split-expenses/groups/${state.activeGroupId}/expenses`, { ...data, participants, splits });
         closeModal({ force: true });
         const dash = await api.get('/split-expenses/dashboard');
         state.dashboard = dash.data;
@@ -483,6 +528,7 @@ function openMemberModal() {
         <label>${t('splitExpenses.member')}<select class="input" name="user_id">${memberOptions('', state.members)}</select></label>
         <label>${t('splitExpenses.role')}<select class="input" name="role"><option value="guest">${t('splitExpenses.roleGuest')}</option><option value="admin">${t('splitExpenses.roleAdmin')}</option></select></label>
         <div class="modal-actions">
+          <button class="btn btn--secondary" type="button" id="split-new-guest">${t('splitExpenses.createGuest')}</button>
           <button class="btn btn--secondary" type="button" id="split-cancel-member">${t('common.cancel')}</button>
           <button class="btn btn--primary" type="submit" id="split-save-member">${t('common.save')}</button>
         </div>
@@ -490,11 +536,60 @@ function openMemberModal() {
     `,
     onSave(panel) {
       panel.querySelector('#split-cancel-member')?.addEventListener('click', () => closeModal());
+      panel.querySelector('#split-new-guest')?.addEventListener('click', () => openGuestModal());
       panel.querySelector('#split-member-form')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(panel.querySelector('#split-member-form')));
         await api.post(`/split-expenses/groups/${state.activeGroupId}/members`, data);
         closeModal({ force: true });
+        await loadGroups();
+        await loadGroupData();
+        renderAll();
+      });
+    },
+  });
+}
+
+function openGuestModal() {
+  openSharedModal({
+    title: t('splitExpenses.createGuest'),
+    content: `
+      <form id="split-guest-form" class="split-form">
+        <label>${t('splitExpenses.displayName')}<input class="input" name="display_name" required maxlength="128"></label>
+        <label>${t('splitExpenses.usernameOptional')}<input class="input" name="username" autocomplete="off" maxlength="64"></label>
+        <label>${t('splitExpenses.temporaryPassword')}<input class="input" name="password" type="password" minlength="8" required autocomplete="new-password"></label>
+        <label>${t('splitExpenses.familyRole')}<select class="input" name="family_role">
+          <option value="other">${t('splitExpenses.familyRoleOther')}</option>
+          <option value="relative">${t('splitExpenses.familyRoleRelative')}</option>
+          <option value="parent">${t('splitExpenses.familyRoleParent')}</option>
+          <option value="child">${t('splitExpenses.familyRoleChild')}</option>
+          <option value="grandparent">${t('splitExpenses.familyRoleGrandparent')}</option>
+        </select></label>
+        <div class="split-form-row">
+          <label>${t('splitExpenses.phone')}<input class="input" name="phone" type="tel" autocomplete="tel"></label>
+          <label>${t('splitExpenses.email')}<input class="input" name="email" type="email" autocomplete="email"></label>
+        </div>
+        <label>${t('splitExpenses.birthDate')}<input class="input" name="birth_date" type="date"></label>
+        <p class="form-hint">${t('splitExpenses.guestSyncHint')}</p>
+        <div class="modal-actions">
+          <button class="btn btn--secondary" type="button" id="split-cancel-guest">${t('common.cancel')}</button>
+          <button class="btn btn--primary" type="submit" id="split-save-guest">${t('splitExpenses.createAndAddGuest')}</button>
+        </div>
+      </form>
+    `,
+    onSave(panel) {
+      panel.querySelector('#split-cancel-guest')?.addEventListener('click', () => closeModal());
+      panel.querySelector('#split-guest-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(panel.querySelector('#split-guest-form')));
+        await api.post(`/split-expenses/groups/${state.activeGroupId}/guests`, data);
+        closeModal({ force: true });
+        const [members, groupMembers] = await Promise.all([
+          api.get('/family/members'),
+          api.get(`/split-expenses/groups/${state.activeGroupId}/members`),
+        ]);
+        state.members = members.data || [];
+        state.groupMembers = groupMembers.data || [];
         await loadGroups();
         await loadGroupData();
         renderAll();

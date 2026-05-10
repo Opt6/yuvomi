@@ -4,10 +4,12 @@
  */
 
 import express from 'express';
+import bcrypt from 'bcrypt';
 import * as db from '../db.js';
 import { createLogger } from '../logger.js';
 import { collectErrors, date as validateDate, id as validateId, str, MAX_TEXT, MAX_TITLE } from '../middleware/validate.js';
 import { buildSplits, decorateMoney, minorToDecimal, parseMoneyToMinor, simplifyDebts } from '../services/split-expenses.js';
+import { syncBirthdayArtifacts } from '../services/birthdays.js';
 
 const log = createLogger('SplitExpenses');
 const router = express.Router();
@@ -18,6 +20,7 @@ const SPLIT_METHODS = ['equal', 'exact', 'percentage', 'shares'];
 const CATEGORIES = ['groceries', 'rent', 'utilities', 'baby', 'pets', 'school', 'travel', 'shopping', 'subscriptions', 'health', 'home', 'general'];
 const CURRENCIES = ['AED', 'AUD', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HUF', 'INR', 'JPY', 'NOK', 'PLN', 'RUB', 'SAR', 'SEK', 'TRY', 'UAH', 'USD'];
 const FREQUENCIES = ['weekly', 'monthly', 'yearly'];
+const FAMILY_ROLES = ['dad', 'mom', 'parent', 'child', 'grandparent', 'relative', 'other'];
 
 function userId(req) {
   return req.authUserId || req.session.userId;
@@ -78,6 +81,62 @@ function normalizeLedgerRow(row) {
     ...row,
     amount: minorToDecimal(row.amount_minor, row.currency),
   };
+}
+
+function slugifyUsername(value) {
+  return String(value || 'guest')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, '.')
+    .replace(/^[._-]+|[._-]+$/g, '')
+    .slice(0, 48) || 'guest';
+}
+
+function uniqueUsername(base) {
+  const normalized = slugifyUsername(base);
+  let username = normalized.length >= 3 ? normalized : `${normalized}.guest`;
+  const exists = db.get().prepare('SELECT 1 FROM users WHERE username = ?');
+  let i = 2;
+  while (exists.get(username)) {
+    username = `${normalized}.${i}`.slice(0, 64);
+    i += 1;
+  }
+  return username;
+}
+
+function syncGuestArtifacts(database, userId, { displayName, phone, email, birthDate, actorUserId }) {
+  const contact = database.prepare('SELECT id FROM contacts WHERE family_user_id = ?').get(userId);
+  if (contact) {
+    database.prepare(`
+      UPDATE contacts SET name = ?, category = COALESCE(category, 'Sonstiges'), phone = ?, email = ?
+      WHERE id = ?
+    `).run(displayName, phone || null, email || null, contact.id);
+  } else {
+    database.prepare(`
+      INSERT INTO contacts (name, category, phone, email, family_user_id)
+      VALUES (?, 'Sonstiges', ?, ?, ?)
+    `).run(displayName, phone || null, email || null, userId);
+  }
+
+  if (!birthDate) return;
+  const existing = database.prepare('SELECT * FROM birthdays WHERE family_user_id = ?').get(userId);
+  let birthday;
+  if (existing) {
+    database.prepare(`
+      UPDATE birthdays
+      SET name = ?, birth_date = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%SZ', 'now')
+      WHERE id = ?
+    `).run(displayName, birthDate, existing.id);
+    birthday = database.prepare('SELECT * FROM birthdays WHERE id = ?').get(existing.id);
+  } else {
+    const created = database.prepare(`
+      INSERT INTO birthdays (name, birth_date, created_by, family_user_id)
+      VALUES (?, ?, ?, ?)
+    `).run(displayName, birthDate, actorUserId, userId);
+    birthday = database.prepare('SELECT * FROM birthdays WHERE id = ?').get(created.lastInsertRowid);
+  }
+  syncBirthdayArtifacts(database, birthday);
 }
 
 function loadExpense(expenseId, req) {
@@ -322,6 +381,61 @@ router.post('/groups/:id/members', (req, res) => {
     res.status(201).json({ data: { group_id: groupId, user_id: vUserId.value, role } });
   } catch (err) {
     log.error('POST /groups/:id/members error:', err);
+    res.status(500).json({ error: 'Internal server error.', code: 500 });
+  }
+});
+
+router.post('/groups/:id/guests', async (req, res) => {
+  try {
+    const groupId = Number(req.params.id);
+    if (!requireGroupAccess(groupId, req)) return res.status(404).json({ error: 'Group not found.', code: 404 });
+    if (!canManageGroup(groupId, req)) return res.status(403).json({ error: 'Not authorized.', code: 403 });
+
+    const vDisplayName = str(req.body.display_name, 'Display name', { max: 128 });
+    const vPhone = str(req.body.phone, 'Phone', { max: 100, required: false });
+    const vEmail = str(req.body.email, 'Email', { max: 200, required: false });
+    const vBirthDate = validateDate(req.body.birth_date, 'Birth date');
+    const errors = collectErrors([vDisplayName, vPhone, vEmail, vBirthDate]);
+    if (errors.length) return res.status(400).json({ error: errors.join(' '), code: 400 });
+    const password = String(req.body.password || '');
+    if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters long.', code: 400 });
+    const familyRole = FAMILY_ROLES.includes(req.body.family_role) ? req.body.family_role : 'other';
+    const username = req.body.username && /^[a-zA-Z0-9._-]{3,64}$/.test(req.body.username)
+      ? String(req.body.username)
+      : uniqueUsername(vDisplayName.value);
+    const exists = db.get().prepare('SELECT 1 FROM users WHERE username = ?').get(username);
+    if (exists) return res.status(409).json({ error: 'Username is already taken.', code: 409 });
+    const hash = await bcrypt.hash(password, 12);
+
+    const createdUserId = db.transaction(() => {
+      const created = db.get().prepare(`
+        INSERT INTO users (username, display_name, password_hash, avatar_color, role, family_role)
+        VALUES (?, ?, ?, '#2563EB', 'member', ?)
+      `).run(username, vDisplayName.value, hash, familyRole);
+      syncGuestArtifacts(db.get(), created.lastInsertRowid, {
+        displayName: vDisplayName.value,
+        phone: vPhone.value,
+        email: vEmail.value,
+        birthDate: vBirthDate.value,
+        actorUserId: userId(req),
+      });
+      db.get().prepare('INSERT INTO expense_group_members (group_id, user_id, role, invited_by) VALUES (?, ?, ?, ?)')
+        .run(groupId, created.lastInsertRowid, 'guest', userId(req));
+      activity(groupId, userId(req), 'guest_created', 'member', created.lastInsertRowid, { display_name: vDisplayName.value });
+      return created.lastInsertRowid;
+    });
+
+    const user = db.get().prepare(`
+      SELECT u.id, u.username, u.display_name, u.avatar_color, u.avatar_data, u.family_role,
+             c.phone, c.email, b.birth_date, u.created_at
+      FROM users u
+      LEFT JOIN contacts c ON c.family_user_id = u.id
+      LEFT JOIN birthdays b ON b.family_user_id = u.id
+      WHERE u.id = ?
+    `).get(createdUserId);
+    res.status(201).json({ data: user });
+  } catch (err) {
+    log.error('POST /groups/:id/guests error:', err);
     res.status(500).json({ error: 'Internal server error.', code: 500 });
   }
 });

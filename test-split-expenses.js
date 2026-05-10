@@ -43,6 +43,20 @@ function testSplitAllocation() {
 
   assert.deepEqual(
     service.buildSplits({
+      method: 'exact',
+      amountMinor: 30000,
+      currency: 'EUR',
+      participants: [1, 2],
+      splits: [{ user_id: 1, amount: '100.00' }, { user_id: 2, amount: '200.00' }],
+    }),
+    [
+      { user_id: 1, amount_minor: 10000 },
+      { user_id: 2, amount_minor: 20000 },
+    ],
+  );
+
+  assert.deepEqual(
+    service.buildSplits({
       method: 'shares',
       amountMinor: 1000,
       currency: 'EUR',

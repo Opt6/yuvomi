@@ -85,6 +85,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-1);
+  margin-left: auto;
   padding: 2px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -113,6 +114,10 @@
 
 .budget-tab[data-tab="loans"].budget-tab--active {
   background: var(--color-info);
+}
+
+.budget-tab[data-tab="split-expenses"].budget-tab--active {
+  background: var(--module-split-expenses);
 }
 
 .budget-tab-panel {
