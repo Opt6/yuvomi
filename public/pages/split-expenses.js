@@ -5,7 +5,7 @@
 
 import { api } from '/api.js';
 import { openModal as openSharedModal, closeModal, confirmModal } from '/components/modal.js';
-import { t, formatDate, getLocale } from '/i18n.js';
+import { t, formatDate, getLocale, dateInputPlaceholder, parseDateInput, isDateInputValid } from '/i18n.js';
 import { esc } from '/utils/html.js';
 import { stagger } from '/utils/ux.js';
 
@@ -297,7 +297,7 @@ function renderExpenses() {
       <div class="split-expense__icon"><i data-lucide="${categoryIcon(expense.category)}" aria-hidden="true"></i></div>
       <div class="split-expense__body">
         <strong>${esc(expense.title)}</strong>
-        <span>${esc(expense.payer_name || '')} · ${formatDate(expense.expense_date)}</span>
+        <span>${t('splitExpenses.paidBy')}: ${esc(expense.payer_name || '')} · ${formatDate(expense.expense_date)}</span>
       </div>
       <div class="split-expense__amount">${money(expense.amount, expense.currency)}</div>
     </article>
@@ -610,18 +610,11 @@ function openGuestModal() {
         <label>${t('splitExpenses.displayName')}<input class="input" name="display_name" required maxlength="128"></label>
         <label>${t('splitExpenses.usernameOptional')}<input class="input" name="username" autocomplete="off" maxlength="64"></label>
         <label>${t('splitExpenses.temporaryPassword')}<input class="input" name="password" type="password" minlength="8" required autocomplete="new-password"></label>
-        <label>${t('splitExpenses.familyRole')}<select class="input" name="family_role">
-          <option value="other">${t('splitExpenses.familyRoleOther')}</option>
-          <option value="relative">${t('splitExpenses.familyRoleRelative')}</option>
-          <option value="parent">${t('splitExpenses.familyRoleParent')}</option>
-          <option value="child">${t('splitExpenses.familyRoleChild')}</option>
-          <option value="grandparent">${t('splitExpenses.familyRoleGrandparent')}</option>
-        </select></label>
         <div class="split-form-row">
           <label>${t('splitExpenses.phone')}<input class="input" name="phone" type="tel" autocomplete="tel"></label>
           <label>${t('splitExpenses.email')}<input class="input" name="email" type="email" autocomplete="email"></label>
         </div>
-        <label>${t('splitExpenses.birthDate')}<input class="input" name="birth_date" type="date"></label>
+        <label>${t('splitExpenses.birthDate')}<input class="input" name="birth_date" type="text" placeholder="${dateInputPlaceholder()}" inputmode="numeric"></label>
         <p class="form-hint">${t('splitExpenses.guestSyncHint')}</p>
         <div class="modal-actions">
           <button class="btn btn--secondary" type="button" id="split-cancel-guest">${t('common.cancel')}</button>
@@ -633,7 +626,11 @@ function openGuestModal() {
       panel.querySelector('#split-cancel-guest')?.addEventListener('click', () => closeModal());
       panel.querySelector('#split-guest-form')?.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const data = Object.fromEntries(new FormData(panel.querySelector('#split-guest-form')));
+        const form = panel.querySelector('#split-guest-form');
+        const birthDateRaw = form.querySelector('[name="birth_date"]')?.value || '';
+        if (!isDateInputValid(birthDateRaw)) return;
+        const data = Object.fromEntries(new FormData(form));
+        data.birth_date = parseDateInput(birthDateRaw) || null;
         await api.post(`/split-expenses/groups/${state.activeGroupId}/guests`, data);
         closeModal({ force: true });
         const [members, groupMembers] = await Promise.all([

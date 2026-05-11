@@ -297,7 +297,13 @@ function wireNav() {
     renderBody();
     updateLabel();
   });
-  const addHandler = () => openBudgetModal({ mode: 'create' });
+  const addHandler = () => {
+    if (state.activeTab === 'split-expenses') {
+      _container.querySelector('#split-add-expense')?.click();
+      return;
+    }
+    openBudgetModal({ mode: 'create' });
+  };
   _container.querySelector('#budget-add').addEventListener('click', addHandler);
   _container.querySelector('#fab-new-budget').addEventListener('click', addHandler);
   _container.querySelectorAll('.budget-tab').forEach((tab) => {
@@ -421,10 +427,20 @@ function updateTabs() {
     tab.setAttribute('aria-selected', String(active));
   });
   const splitActive = state.activeTab === 'split-expenses' || _user?.access_scope === 'split_guest';
-  ['#budget-prev', '#budget-next', '#budget-today', '#budget-label', '#budget-add', '#fab-new-budget'].forEach((selector) => {
+  const loansActive = state.activeTab === 'loans';
+  ['#budget-today', '#budget-label', '#budget-add'].forEach((selector) => {
     const el = _container.querySelector(selector);
     if (el) el.hidden = splitActive;
   });
+  ['#budget-prev', '#budget-next'].forEach((selector) => {
+    const el = _container.querySelector(selector);
+    if (el) el.hidden = splitActive || loansActive;
+  });
+  const fab = _container.querySelector('#fab-new-budget');
+  if (fab) {
+    fab.hidden = false;
+    fab.setAttribute('aria-label', splitActive ? t('splitExpenses.addExpense') : t('budget.newEntryFabLabel'));
+  }
 }
 
 function renderCategoryBars(byCategory) {
