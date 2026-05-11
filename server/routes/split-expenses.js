@@ -117,12 +117,12 @@ function uniqueUsername(base) {
   return username;
 }
 
-function userFromContact(database, contactId, actorId) {
+async function userFromContact(database, contactId, actorId) {
   const contact = database.prepare('SELECT * FROM contacts WHERE id = ?').get(contactId);
   if (!contact) throw new Error('Contact not found.');
   if (contact.family_user_id) return contact.family_user_id;
   const username = uniqueUsername(contact.name);
-  const passwordHash = bcrypt.hashSync(crypto.randomBytes(24).toString('base64url'), 12);
+  const passwordHash = await bcrypt.hash(crypto.randomBytes(24).toString('base64url'), 12);
   const created = database.prepare(`
     INSERT INTO users (username, display_name, password_hash, avatar_color, role, family_role)
     VALUES (?, ?, ?, '#2563EB', 'member', 'other')
@@ -266,7 +266,12 @@ function parseExpenseBody(body, fallbackCurrency) {
 }
 
 router.get('/meta', (_req, res) => {
-  res.json({ data: { group_types: GROUP_TYPES, group_roles: GROUP_ROLES, split_methods: SPLIT_METHODS, categories: CATEGORIES, currencies: CURRENCIES, frequencies: FREQUENCIES, default_currency: defaultCurrency() } });
+  try {
+    res.json({ data: { group_types: GROUP_TYPES, group_roles: GROUP_ROLES, split_methods: SPLIT_METHODS, categories: CATEGORIES, currencies: CURRENCIES, frequencies: FREQUENCIES, default_currency: defaultCurrency() } });
+  } catch (err) {
+    log.error('GET /meta error:', err);
+    res.status(500).json({ error: 'Internal server error.', code: 500 });
+  }
 });
 
 router.get('/dashboard', (req, res) => {
@@ -456,7 +461,7 @@ router.get('/groups/:id/member-candidates', (req, res) => {
   }
 });
 
-router.post('/groups/:id/members', (req, res) => {
+router.post('/groups/:id/members', async (req, res) => {
   try {
     const groupId = Number(req.params.id);
     if (!requireGroupAccess(groupId, req)) return res.status(404).json({ error: 'Group not found.', code: 404 });
@@ -465,7 +470,7 @@ router.post('/groups/:id/members', (req, res) => {
     const vContactId = req.body.contact_id ? validateId(req.body.contact_id, 'contact_id') : { value: null, error: null };
     if (vUserId.error || vContactId.error) return res.status(400).json({ error: vUserId.error || vContactId.error, code: 400 });
     const role = GROUP_ROLES.includes(req.body.role) && req.body.role !== 'owner' ? req.body.role : 'guest';
-    const memberUserId = vContactId.value ? userFromContact(db.get(), vContactId.value, userId(req)) : vUserId.value;
+    const memberUserId = vContactId.value ? await userFromContact(db.get(), vContactId.value, userId(req)) : vUserId.value;
     if (!memberUserId) return res.status(400).json({ error: 'user_id or contact_id is required.', code: 400 });
     const exists = db.get().prepare('SELECT 1 FROM users WHERE id = ?').get(memberUserId);
     if (!exists) return res.status(404).json({ error: 'User not found.', code: 404 });
@@ -475,8 +480,13 @@ router.post('/groups/:id/members', (req, res) => {
       ON CONFLICT(group_id, user_id) DO UPDATE SET role = excluded.role
     `).run(groupId, memberUserId, role, userId(req));
     if (role === 'guest') {
-      db.get().prepare('INSERT OR IGNORE INTO split_expense_guest_users (user_id, group_id, created_by) VALUES (?, ?, ?)')
-        .run(memberUserId, groupId, userId(req));
+      const existingGuestRow = db.get().prepare('SELECT group_id FROM split_expense_guest_users WHERE user_id = ?').get(memberUserId);
+      if (existingGuestRow && existingGuestRow.group_id !== groupId) {
+        return res.status(409).json({ error: 'This guest account is already assigned to another group.', code: 409 });
+      }
+      if (!existingGuestRow) {
+        db.get().prepare('INSERT INTO split_expense_guest_users (user_id, group_id, created_by) VALUES (?, ?, ?)').run(memberUserId, groupId, userId(req));
+      }
     }
     activity(groupId, userId(req), 'member_added', 'member', memberUserId, { role });
     res.status(201).json({ data: { group_id: groupId, user_id: memberUserId, role } });

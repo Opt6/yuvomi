@@ -571,7 +571,7 @@ function openExpenseModal(prefill = {}) {
         </div>
         <div class="split-form-row">
           <label>${t('splitExpenses.currency')}<select class="input" name="currency">${state.meta.currencies.map((c) => `<option value="${c}" ${c === group.default_currency ? 'selected' : ''}>${c}</option>`).join('')}</select></label>
-          <label>${t('splitExpenses.date')}<input class="input" name="expense_date" type="date" value="${new Date().toISOString().slice(0, 10)}"></label>
+          <label>${t('splitExpenses.date')}<input class="input" name="expense_date" type="date" value="${(() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })()}"></label>
         </div>
         <label>${t('splitExpenses.splitMethod')}<select class="input" name="split_method">
           <option value="equal">${t('splitExpenses.splitEqual')}</option>
