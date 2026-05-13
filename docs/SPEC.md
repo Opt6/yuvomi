@@ -29,11 +29,20 @@ Every table: `id INTEGER PRIMARY KEY`, `created_at TEXT`, `updated_at TEXT` (ISO
 | status | TEXT | open, in_progress, done, archived |
 | due_date | TEXT | DATE, nullable |
 | due_time | TEXT | TIME, nullable |
-| assigned_to | INTEGER | FK → Users |
+| assigned_to | INTEGER | FK → Users (legacy single-user field, kept for backwards compat) |
 | created_by | INTEGER | FK → Users, NOT NULL |
 | is_recurring | INTEGER | 0/1 |
 | recurrence_rule | TEXT | iCal RRULE |
 | parent_task_id | INTEGER | FK → Tasks (max 2 levels) |
+
+### Task Assignments
+Join table for multi-person task assignment (migration v32). Existing `assigned_to` values were migrated automatically.
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| task_id | INTEGER | FK → Tasks (CASCADE delete), NOT NULL |
+| user_id | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+| PRIMARY KEY | | (task_id, user_id) |
 
 ### Shopping Lists
 | Column | Type | Constraint |
@@ -109,7 +118,7 @@ Reusable recipe cards that can be pre-filled into meal slots.
 | location | TEXT | |
 | color | TEXT | HEX |
 | icon | TEXT | Lucide icon name, default 'calendar' |
-| assigned_to | INTEGER | FK → Users |
+| assigned_to | INTEGER | FK → Users (legacy single-user field, kept for backwards compat) |
 | created_by | INTEGER | FK → Users, NOT NULL |
 | external_calendar_id | TEXT | ID from external calendar |
 | external_source | TEXT | local, google, apple, ics, caldav |
@@ -123,6 +132,15 @@ Reusable recipe cards that can be pre-filled into meal slots.
 | attachment_data | TEXT | Base64 data URL of attachment (≤ 5 MB), nullable |
 | target_caldav_account_id | INTEGER | FK → CalDAV Accounts (for outbound sync), nullable |
 | target_caldav_calendar_url | TEXT | CalDAV calendar URL (for outbound sync), nullable |
+
+### Event Assignments
+Join table for multi-person calendar event assignment (migration v32). Existing `assigned_to` values were migrated automatically.
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| event_id | INTEGER | FK → Calendar Events (CASCADE delete), NOT NULL |
+| user_id | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+| PRIMARY KEY | | (event_id, user_id) |
 
 ### External Calendars
 Display metadata (name, color) for synced Google/CalDAV calendars. Populated automatically during sync.
@@ -393,6 +411,18 @@ Allowlist for `visibility = 'restricted'` documents — only listed users can se
 | user_id | INTEGER | FK → Users (CASCADE delete), NOT NULL |
 | PRIMARY KEY | | (document_id, user_id) |
 
+### Family Document Folders
+Custom folders for organizing family documents (migration v37). A "Hausreinigung" folder is auto-created when a housekeeping worker is first added.
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| name | TEXT | NOT NULL UNIQUE |
+| created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+| created_at | TEXT | ISO 8601 |
+| updated_at | TEXT | ISO 8601 |
+
+`family_documents.folder_id` references this table (ON DELETE SET NULL, nullable).
+
 ### Budget Loans
 Instalment-based loans with per-payment tracking. Active loans show remaining balance and due months; paid-off loans are automatically closed.
 
@@ -418,6 +448,214 @@ Individual payment records for a budget loan. Each installment number is unique 
 | paid_date | TEXT | DATE, NOT NULL |
 | budget_entry_id | INTEGER | FK → Budget Entries (SET NULL on delete), nullable |
 | created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+
+### Housekeeping Workers
+Staff profiles for the Housekeeping module (migration v34).
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| user_id | INTEGER | FK → Users (CASCADE delete), NOT NULL UNIQUE |
+| daily_rate | REAL | NOT NULL DEFAULT 0 CHECK(>= 0) |
+| payment_schedule | TEXT | 'daily', 'twice_monthly', 'monthly' (default) |
+| calendar_color | TEXT | HEX, default '#7C3AED' |
+| notes | TEXT | nullable |
+| created_at | TEXT | ISO 8601 |
+| updated_at | TEXT | ISO 8601 |
+
+### Housekeeping Work Sessions
+Individual check-in/check-out sessions (migrations v33, v34, v35, v36, v37).
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| check_in | TEXT | DATETIME, NOT NULL |
+| check_out | TEXT | DATETIME, nullable (open session when NULL) |
+| daily_rate | REAL | NOT NULL DEFAULT 0 |
+| extras | REAL | NOT NULL DEFAULT 0 |
+| worker_id | INTEGER | FK → Housekeeping Workers (SET NULL on delete), nullable |
+| calendar_event_id | INTEGER | FK → Calendar Events (SET NULL on delete), nullable |
+| payment_task_id | INTEGER | FK → Tasks (SET NULL on delete), nullable |
+| receipt_document_id | INTEGER | FK → Family Documents (SET NULL on delete), nullable |
+| paid_at | TEXT | DATETIME, nullable |
+| created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+| created_at | TEXT | ISO 8601 |
+| updated_at | TEXT | ISO 8601 |
+
+### Housekeeping Decay Tasks
+Recurring chores with urgency decay indicators (migration v33).
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| name | TEXT | NOT NULL |
+| area | TEXT | NOT NULL |
+| frequency_days | INTEGER | NOT NULL CHECK(> 0) |
+| last_completed | TEXT | DATETIME, nullable |
+| created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+| created_at | TEXT | ISO 8601 |
+| updated_at | TEXT | ISO 8601 |
+
+### Housekeeping Supply Requests
+Supply requests linked to shopping lists (migration v33).
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| name | TEXT | NOT NULL |
+| quantity | TEXT | nullable |
+| shopping_item_id | INTEGER | FK → Shopping Items (SET NULL on delete), nullable |
+| created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+| created_at | TEXT | ISO 8601 |
+
+### Housekeeping Maintenance Log
+Photo log for maintenance issues (migration v33).
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| description | TEXT | NOT NULL |
+| photo_url | TEXT | nullable |
+| created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+| created_at | TEXT | ISO 8601 |
+| updated_at | TEXT | ISO 8601 |
+
+### Expense Groups
+Split expense groups (migration v39).
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| name | TEXT | NOT NULL |
+| description | TEXT | nullable |
+| type | TEXT | 'household', 'couple', 'travel', 'event', 'shopping', 'general' (default) |
+| avatar_color | TEXT | HEX, default '#0F766E' |
+| avatar_document_id | INTEGER | FK → Family Documents (SET NULL on delete), nullable |
+| default_currency | TEXT | NOT NULL DEFAULT 'EUR' |
+| status | TEXT | 'active' (default) or 'archived' |
+| created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+| archived_at | TEXT | nullable |
+| created_at | TEXT | ISO 8601 |
+| updated_at | TEXT | ISO 8601 |
+
+### Expense Group Members
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| group_id | INTEGER | FK → Expense Groups (CASCADE delete), NOT NULL |
+| user_id | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+| role | TEXT | 'owner', 'admin', 'guest' (default) |
+| invited_by | INTEGER | FK → Users (SET NULL on delete), nullable |
+| joined_at | TEXT | ISO 8601 |
+| PRIMARY KEY | | (group_id, user_id) |
+
+### Expenses
+Immutable expense records — amounts stored in integer minor currency units (e.g. cents) to avoid floating-point errors.
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| group_id | INTEGER | FK → Expense Groups (CASCADE delete), NOT NULL |
+| title | TEXT | NOT NULL |
+| amount_minor | INTEGER | NOT NULL CHECK(> 0) |
+| currency | TEXT | NOT NULL |
+| converted_amount_minor | INTEGER | NOT NULL CHECK(> 0) |
+| converted_currency | TEXT | NOT NULL |
+| exchange_rate_num | INTEGER | NOT NULL DEFAULT 1 |
+| exchange_rate_den | INTEGER | NOT NULL DEFAULT 1 |
+| payer_id | INTEGER | FK → Users (RESTRICT on delete), NOT NULL |
+| category | TEXT | NOT NULL DEFAULT 'general' |
+| split_method | TEXT | 'equal', 'exact', 'percentage', 'shares' (default 'equal') |
+| status | TEXT | 'active' (default) or 'deleted' |
+| expense_date | TEXT | DATE, NOT NULL |
+| recurring_rule_id | INTEGER | FK → Recurring Expenses, nullable |
+| created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+| deleted_at | TEXT | nullable |
+
+### Expense Splits
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| expense_id | INTEGER | FK → Expenses (CASCADE delete), NOT NULL |
+| user_id | INTEGER | FK → Users (RESTRICT on delete), NOT NULL |
+| amount_minor | INTEGER | NOT NULL CHECK(>= 0) |
+| currency | TEXT | NOT NULL |
+| UNIQUE | | (expense_id, user_id) |
+
+### Expense Ledger Entries
+Immutable double-entry ledger derived from expense splits and settlements.
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| group_id | INTEGER | FK → Expense Groups (CASCADE delete), NOT NULL |
+| source_type | TEXT | 'expense', 'expense_reversal', 'settlement', 'settlement_reversal' |
+| source_id | INTEGER | NOT NULL |
+| user_id | INTEGER | FK → Users (RESTRICT on delete), NOT NULL |
+| counterparty_id | INTEGER | FK → Users (SET NULL on delete), nullable |
+| amount_minor | INTEGER | NOT NULL |
+| currency | TEXT | NOT NULL |
+| memo | TEXT | nullable |
+| created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+
+### Settlements
+Debt payments between group members. A debt-simplification algorithm produces the minimal transfer set.
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| group_id | INTEGER | FK → Expense Groups (CASCADE delete), NOT NULL |
+| payer_id | INTEGER | FK → Users (RESTRICT on delete), NOT NULL |
+| payee_id | INTEGER | FK → Users (RESTRICT on delete), NOT NULL |
+| amount_minor | INTEGER | NOT NULL CHECK(> 0) |
+| currency | TEXT | NOT NULL |
+| notes | TEXT | nullable |
+| proof_document_id | INTEGER | FK → Family Documents (SET NULL on delete), nullable |
+| status | TEXT | 'active' (default) or 'deleted' |
+| paid_at | TEXT | DATETIME, NOT NULL |
+| created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+| deleted_at | TEXT | nullable |
+
+### Settlement Entries
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| settlement_id | INTEGER | FK → Settlements (CASCADE delete), NOT NULL |
+| from_user_id | INTEGER | FK → Users (RESTRICT on delete), NOT NULL |
+| to_user_id | INTEGER | FK → Users (RESTRICT on delete), NOT NULL |
+| amount_minor | INTEGER | NOT NULL CHECK(> 0) |
+| currency | TEXT | NOT NULL |
+
+### Recurring Expenses
+Template for automatically generated expenses on a fixed schedule.
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| group_id | INTEGER | FK → Expense Groups (CASCADE delete), NOT NULL |
+| title | TEXT | NOT NULL |
+| amount_minor | INTEGER | NOT NULL CHECK(> 0) |
+| currency | TEXT | NOT NULL |
+| payer_id | INTEGER | FK → Users (RESTRICT on delete), NOT NULL |
+| category | TEXT | NOT NULL DEFAULT 'general' |
+| split_method | TEXT | NOT NULL DEFAULT 'equal' |
+| split_snapshot | TEXT | NOT NULL (JSON) |
+| frequency | TEXT | 'weekly', 'monthly', 'yearly' |
+| next_run_date | TEXT | DATE, NOT NULL |
+| paused_at | TEXT | nullable |
+| created_by | INTEGER | FK → Users (CASCADE delete), NOT NULL |
+
+### Expense Activity
+Per-group event log for expenses, settlements, and member events.
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| group_id | INTEGER | FK → Expense Groups (CASCADE delete), NOT NULL |
+| actor_id | INTEGER | FK → Users (SET NULL on delete), nullable |
+| type | TEXT | NOT NULL |
+| entity_type | TEXT | NOT NULL |
+| entity_id | INTEGER | nullable |
+| metadata | TEXT | JSON, nullable |
+
+### Split Expense Guest Users
+Tracks which users were created as restricted guests for a split group (migration v40).
+
+| Column | Type | Constraint |
+|--------|------|-----------|
+| user_id | INTEGER | FK → Users (CASCADE delete), PRIMARY KEY |
+| group_id | INTEGER | FK → Expense Groups (CASCADE delete), nullable |
+| created_by | INTEGER | FK → Users (SET NULL on delete), nullable |
+| created_at | TEXT | ISO 8601 |
 
 ### Sync Config
 Key-value table for OAuth tokens and CalDAV credentials.
@@ -457,7 +695,7 @@ Skeleton loading instead of spinners. Clicking any widget navigates to that modu
 
 **Features:**
 - CRUD + subtasks (max 2 levels, checkbox list, progress bar)
-- Assignment to users (avatar color as indicator)
+- **Multi-person assignment:** tasks can be assigned to multiple family members simultaneously via `UserMultiSelect` checkbox dropdown; stacked avatars (up to 3 visible + `+N` overflow badge) shown on task cards and Kanban
 - Priorities shown visually via color/icon
 - Recurring: automatically create next instance on completion
 - Archive: completed tasks can be archived (status = 'archived'); visible in a separate Archived filter
@@ -503,8 +741,9 @@ Reusable recipe cards linked to meal slots.
 **Views:** Month (default, dot indicators), Week (hour grid), Day (timeline), Agenda (list).
 
 - CRUD: title, description, start/end, all-day, location, color, assignment
+- **Multi-person assignment:** events can be assigned to multiple family members via the same `UserMultiSelect` component as tasks
 - Color-coding per person
-- Recurring via iCal RRULE
+- Recurring via iCal RRULE (daily, weekly, monthly, yearly)
 - **Google Calendar:** OAuth 2.0, Calendar API v3, two-way sync
 - **CalDAV Multi-Account:** Connect multiple CalDAV servers (iCloud, Nextcloud, Radicale, Baikal) with per-account calendar selection via checkboxes, two-way sync (tsdav), optional outbound target selection per event
 - **ICS Subscriptions:** Subscribe to any public ICS/webcal URL (e.g. public holidays, sports schedules). Per-subscription color, private/shared visibility, manual "Sync now" and automatic sync on the shared interval. Edit name, color, and visibility of any subscription inline. RRULE events expanded into a rolling ±6/+12 month window. SSRF-protected (DNS pre-resolution), ETag/Last-Modified conditional fetch, 10 MB limit, 15 s timeout. User-edited events are protected from being overwritten (`user_modified`); a "Reset to original" link restores them.
@@ -545,12 +784,25 @@ Upload and manage family files with per-document access control.
 
 - CRUD: name, description, category, file upload (PDF, images, text, Office documents; ≤ 5 MB)
 - Drag-and-drop upload in the new-document modal
+- **Folder browser:** documents can be organized into custom folders; a sidebar lists all folders plus "Alle Ordner"; a "Hausreinigung" folder is auto-created when the first housekeeping worker is added
 - **Grid / list view** toggle; view mode persisted in localStorage
 - **Category tags:** 14 predefined categories (medical, school, identity, insurance, finance, home, vehicle, legal, travel, pets, warranty, taxes, work, other)
 - **Visibility:** family (all members see it), restricted (only selected members), private (only the uploader)
 - **Archive / restore** — archived documents hidden from the main view, accessible via the Archive filter
 - **Download** — original file downloaded with its original filename
 - API: `GET /api/v1/documents`, `POST /api/v1/documents`, `GET /api/v1/documents/:id`, `PUT /api/v1/documents/:id`, `DELETE /api/v1/documents/:id`, `GET /api/v1/documents/:id/download`
+
+### Housekeeping (`/housekeeping`)
+
+Module for managing household staff workflows. Navigation uses violet accent theming.
+
+- **Staff profiles:** each worker is linked to a user account; configurable daily rate, payment schedule (daily / twice monthly / monthly), calendar color, and notes
+- **Work sessions:** check-in/check-out with timestamps; open sessions shown prominently; automatic local calendar event created on check-in; optional payment task created on check-in (toggle in Settings → Housekeeping)
+- **Payment tracking:** mark sessions as paid; monthly visit log with payment summaries and paid/unpaid breakdown
+- **Recurring chores (`housekeeping_decay_tasks`):** define chores by name, area, and frequency in days; urgency level computed from elapsed time since `last_completed`; visual decay indicator
+- **Supply requests:** request supplies with optional quantity; supplies can be linked directly to shopping lists
+- **Dashboard integration:** housekeeping widgets show today's open sessions and upcoming chores
+- **Document folder:** a "Hausreinigung" folder in Documents is auto-created on first worker creation; receipts can be linked to individual work sessions
 
 ### Login (`/login`)
 
@@ -567,7 +819,8 @@ User management and app configuration. Logged-in users only.
 
 - **Profile:** change display name, avatar color, password
 - **User management (admin):** create new users, edit/delete existing users, assign roles (admin/member)
-- **Module toggles (admin, Settings → General):** individual modules (Tasks, Calendar, Shopping, Meals, Recipes, Birthdays, Notes, Contacts, Budget, Documents) can be disabled to hide them from navigation. Data is preserved and reappears when re-enabled. Dashboard and Settings remain essential and cannot be disabled. Stored as `disabled_modules` key in `sync_config`.
+- **Module toggles (admin, Settings → General):** individual modules (Tasks, Calendar, Shopping, Meals, Recipes, Birthdays, Notes, Contacts, Budget, Documents, Housekeeping) can be disabled to hide them from navigation. Data is preserved and reappears when re-enabled. Dashboard and Settings remain essential and cannot be disabled. Stored as `disabled_modules` key in `sync_config`.
+- **Housekeeping (admin):** toggle for automatic payment task creation on work session check-in.
 - **Synchronization tab:** unified tab for calendar and contact sync, replacing the old Calendar tab. Contains two sections:
   - **Calendar Sync:** connect/disconnect Google Calendar (OAuth 2.0); manage multiple CalDAV accounts (iCloud, Nextcloud, Radicale, Baikal) with per-account calendar selection via checkboxes, two-way sync, and optional outbound event target; manage ICS URL subscriptions (add, delete, sync now, set color and visibility); configure sync interval
   - **Contact Sync:** manage multiple CardDAV accounts (iCloud, Nextcloud, Radicale, Baikal); per-addressbook enable/disable; manual sync trigger; real-time status badges (success, error, syncing with animated spinner)
@@ -582,6 +835,8 @@ User management and app configuration. Logged-in users only.
 
 ### Budget (`/budget`)
 
+**Tabs:** Overview, Transactions, Loans, Split Expenses.
+
 **Views:**
 - Monthly overview: income vs. expenses, balance, bar chart by category (Canvas, no library)
 - Transaction list: chronological, filterable
@@ -593,8 +848,10 @@ User management and app configuration. Logged-in users only.
 - Monthly comparison (current vs. previous month)
 - CSV export includes a subcategory column and English column headers
 - **Loans tab:** create instalment-based loans (borrower, total amount, number of instalments, start month); record individual payments; remaining balance and due months shown automatically; paid-off loans marked as closed; filter budget transactions by loan
+- **Split Expenses tab:** shared expense tracking within named groups (household, couple, travel, event, shopping, general). Split methods: equal, exact amounts, percentage, shares. Balances derived from an immutable double-entry ledger — amounts stored as integer minor currency units (cents) to avoid floating-point errors. **Settlements:** record payments between members; a debt-simplification algorithm produces the minimal transfer set. **Recurring expenses:** daily, weekly, monthly, yearly schedule with automatic generation via hourly scheduler. **Guest accounts:** invite people outside the family as restricted users who can only access the Split module and see their invited groups. **Multi-currency:** each group has a default currency; individual expenses can use any currency with historical exchange rate snapshots. **Activity feed:** per-group log of all expense, member, and settlement events.
 - API: `GET /api/v1/budget/categories`, `GET /api/v1/budget/categories/:key/subcategories` (optional `?lang=` localisation), `POST /api/v1/budget/categories`, `POST /api/v1/budget/categories/:key/subcategories`
 - Loans API: `GET /api/v1/budget/loans`, `POST /api/v1/budget/loans`, `GET /api/v1/budget/loans/:id`, `PUT /api/v1/budget/loans/:id`, `DELETE /api/v1/budget/loans/:id`, `GET /api/v1/budget/loans/:id/payments`, `POST /api/v1/budget/loans/:id/payments`, `DELETE /api/v1/budget/loans/:id/payments/:paymentId`
+- Split API: `/api/v1/split/*` — CRUD for groups, members, expenses, settlements, recurring expenses, and activity feed
 
 ### Birthdays (`/birthdays`)
 
@@ -820,7 +1077,7 @@ All UI strings are managed via `public/i18n.js`. No hardcoded text in JS files o
 | `ar` | Arabic | Full translation (added v0.19.0) |
 | `hi` | Hindi | Full translation (added v0.19.0) |
 | `pt` | Portuguese | Full translation (added v0.19.0) |
-| `uk` | Ukrainian | Full translation (added v0.19.0) |
+| `uk` | Ukrainian | Full translation (added v0.19.0, completed v0.52.3 by @baragoon) |
 | `pl` | Polish | Full translation (added v0.50.0) |
 
 ### Adding a New Language
