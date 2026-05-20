@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.18] - 2026-05-21
+
+### Changed
+- Dashboard metric tiles now always display in a 2-column grid on all screen sizes; the single-column layout below 768 px has been removed, reducing the scroll offset on mobile by approximately 200 px
+
 ## [0.52.17] - 2026-05-20
 
 ### Changed
