@@ -17,6 +17,11 @@ import {
   applyDuration
 } from './ics-parser.js';
 
+function escapeICSText(str) {
+  if (!str) return '';
+  return str.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+}
+
 // --------------------------------------------------------
 // Helper Functions
 // --------------------------------------------------------
@@ -448,8 +453,8 @@ BEGIN:VEVENT
 UID:${uid}
 DTSTART:${event.start_datetime.replace(/[-:]/g, '')}
 DTEND:${event.end_datetime.replace(/[-:]/g, '')}
-SUMMARY:${event.title || ''}
-DESCRIPTION:${event.description || ''}
+SUMMARY:${escapeICSText(event.title)}
+DESCRIPTION:${escapeICSText(event.description)}
 END:VEVENT
 END:VCALENDAR`;
 

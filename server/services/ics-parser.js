@@ -11,6 +11,15 @@ function unfoldLines(ics) {
   return ics.replace(/\r?\n[ \t]/g, '');
 }
 
+function unescapeICSText(str) {
+  if (!str) return str;
+  return str
+    .replace(/\\n/gi, '\n')
+    .replace(/\\,/g, ',')
+    .replace(/\\;/g, ';')
+    .replace(/\\\\/g, '\\');
+}
+
 function parseICS(ics) {
   const unfolded = unfoldLines(ics);
   const events   = [];
@@ -24,9 +33,9 @@ function parseICS(ics) {
       return m ? m[1].trim() : null;
     };
     const uid         = get('UID');
-    const summary     = get('SUMMARY') || '(kein Titel)';
-    const description = get('DESCRIPTION') || null;
-    const location    = get('LOCATION')    || null;
+    const summary     = unescapeICSText(get('SUMMARY') || '(kein Titel)');
+    const description = unescapeICSText(get('DESCRIPTION')) || null;
+    const location    = unescapeICSText(get('LOCATION'))    || null;
     const rrule       = get('RRULE')       ? `RRULE:${get('RRULE')}` : null;
     const parseDTLine = (prop) => {
       const re = new RegExp(`^${prop}((?:;[^:]*)*):(.*)$`, 'im');
@@ -151,4 +160,4 @@ function expandRRULE(vevent, windowStart, windowEnd) {
   return results;
 }
 
-export { unfoldLines, parseICS, formatICSDate, tzLocalToUTC, applyDuration, expandRRULE };
+export { unfoldLines, unescapeICSText, parseICS, formatICSDate, tzLocalToUTC, applyDuration, expandRRULE };

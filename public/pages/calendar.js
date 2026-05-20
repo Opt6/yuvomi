@@ -1379,8 +1379,8 @@ async function loadCalDAVTargets(selectElement, currentEvent = null) {
 
         for (const calendar of enabledCalendars) {
           const option = document.createElement('option');
-          option.value = `${account.id}|${calendar.url}`;
-          option.textContent = calendar.display_name || calendar.url;
+          option.value = `${account.id}|${calendar.calendarUrl}`;
+          option.textContent = calendar.calendarName || calendar.calendarUrl;
           optgroup.appendChild(option);
         }
 

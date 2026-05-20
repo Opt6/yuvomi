@@ -1,4 +1,4 @@
-import { unfoldLines, parseICS, expandRRULE } from './server/services/ics-parser.js';
+import { unfoldLines, unescapeICSText, parseICS, expandRRULE } from './server/services/ics-parser.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -45,6 +45,21 @@ test('expandRRULE: WEEKLY 3-Wochen-Fenster', () => {
   assert(occ.length >= 3, `expected >=3, got ${occ.length}`);
   assert(occ[0].uid === 'weekly@x__2026-04-13', `uid: ${occ[0].uid}`);
   assert(occ[0].rrule === null, 'expanded events have null rrule');
+});
+
+test('unescapeICSText: unescapes special sequences', () => {
+  assert(unescapeICSText('Main Street\\, London') === 'Main Street, London', 'comma');
+  assert(unescapeICSText('Notes\\;Details') === 'Notes;Details', 'semicolon');
+  assert(unescapeICSText('Line1\\nLine2') === 'Line1\nLine2', 'newline');
+  assert(unescapeICSText('C:\\\\path') === 'C:\\path', 'backslash');
+  assert(unescapeICSText(null) === null, 'null passthrough');
+});
+
+test('parseICS: unescape text fields', () => {
+  const ics = 'BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nUID:esc@x\r\nSUMMARY:Dinner\\, Party\r\nLOCATION:Main St\\, City\r\nDTSTART:20260615T180000Z\r\nEND:VEVENT\r\nEND:VCALENDAR';
+  const [ev] = parseICS(ics);
+  assert(ev.summary === 'Dinner, Party', `summary: ${ev.summary}`);
+  assert(ev.location === 'Main St, City', `location: ${ev.location}`);
 });
 
 test('expandRRULE: null rrule → leeres Array', () => {
