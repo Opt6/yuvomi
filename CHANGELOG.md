@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.20] - 2026-05-21
+
+### Fixed
+- Dashboard skeleton screen now renders all 9 widgets with correct grid-spanning sizes (matching `DEFAULT_WIDGET_CONFIG`) instead of 6 fixed-width placeholders, preventing content layout shift on initial load
+
 ## [0.52.19] - 2026-05-21
 
 ### Fixed
