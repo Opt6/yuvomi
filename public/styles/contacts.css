@@ -18,7 +18,9 @@
   height: calc(100dvh - var(--safe-area-inset-top) - var(--nav-bottom-height) - var(--safe-area-inset-bottom));
   max-width: var(--content-max-width);
   margin: 0 auto;
-  overflow: clip;
+  /* overflow:clip inside overflow:auto (.app-content) triggers iOS WebKit blank-screen on scroll.
+   * overflow:hidden provides identical clipping without the compositor bug. */
+  overflow: hidden;
 }
 
 @media (min-width: 1024px) {

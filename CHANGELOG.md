@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.28] - 2026-05-23
+
+### Fixed
+- Scrolling on Notes, Contacts, Calendar, and Shopping pages no longer causes a blank screen on iOS Safari and mobile Chrome. `overflow: clip` on the page containers (`.notes-page`, `.contacts-page`, `.calendar-page`, `.shopping-page`) inside the `overflow: auto` scroll container triggered the same iOS WebKit compositor bug fixed for the dashboard in v0.52.27. Changed to `overflow: hidden`, which clips identically without the compositor regression. Closes #166.
+
 ## [0.52.27] - 2026-05-23
 
 ### Fixed
