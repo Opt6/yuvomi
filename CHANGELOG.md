@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.27] - 2026-05-23
+
+### Fixed
+- Dashboard page no longer goes blank when scrolling on iOS (Safari, WebKit). `overflow: clip` and `isolation: isolate` set by an older skin variant on `.dashboard` were not reset when the Admin Dashboard Layout replaced it; `overflow: clip` inside an `overflow: auto` scroll container prevents WebKit from repainting scroll content, leaving only compositor-promoted elements (the dashboard-overview top border) visible. Both properties are now reset to their initial values.
+
 ## [0.52.26] - 2026-05-23
 
 ### Fixed
