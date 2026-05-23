@@ -635,7 +635,7 @@
   border-radius: var(--radius-full);
   flex-shrink: 0;
   background-color: var(--color-accent);
-  filter: saturate(0.4);
+  opacity: 0.5;
 }
 
 .event-item__content {
@@ -1025,7 +1025,6 @@
   width: 64px;
   height: 64px;
   flex-shrink: 0;
-  filter: var(--shadow-drop-icon);
 }
 
 .weather-forecast {
@@ -2031,20 +2030,14 @@
   max-width: min(1680px, 100%);
   /* isolation:isolate + overflow:clip (Modern Skin) cause blank-screen on scroll on iOS WebKit.
    * The blob decorations they were meant to contain are hidden, so both can be reset.
-   * display:flex + height + overflow:hidden: .dashboard-shell takes over as internal scroll
-   * container so .app-content never scrolls — eliminates the iOS WebKit compositor conflict
-   * between backdrop-filter on .nav-bottom and a scrolling .app-content. */
+   * display:flex + height:100% + overflow:hidden: .dashboard-shell becomes the internal scroll
+   * container so .app-content never scrolls (consistent with all other page modules).
+   * height:100% works because .app-content already has a definite height from the flex layout. */
   isolation: auto;
   display: flex;
   flex-direction: column;
-  height: calc(100dvh - var(--safe-area-inset-top) - var(--nav-bottom-height) - var(--safe-area-inset-bottom));
+  height: 100%;
   overflow: hidden;
-}
-
-@media (min-width: 1024px) {
-  .dashboard {
-    height: 100dvh;
-  }
 }
 
 .dashboard::before,

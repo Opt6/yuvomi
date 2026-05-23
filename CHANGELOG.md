@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.30] - 2026-05-23
+
+### Fixed
+- Dashboard scroll blank-screen fixed on iOS Safari and Android Chrome. Two `filter` properties on dashboard elements (`.event-item__bar { filter: saturate(0.4) }` and `.weather-widget__icon { filter: drop-shadow(...) }`) created GPU compositor layers inside the scroll container that overwhelmed the mobile compositor on both WebKit and Blink. Replaced `filter: saturate(0.4)` with `opacity: 0.5`; removed the drop-shadow filter entirely. The gap between content and bottom nav introduced in v0.52.29 is also fixed: `height: calc(100dvh - nav - safe-areas)` double-subtracted the nav height (`.dashboard` is already inside `.app-content` which excludes the nav), changed to `height: 100%`.
+
 ## [0.52.29] - 2026-05-23
 
 ### Fixed
