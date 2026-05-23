@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.35] - 2026-05-23
+
+### Fixed
+- Dashboard blank-screen on scroll — new lead identified after the previous glass/gradient theories were ruled out by an iOS `prefers-reduced-transparency: reduce` test (bug persisted even with reduced transparency, so backdrop-filter and `color-mix` gradients are not the cause). Remaining differentiator: only the dashboard renders a `.fab-backdrop` element — a `position: fixed; inset: 0` full-viewport overlay that was always in the DOM (initial `opacity: 0`) so the FAB speed-dial open/close could cross-fade. iOS Safari and iOS PWA repeatedly composite fixed-positioned full-viewport elements per scroll frame, which is a known trigger for the blank-screen symptom in this exact scenario. Other module pages don't have this overlay and didn't reproduce the bug. Switched `.fab-backdrop` from `opacity: 0` + always-on `position: fixed; inset: 0` to `display: none` when inactive; only laid out when the FAB speed-dial is open. The opacity cross-fade is lost (was barely perceptible) but the dashboard scroll path no longer carries a permanent full-viewport fixed layer.
+
 ## [0.52.34] - 2026-05-23
 
 ### Fixed

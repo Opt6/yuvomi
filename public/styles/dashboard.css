@@ -1245,17 +1245,21 @@
 }
 
 .fab-backdrop {
+  /* display:none bis sichtbar, damit kein fixed-positioniertes Viewport-Overlay
+   * permanent im Dashboard liegt. Vorher (opacity:0 + position:fixed inset:0) bot der
+   * Browser-Compositor das Backdrop bei jedem Scroll-Frame als eigene Layer an, was
+   * auf iOS PWA + mobilem Chrome zu sporadischem Blank-Screen führt (Issue #166).
+   * Andere Modul-Seiten haben kein Backdrop und sind nicht betroffen. */
+  display: none;
   position: fixed;
   inset: 0;
   background: var(--color-backdrop-fab);
   z-index: calc(var(--z-nav) - 10);
-  opacity: 0;
   pointer-events: none;
-  transition: opacity var(--transition-base);
 }
 
 .fab-backdrop--visible {
-  opacity: 1;
+  display: block;
   pointer-events: auto;
 }
 
