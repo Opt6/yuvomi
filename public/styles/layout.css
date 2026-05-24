@@ -352,17 +352,18 @@
   width: 36px;
   height: 36px;
   border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--item-module-accent, var(--color-text-secondary)) 12%, transparent);
+  background: color-mix(in srgb, var(--item-module-accent, var(--color-text-secondary)) 20%, var(--color-surface-elevated));
   color: var(--item-module-accent, var(--color-text-secondary));
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 28%, transparent);
   transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 .more-item[aria-current="page"] .more-item__icon-well {
-  background: color-mix(in srgb, var(--active-module-accent, var(--color-accent)) 20%, transparent);
+  background: color-mix(in srgb, var(--active-module-accent, var(--color-accent)) 26%, var(--color-surface-elevated));
   color: var(--active-module-accent, var(--color-accent));
 }
 

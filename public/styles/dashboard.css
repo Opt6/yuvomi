@@ -1875,10 +1875,10 @@
   min-height: calc(var(--target-lg) + var(--space-12));
   height: 100%;
   padding: var(--space-3);
-  border: 1px solid var(--color-border);
+  border: 1px solid color-mix(in srgb, var(--today-card-accent) 22%, var(--color-border));
   border-inline-start: var(--space-1) solid var(--today-card-accent);
   border-radius: var(--radius-sm);
-  background: var(--color-surface);
+  background: color-mix(in srgb, var(--today-card-accent) 5%, var(--color-surface));
   color: var(--color-text-primary);
   text-align: left;
   cursor: pointer;
@@ -1888,8 +1888,8 @@
 
 .today-cockpit-card:hover,
 .today-cockpit-card:focus-visible {
-  border-color: color-mix(in srgb, var(--today-card-accent) 42%, var(--color-border));
-  background: color-mix(in srgb, var(--today-card-accent) 5%, var(--color-surface));
+  border-color: color-mix(in srgb, var(--today-card-accent) 50%, var(--color-border));
+  background: color-mix(in srgb, var(--today-card-accent) 9%, var(--color-surface));
   box-shadow: var(--shadow-xs);
 }
 
@@ -1900,8 +1900,9 @@
   width: var(--target-sm);
   height: var(--target-sm);
   border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--today-card-accent) 12%, transparent);
+  background: color-mix(in srgb, var(--today-card-accent) 18%, var(--color-surface-elevated));
   color: var(--today-card-accent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 25%, transparent);
   grid-row: 1 / span 2;
 }
 
@@ -1921,7 +1922,7 @@
 
 .today-cockpit-card__value {
   align-self: start;
-  color: var(--color-text-primary);
+  color: var(--today-card-accent);
   font-size: var(--text-base);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-snug);
@@ -2026,6 +2027,26 @@
 .dashboard-stat--weather .dashboard-stat__icon {
   background: color-mix(in srgb, var(--module-dashboard) 16%, transparent);
   color: var(--module-dashboard);
+}
+
+.dashboard-stat--tasks .dashboard-stat__icon {
+  background: color-mix(in srgb, var(--module-tasks) 16%, transparent);
+  color: var(--module-tasks);
+}
+
+.dashboard-stat--shopping .dashboard-stat__icon {
+  background: color-mix(in srgb, var(--module-shopping) 16%, transparent);
+  color: var(--module-shopping);
+}
+
+.dashboard-stat--notes .dashboard-stat__icon {
+  background: color-mix(in srgb, var(--module-notes) 16%, transparent);
+  color: var(--module-notes);
+}
+
+.dashboard-stat--budget .dashboard-stat__icon {
+  background: color-mix(in srgb, var(--module-budget) 16%, transparent);
+  color: var(--module-budget);
 }
 
 .dashboard-stat__text {
