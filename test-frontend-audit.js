@@ -85,6 +85,14 @@ test('More button active state keeps visible and accessible labels in sync', () 
   assert.doesNotMatch(source, /moreBtn\.toggleAttribute\('aria-current',\s*inMoreSheet\)/);
 });
 
+test('More sheet closes route clicks through delegated handler after rebuilds', () => {
+  const source = read('./public/router.js');
+
+  assert.match(source, /sheet\.addEventListener\('click',\s*\(e\) =>/);
+  assert.match(source, /e\.target\.closest\('\[data-route\]'\)/);
+  assert.doesNotMatch(source, /sheet\.querySelectorAll\('\[data-route\]'\)\.forEach/);
+});
+
 test('bottom navigation labels are constrained against localized overflow', () => {
   const layout = read('./public/styles/layout.css');
   const labelRule = cssRuleBody(layout, '.nav-item__label');

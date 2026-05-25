@@ -963,6 +963,7 @@ function initMoreSheet(container, openSearch) {
   }
 
   function closeSheet({ restoreFocus = true } = {}) {
+    if (sheet.getAttribute('aria-hidden') === 'true') return;
     setOverlayInteractive(sheet, false);
     sheet.removeEventListener('keydown', moreSheetTrap);
     backdrop.classList.remove('more-backdrop--visible');
@@ -990,8 +991,8 @@ function initMoreSheet(container, openSearch) {
     if (e.changedTouches[0].clientY - _touchStartY > 60) closeSheet();
   }, { passive: true });
 
-  sheet.querySelectorAll('[data-route]').forEach((el) => {
-    el.addEventListener('click', () => closeSheet());
+  sheet.addEventListener('click', (e) => {
+    if (e.target.closest('[data-route]')) closeSheet({ restoreFocus: false });
   });
 
   const moreSearchBar = sheet.querySelector('#more-sheet-search');
