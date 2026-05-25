@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.53] - 2026-05-25
+
+### Fixed
+- Mobile bottom navigation now reserves iOS safe-area space while keeping floating action buttons stable.
+- Mobile More search now uses a native button with visible keyboard focus styling and focuses immediately when the sheet opens.
+- SPA route changes now move keyboard focus to the main content after navigation while leaving login focus behavior untouched.
+
 ## [0.52.52] - 2026-05-25
 
 ### Fixed
