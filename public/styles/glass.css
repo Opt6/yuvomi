@@ -188,6 +188,17 @@
     box-shadow: none;
   }
 
+  .nav-item__icon-well {
+    background: var(--color-surface-elevated);
+    box-shadow: none;
+  }
+
+  .nav-item[aria-current="page"] .nav-item__icon-well,
+  .nav-item--active .nav-item__icon-well {
+    background: color-mix(in srgb, var(--item-module-accent, var(--color-accent)) 20%, var(--color-surface-elevated));
+    box-shadow: none;
+  }
+
   .btn--primary,
   .btn--primary:hover,
   .fab,

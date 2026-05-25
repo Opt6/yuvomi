@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.52.50] - 2026-05-25
+
+### Changed
+- Bottom navigation items now display colored icon wells (32 × 32 px rounded squares) matching the style of the "More" sheet, with per-module accent colors applied consistently across all six slots (primary items, Kitchen button, and More button).
+- Sidebar navigation items receive smaller icon wells (26 × 26 px) for visual consistency with the iOS-style sidebar pattern.
+- Kitchen and More buttons in the bottom bar dynamically adopt the active sub-module's accent color when a kitchen route or a secondary-sheet route is active.
+- More button default icon changed from `ellipsis` to `grid-2x2` to match the icon used when no secondary module is active.
+
 ## [0.52.49] - 2026-05-24
 
 ### Changed

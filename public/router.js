@@ -548,14 +548,20 @@ function renderAppShell(container) {
     kitchenBtn.type = 'button';
     kitchenBtn.setAttribute('aria-label', t('nav.kitchen'));
     kitchenBtn.setAttribute('title', t('nav.kitchen'));
+    const kitchenBtnWrap = document.createElement('div');
+    kitchenBtnWrap.className = 'nav-item__icon-wrap';
+    const kitchenBtnWell = document.createElement('div');
+    kitchenBtnWell.className = 'nav-item__icon-well';
     const kitchenBtnIcon = document.createElement('i');
     kitchenBtnIcon.dataset.lucide = 'utensils';
     kitchenBtnIcon.className = 'nav-item__icon';
     kitchenBtnIcon.setAttribute('aria-hidden', 'true');
+    kitchenBtnWell.appendChild(kitchenBtnIcon);
+    kitchenBtnWrap.appendChild(kitchenBtnWell);
     const kitchenBtnLabel = document.createElement('span');
     kitchenBtnLabel.className = 'nav-item__label';
     kitchenBtnLabel.textContent = t('nav.kitchen');
-    kitchenBtn.appendChild(kitchenBtnIcon);
+    kitchenBtn.appendChild(kitchenBtnWrap);
     kitchenBtn.appendChild(kitchenBtnLabel);
     kitchenBtn.addEventListener('click', () => navigate(getLastKitchenRoute()));
     bottomItems.appendChild(kitchenBtn);
@@ -566,14 +572,20 @@ function renderAppShell(container) {
     moreBtn.type = 'button';
     moreBtn.setAttribute('aria-label', t('nav.more'));
     moreBtn.setAttribute('aria-expanded', 'false');
+    const moreBtnWrap = document.createElement('div');
+    moreBtnWrap.className = 'nav-item__icon-wrap';
+    const moreBtnWell = document.createElement('div');
+    moreBtnWell.className = 'nav-item__icon-well';
     const moreBtnIcon = document.createElement('i');
-    moreBtnIcon.dataset.lucide = 'ellipsis';
+    moreBtnIcon.dataset.lucide = 'grid-2x2';
     moreBtnIcon.className = 'nav-item__icon';
     moreBtnIcon.setAttribute('aria-hidden', 'true');
+    moreBtnWell.appendChild(moreBtnIcon);
+    moreBtnWrap.appendChild(moreBtnWell);
     const moreBtnLabel = document.createElement('span');
     moreBtnLabel.className = 'nav-item__label';
     moreBtnLabel.textContent = t('nav.more');
-    moreBtn.appendChild(moreBtnIcon);
+    moreBtn.appendChild(moreBtnWrap);
     moreBtn.appendChild(moreBtnLabel);
     bottomItems.appendChild(moreBtn);
 
@@ -1125,21 +1137,28 @@ function setDisabledModules(modules) {
   rebuildNavigation();
 }
 
-function navItemEl({ path, label, icon }) {
+function navItemEl({ path, label, icon, module: mod }) {
   const a = document.createElement('a');
   a.href = path;
   a.dataset.route = path;
   a.className = 'nav-item';
   a.setAttribute('aria-label', label);
   a.setAttribute('title', label);
+  if (mod) a.style.setProperty('--item-module-accent', `var(--module-${mod})`);
+  const iconWrap = document.createElement('div');
+  iconWrap.className = 'nav-item__icon-wrap';
+  const well = document.createElement('div');
+  well.className = 'nav-item__icon-well';
   const i = document.createElement('i');
   i.dataset.lucide = icon;
   i.className = 'nav-item__icon';
   i.setAttribute('aria-hidden', 'true');
+  well.appendChild(i);
+  iconWrap.appendChild(well);
   const span = document.createElement('span');
   span.className = 'nav-item__label';
   span.textContent = label;
-  a.appendChild(i);
+  a.appendChild(iconWrap);
   a.appendChild(span);
   return a;
 }
@@ -1149,16 +1168,23 @@ function sidebarKitchenEl() {
   a.href = '/meals';
   a.id = 'sidebar-kitchen-nav';
   a.className = 'nav-item';
+  a.style.setProperty('--item-module-accent', 'var(--module-meals)');
   a.setAttribute('aria-label', t('nav.kitchen'));
   a.setAttribute('title', t('nav.kitchen'));
+  const iconWrap = document.createElement('div');
+  iconWrap.className = 'nav-item__icon-wrap';
+  const well = document.createElement('div');
+  well.className = 'nav-item__icon-well';
   const icon = document.createElement('i');
   icon.dataset.lucide = 'utensils';
   icon.className = 'nav-item__icon';
   icon.setAttribute('aria-hidden', 'true');
+  well.appendChild(icon);
+  iconWrap.appendChild(well);
   const label = document.createElement('span');
   label.className = 'nav-item__label';
   label.textContent = t('nav.kitchen');
-  a.appendChild(icon);
+  a.appendChild(iconWrap);
   a.appendChild(label);
   a.addEventListener('click', (e) => {
     e.preventDefault();
@@ -1217,8 +1243,11 @@ function updateNav(path) {
     kitchenNavBtn.classList.toggle('nav-item--active', isKitchen);
     if (isKitchen) {
       kitchenNavBtn.setAttribute('aria-current', 'page');
+      const kitchenMod = navItems().find((n) => n.path === getLastKitchenRoute())?.module;
+      if (kitchenMod) kitchenNavBtn.style.setProperty('--item-module-accent', `var(--module-${kitchenMod})`);
     } else {
       kitchenNavBtn.removeAttribute('aria-current');
+      kitchenNavBtn.style.removeProperty('--item-module-accent');
     }
 
     const kitchenBtnLabel = kitchenNavBtn.querySelector('.nav-item__label');
@@ -1254,6 +1283,12 @@ function updateNav(path) {
 
     moreBtn.classList.toggle('nav-item--active', inMoreSheet);
     moreBtn.toggleAttribute('aria-current', inMoreSheet);
+
+    if (inMoreSheet && activeSecondary.module) {
+      moreBtn.style.setProperty('--item-module-accent', `var(--module-${activeSecondary.module})`);
+    } else {
+      moreBtn.style.removeProperty('--item-module-accent');
+    }
 
     const moreBtnLabel = moreBtn.querySelector('.nav-item__label');
     const moreBtnIcon  = moreBtn.querySelector('.nav-item__icon');
