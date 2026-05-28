@@ -162,11 +162,33 @@
 }
 
 .budget-summary-card {
-  background-color: var(--color-surface);
-  border-radius: var(--radius-md);
+  background-color: var(--glass-bg-card);
+  border-radius: var(--radius-glass-card);
   padding: var(--space-3);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-shadow-sm);
   text-align: center;
+  position: relative;
+}
+
+.budget-summary-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: color-mix(
+    in srgb,
+    var(--module-accent, var(--color-accent)) calc(var(--glass-tint-strength) / 2),
+    transparent
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.budget-summary-card__label,
+.budget-summary-card__amount,
+.budget-summary-card__trend {
+  position: relative;
+  z-index: 1;
 }
 
 .budget-summary-card__label {
@@ -269,10 +291,10 @@
 .budget-loans {
   margin: 0 var(--space-4) var(--space-3);
   padding: var(--space-3);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  background-color: var(--glass-bg-card);
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: var(--radius-glass-card);
+  box-shadow: var(--glass-shadow-sm);
   flex-shrink: 0;
 }
 
@@ -385,15 +407,15 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--space-2) var(--space-3);
   padding: var(--space-3);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: var(--radius-glass-inner);
   cursor: pointer;
   transition: border-color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .budget-loan-card:hover {
   border-color: var(--color-info);
-  background: var(--color-surface-2);
+  background-color: var(--glass-bg-card-hover);
 }
 
 .budget-loan-card__main {
@@ -501,9 +523,9 @@
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-3);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-2);
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: var(--radius-glass-inner);
+  background-color: var(--glass-bg-card);
 }
 
 .budget-loan-transaction span {
@@ -523,8 +545,8 @@
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-4);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-2);
+  border-radius: var(--radius-glass-inner);
+  background-color: var(--glass-bg-card);
 }
 
 .loan-report__borrower {
@@ -564,8 +586,8 @@
 
 .loan-report__grid > div {
   padding: var(--space-3);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: var(--radius-glass-inner);
 }
 
 .loan-report__grid span {
@@ -700,7 +722,7 @@
 }
 
 .budget-entry:hover {
-  background-color: var(--color-surface-2);
+  background-color: var(--glass-bg-card-hover);
 }
 
 .budget-entry__indicator {
@@ -867,10 +889,10 @@
 .budget-inline-modal__panel {
   width: min(100%, 380px);
   padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: var(--radius-glass-card);
+  background-color: var(--glass-bg-card);
+  box-shadow: var(--glass-shadow-lg);
 }
 
 .budget-inline-modal__header,
