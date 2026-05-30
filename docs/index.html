@@ -417,23 +417,28 @@
 <header class="hero">
   <div class="wrap">
     <div class="hero-content">
-      <div class="hero-badge" data-t="hero_badge">Open Source · Self-Hosted · Private</div>
-      <h1><span data-t="hero_h1_pre">Your household,</span><br><em data-t="hero_h1_em">organized together.</em></h1>
-      <p class="hero-sub" data-t="hero_sub">Tasks, shopping, meals, calendar, budget — everything your family needs in one place. Self-hosted on your own server. No cloud, no tracking, no subscriptions.</p>
+      <div class="hero-badge" data-t="hero_badge">Open Source · Privacy-First · No Subscriptions</div>
+      <h1><span data-t="hero_h1_pre">Your family. Your data.</span><br><em data-t="hero_h1_em">Your home.</em></h1>
+      <p class="hero-sub" data-t="hero_sub">One private place for everything that keeps your family running — without giving your data to Big Tech.</p>
       <div class="hero-actions">
-        <a href="https://github.com/ulsklyc/oikos" class="btn-primary" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path></svg>
-          <span data-t="hero_cta">View on GitHub</span>
+        <a href="#carousel" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <span data-t="hero_cta_demo">See it in action</span>
         </a>
         <a href="install.html" class="btn-secondary">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
           <span data-t="hero_install">Installation Guide</span>
+        </a>
+        <a href="https://github.com/ulsklyc/oikos" class="btn-ghost" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path></svg>
+          <span data-t="nav_gh">GitHub</span>
         </a>
       </div>
       <div class="hero-tags">
         <span class="tag">MIT License</span>
         <span class="tag">Docker</span>
         <span class="tag">PWA</span>
+        <span class="tag">16 languages</span>
         <span class="tag" data-t="tag_nocloud">No Cloud Required</span>
       </div>
     </div>
@@ -664,10 +669,10 @@ cp .env.example .env
 
   var T = {
     en: {
-      nav_gh:'GitHub', hero_badge:'Open Source · Self-Hosted · Private',
-      hero_h1_pre:'Your household,', hero_h1_em:'organized together.',
-      hero_sub:'Tasks, shopping, meals, calendar, budget — everything your family needs in one place. Self-hosted on your own server. No cloud, no tracking, no subscriptions.',
-      hero_cta:'View on GitHub', hero_install:'Installation Guide', tag_nocloud:'No Cloud Required',
+      nav_gh:'GitHub', hero_badge:'Open Source · Privacy-First · No Subscriptions',
+      hero_h1_pre:'Your family. Your data.', hero_h1_em:'Your home.',
+      hero_sub:'One private place for everything that keeps your family running — without giving your data to Big Tech.',
+      hero_cta:'View on GitHub', hero_cta_demo:'See it in action', hero_install:'Installation Guide', tag_nocloud:'No Cloud Required',
       feat_label:'Features', feat_title:'Everything your household needs',
       feat_desc:'A complete set of tools designed for families — seamlessly working together.',
       f_tasks_t:'Task Management', f_tasks_d:'Shared tasks with deadlines, priorities, subtasks, and recurring schedules. Assign to multiple family members simultaneously with stacked avatar display. Kanban board with one-tap status changes.',
@@ -701,10 +706,10 @@ cp .env.example .env
       footer_heart:'Built with care for families who value privacy and simplicity.', footer_contrib:'Contributing'
     },
     de: {
-      nav_gh:'GitHub', hero_badge:'Open Source · Self-Hosted · Privat',
-      hero_h1_pre:'Euer Haushalt,', hero_h1_em:'gemeinsam organisiert.',
-      hero_sub:'Aufgaben, Einkauf, Mahlzeiten, Kalender, Budget — alles, was eure Familie braucht, an einem Ort. Selbstgehostet auf eurem eigenen Server. Keine Cloud, kein Tracking, keine Abos.',
-      hero_cta:'Auf GitHub ansehen', hero_install:'Installationsanleitung', tag_nocloud:'Keine Cloud nötig',
+      nav_gh:'GitHub', hero_badge:'Open Source · Privacy-First · Keine Abos',
+      hero_h1_pre:'Eure Familie. Eure Daten.', hero_h1_em:'Euer Zuhause.',
+      hero_sub:'Ein privater Ort für alles, was eure Familie zusammenhält — ohne eure Daten der Cloud zu überlassen.',
+      hero_cta:'Auf GitHub ansehen', hero_cta_demo:'App ansehen', hero_install:'Installationsanleitung', tag_nocloud:'Keine Cloud nötig',
       feat_label:'Funktionen', feat_title:'Alles, was euer Haushalt braucht',
       feat_desc:'Ein vollständiges Werkzeugset für Familien — nahtlos aufeinander abgestimmt.',
       f_tasks_t:'Aufgabenverwaltung', f_tasks_d:'Gemeinsame Aufgaben mit Fristen, Prioritäten, Unteraufgaben und wiederkehrenden Terminen. Mehrere Familienmitglieder gleichzeitig zuweisen mit gestapelter Avatar-Anzeige. Kanban-Board mit Ein-Tipp-Status.',
