@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.55.11] - 2026-06-01
+
+### Changed
+- **Documentation refreshed for the completed frontend UI/UX audit rollout:** Updated the README, GitHub Pages copy, product specification, audit notes, and landing-page design docs to reflect the stronger work surfaces, mobile ergonomics, stable Kitchen/More navigation identity, Calendar readability improvements, Settings information architecture, and current release version.
+
 ## [0.55.10] - 2026-06-01
 
 ### Changed
