@@ -10,7 +10,7 @@ node tools/installer/install-server.js
 # Open http://localhost:8090
 ```
 
-Requires Node.js 18+ on the host. The browser-based wizard configures your `.env`, starts Docker, and creates your admin account. Docker still runs the app itself.
+Requires Node.js 18+ on the host. The browser-based wizard is fully localized (16 languages, auto-detected from your browser), checks Docker prerequisites first, then configures your `.env` — including optional reverse-proxy/HTTPS, Single Sign-On (OIDC), and automatic backups — starts Docker, and creates your admin account. Docker still runs the app itself.
 
 ### Option B — CLI Installer (Linux / macOS)
 
@@ -133,12 +133,13 @@ node tools/installer/install-server.js
 
 #### 3. Open the Wizard
 
-Open your browser and navigate to **http://localhost:8090**. The wizard guides you through:
+Open your browser and navigate to **http://localhost:8090**. The wizard detects your browser language (16 languages supported), verifies that Docker and Docker Compose v2 are available, and reports any existing `.env` file or running container before you start. It then guides you through:
 
-- Basic configuration (host, port, timezone)
-- Security key generation
+- Basics — timezone (`TZ`) and HTTP host port (`OIKOS_HTTP_PORT`)
+- Security key generation (`SESSION_SECRET`, `DB_ENCRYPTION_KEY`)
 - Optional integrations (weather, Google Calendar, Apple CalDAV)
-- Writing your `.env` file
+- Advanced settings — reverse-proxy/HTTPS (`SESSION_SECURE`, `TRUST_PROXY`), Single Sign-On (OIDC), and automatic backups
+- Writing your `.env` file (an existing `.env` is backed up to `.env.bak-<timestamp>` first)
 - Starting the Docker container
 - Creating your admin account
 
@@ -269,7 +270,9 @@ All configuration happens in the `.env` file. The container reads these values o
 
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
-| `PORT` | Port the Express server listens on | `3000` | No |
+| `PORT` | Port the Express server listens on **inside the container** (rarely changed) | `3000` | No |
+| `OIKOS_HTTP_PORT` | Host port that `docker-compose.yml` maps to the container's port 3000. Change this to expose Oikos on a different host port; the app inside the container always listens on 3000. | `3000` | No |
+| `TZ` | Container timezone (e.g. `Europe/Berlin`). Affects timestamps and the automated-backup schedule. | `UTC` | No |
 | `NODE_ENV` | Runtime environment | `production` | No |
 | `TRUST_PROXY` | Number of reverse-proxy hops to trust, or a subnet string (e.g. `1`, `172.16.0.0/12`, `loopback`). Set to `1` when running behind a single Traefik/Nginx hop so `req.ip` returns the real client IP. Numeric values are treated as a hop count; subnet strings and named values (`loopback`, `linklocal`, `uniquelocal`) work as expected. | `false` | No |
 
@@ -420,16 +423,16 @@ sudo certbot renew --dry-run
 
 ### Update Oikos for HTTPS
 
-When using HTTPS through a reverse proxy, remove or comment out the `SESSION_SECURE=false` line in `docker-compose.yml`:
+`docker-compose.yml` reads `SESSION_SECURE` from your `.env` (`${SESSION_SECURE:-false}`), so you no longer need to edit the Compose file. When running behind an HTTPS reverse proxy, set these in `.env`:
 
-```yaml
-environment:
-  - NODE_ENV=production
-  - DB_PATH=/data/oikos.db
-  # - SESSION_SECURE=false   # Remove this for HTTPS
+```bash
+SESSION_SECURE=true
+TRUST_PROXY=1
 ```
 
-Then restart the container:
+> The web installer's **Advanced** step and `install.sh` set both values for you when you choose a reverse-proxy deployment.
+
+Then restart the container so the new values take effect:
 
 ```bash
 docker compose up -d
@@ -555,12 +558,13 @@ If port 3000 is already occupied by another application:
 lsof -i :3000
 ```
 
-Either stop the conflicting process, or change the port in your `.env` file and `docker-compose.yml`:
+Either stop the conflicting process, or change the host port in your `.env` file — `docker-compose.yml` maps `OIKOS_HTTP_PORT` to the container's port 3000 automatically:
 
-```yaml
-ports:
-  - "0.0.0.0:8080:3000"
+```bash
+OIKOS_HTTP_PORT=8080
 ```
+
+Then run `docker compose up -d` to apply it.
 
 </details>
 
