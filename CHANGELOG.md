@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.55.18] - 2026-06-02
+
+### Changed
+- Installer env configuration extracted into a shared `tools/installer/env-schema.js` module (`ENV_SCHEMA`). Adds `TZ` and `OIKOS_HTTP_PORT` fields (both with `writeToEnv: true`) and a `group` field per entry. `GET /api/defaults` now serves `ENV_SCHEMA` directly; existing UI behaviour is unchanged.
+
 ## [0.55.17] - 2026-06-02
 
 ### Changed
