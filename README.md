@@ -78,7 +78,7 @@ git clone https://github.com/ulsklyc/oikos.git && cd oikos
 node tools/installer/install-server.js
 ```
 
-Open **http://localhost:8090** in your browser. The wizard configures your `.env`, starts Docker, and creates your admin account. Requires Node.js 18+ on the host.
+Open **http://localhost:8090** in your browser. The localized wizard (16 languages) checks your Docker setup, configures your `.env` — including optional reverse proxy/HTTPS, SSO (OIDC), and automatic backups — starts Docker, and creates your admin account. Requires Node.js 18+ on the host.
 
 **Option B — Pre-built image (no clone required)**
 

@@ -1,7 +1,7 @@
 # Oikos Web Installer
 
 A browser-based setup wizard for Oikos. Run it once to configure your `.env`,
-start Docker, and create your admin account.
+start Docker, and create your admin account — no hand-editing of config files.
 
 ## Usage
 
@@ -17,14 +17,54 @@ The server shuts down automatically after setup completes (or after 30 minutes o
 
 ## Requirements
 
-- Node.js 18+
+- Node.js 18+ (the installer itself has zero npm dependencies — Node built-ins only)
 - Docker with Compose v2
 - The repository cloned locally
 
+The wizard verifies that `docker` and `docker compose` v2 are available before it
+starts, and surfaces container start/spawn errors in the UI instead of failing silently.
+
 ## What it does
 
-1. Guides you through all configuration options
-2. Writes `.env` to the project root
-3. Starts the Docker container (`docker compose up -d`)
-4. Polls the health endpoint until the container is ready
-5. Creates your first admin account via `POST /api/v1/auth/setup`
+1. Checks Docker prerequisites and reports any existing `.env` file or running
+   `oikos` container before you start
+2. Guides you through all configuration options, grouped into steps:
+   - **Basics** — timezone (`TZ`) and HTTP host port (`OIKOS_HTTP_PORT`)
+   - **Security keys** — generates `SESSION_SECRET` and `DB_ENCRYPTION_KEY`
+   - **Optional integrations** — weather, Google Calendar, Apple CalDAV
+   - **Advanced** — reverse-proxy/HTTPS (`SESSION_SECURE`, `TRUST_PROXY`),
+     Single Sign-On (OIDC), and automatic backups
+3. Backs up any existing `.env` to `.env.bak-<ISO>` before writing
+4. Writes `.env` to the project root (keys are allowlisted against the shared
+   env schema; values containing line breaks are rejected)
+5. Starts the Docker container (`docker compose up -d`)
+6. Polls the health endpoint until the container is ready
+7. Creates your first admin account via `POST /api/v1/auth/setup`
+
+## Localization
+
+The wizard is fully localized into all 16 languages supported by the app and
+detects the browser language automatically (`de` is the reference locale, `en`
+the fallback). Translations live in `tools/installer/locales/*.json` and are
+loaded by `i18n-mini.js`, which mirrors the app's locale resolution.
+
+## Design
+
+The wizard reuses the app's design language: shared design tokens
+(`public/styles/tokens.css`) and the Plus Jakarta Sans variable font are served
+read-only from the repo, so the installer matches the app's violet accent,
+radii, shadows, and automatic dark mode. The wizard meets WCAG 2.1 AA
+(keyboard-operable accordions, ARIA live regions for Docker status, focus
+management, and labelled controls).
+
+## Architecture
+
+- `install-server.js` — the temporary HTTP server (port 8090). Endpoints:
+  `GET /api/defaults` (serves `ENV_SCHEMA`), `GET /api/prereqs`,
+  `GET /api/preflight` (existing `.env` / running container),
+  `POST /api/generate-secret`, `POST /api/save-env`, `POST /api/start`,
+  `GET /api/status`, `POST /api/create-admin`.
+- `env-schema.js` — the single source of truth (`ENV_SCHEMA`) for every
+  configurable variable, its group, default, and whether it is written to `.env`.
+- `i18n-mini.js` + `locales/*.json` — localization.
+- `install.html` — the wizard UI.
