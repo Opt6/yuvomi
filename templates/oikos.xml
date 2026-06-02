@@ -11,11 +11,36 @@
   <TemplateURL>https://raw.githubusercontent.com/ulsklyc/oikos/main/templates/oikos.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/ulsklyc/oikos/main/icon.svg</Icon>
 
-  <Overview>Oikos is a self-hosted family planner PWA. It keeps your household organized — tasks, groceries, meals, recipes, calendar, documents, budget, housekeeping, notes, contacts and birthdays — in one private place, without cloud accounts or subscriptions. Each module is independent: use what fits, skip what doesn't. Polished mobile-first interface, offline-capable PWA, optional CalDAV/CardDAV and Google Calendar sync, OIDC SSO, and encrypted-at-rest storage (SQLCipher).
+  <Overview>Oikos is a private, self-hosted family planner — one calm home for everything your household needs to stay organized. No cloud accounts, no subscriptions, no tracking: your data lives on your server and nowhere else.
 
-REQUIRED: Set a long random SESSION_SECRET. RECOMMENDED: Set a strong DB_ENCRYPTION_KEY to encrypt the database at rest — without it the database and any synced calendar/contact credentials are stored unencrypted. Generate secrets with: openssl rand -base64 48
+Independent modules — turn on what fits, ignore the rest:
 
-After first start, open the WebUI and create your admin account.</Overview>
+- Dashboard — today's tasks, events, meals and reminders at a glance
+- Tasks — shared to-dos with priorities, due dates and assignees
+- Shopping — collaborative grocery lists, auto-sorted by category
+- Meals &amp; Recipes — weekly meal planner with a built-in recipe book
+- Calendar — family calendar with recurring events and reminders
+- Budget — shared expenses, split costs and a spending overview
+- Housekeeping — chores, supplies and staff/session tracking
+- Documents — store and find important household files
+- Notes, Contacts &amp; Birthdays — everything else in one tidy place
+
+Why Oikos:
+
+- Mobile-first PWA — install it on any phone, works offline
+- Light &amp; dark mode, fast and polished (no bloated frameworks, no build step)
+- Optional sync — CalDAV / CardDAV, Apple and Google Calendar
+- OIDC single sign-on for households that already run an identity provider
+- Encrypted-at-rest storage (SQLCipher) with automated, scheduled backups
+- Multi-language, fully self-contained and MIT-licensed
+
+— Setup —
+
+REQUIRED: Set a long random SESSION_SECRET.
+RECOMMENDED: Set a strong DB_ENCRYPTION_KEY to encrypt the database at rest — without it the database and any synced calendar/contact credentials are stored unencrypted.
+Generate either secret with: openssl rand -base64 48
+
+After the container starts, open the WebUI and create your admin account. That's it — pick the modules you want and invite your family.</Overview>
 
   <!-- Either Support or Project is required -->
   <Support>https://github.com/ulsklyc/oikos/issues</Support>
@@ -26,10 +51,12 @@ After first start, open the WebUI and create your admin account.</Overview>
   <License>MIT</License>
   <ExtraSearchTerms>family planner household organizer tasks groceries shopping meals recipes calendar budget chores notes contacts birthdays caldav carddav pwa selfhosted</ExtraSearchTerms>
 
-  <Screenshot>https://raw.githubusercontent.com/ulsklyc/oikos/main/docs/screenshots/dashboard-light-desktop.png</Screenshot>
-  <Screenshot>https://raw.githubusercontent.com/ulsklyc/oikos/main/docs/screenshots/calendar-light-desktop.png</Screenshot>
-  <Screenshot>https://raw.githubusercontent.com/ulsklyc/oikos/main/docs/screenshots/meals-light-desktop.png</Screenshot>
-  <Screenshot>https://raw.githubusercontent.com/ulsklyc/oikos/main/docs/screenshots/budget-light-desktop.png</Screenshot>
+  <!-- Combined desktop + mobile dark-mode composites (see docs/screenshots/build-unraid-composites.mjs) -->
+  <Screenshot>https://raw.githubusercontent.com/ulsklyc/oikos/main/docs/screenshots/unraid/dashboard-combined-dark.png</Screenshot>
+  <Screenshot>https://raw.githubusercontent.com/ulsklyc/oikos/main/docs/screenshots/unraid/calendar-combined-dark.png</Screenshot>
+  <Screenshot>https://raw.githubusercontent.com/ulsklyc/oikos/main/docs/screenshots/unraid/meals-combined-dark.png</Screenshot>
+  <Screenshot>https://raw.githubusercontent.com/ulsklyc/oikos/main/docs/screenshots/unraid/shopping-combined-dark.png</Screenshot>
+  <Screenshot>https://raw.githubusercontent.com/ulsklyc/oikos/main/docs/screenshots/unraid/budget-combined-dark.png</Screenshot>
 
   <!-- WebUI port (container always listens on 3000) -->
   <Config Name="WebUI Port" Target="3000" Default="3000" Mode="tcp" Description="Host port for the Oikos web interface." Type="Port" Display="always" Required="true" Mask="false">3000</Config>
