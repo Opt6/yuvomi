@@ -38,7 +38,7 @@ function parseICS(ics) {
     const location    = unescapeICSText(get('LOCATION'))    || null;
     const rrule       = get('RRULE')       ? `RRULE:${get('RRULE')}` : null;
     const parseDTLine = (prop) => {
-      const re = new RegExp(`^${prop}((?:;[^:]*)*):(.*)$`, 'im');
+      const re = new RegExp(`^${prop}((?:;[^:;]*)*):(.*)$`, 'im');
       const m = block.match(re);
       if (!m) return { value: null, tzid: null };
       const params  = m[1];
@@ -89,7 +89,7 @@ function parseVTODO(ics) {
     const completed   = statusRaw === 'COMPLETED' || completedAt !== null;
     const status      = statusRaw ? statusRaw.toLowerCase() : (completed ? 'completed' : 'needs-action');
     // DUE date / datetime (reuse VEVENT date-line parsing semantics)
-    const dueRe   = /^DUE((?:;[^:]*)*):(.*)$/im;
+    const dueRe   = /^DUE((?:;[^:;]*)*):(.*)$/im;
     const dueM    = block.match(dueRe);
     let   due     = null;
     if (dueM) {

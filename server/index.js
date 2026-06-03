@@ -129,12 +129,28 @@ app.use('/api/', (req, res, next) => {
   next();
 });
 
+// --------------------------------------------------------
+// Globaler API-Rate-Limiter (Schritt 29)
+// Verhindert Brute-Force und DoS auf allen API-Endpunkten.
+// Login hat einen eigenen, strengeren Limiter (auth.js).
+// Früh definiert, damit auch die nicht unter /api/ liegenden Admin-Routen
+// (/docs, /openapi.json) ihn als Route-Middleware nutzen können.
+// --------------------------------------------------------
+const apiLimiter = rateLimit({
+  windowMs: 60_000,         // 1 Minute
+  max: 300,                 // 300 Requests/Minute pro IP (großzügig für Familien-App)
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please wait a moment.', code: 429 },
+  skip: (req) => req.path === '/health', // Health-Check ausgenommen
+});
+
 if (process.env.NODE_ENV === 'production' && process.env.ENABLE_API_DOCS !== 'true') {
   app.get(['/docs', '/docs/'], (_req, res) => {
     res.status(404).json({ error: 'Not found.', code: 404 });
   });
 } else {
-  app.get(['/docs', '/docs/'], requireAuth, requireAdmin, (_req, res) => {
+  app.get(['/docs', '/docs/'], apiLimiter, requireAuth, requireAdmin, (_req, res) => {
     res.type('text/plain').send('OpenAPI JSON is available to admins at /api/v1/openapi.json');
   });
 }
@@ -169,19 +185,7 @@ app.use(express.static(path.join(import.meta.dirname, '..', 'public'), {
   },
 }));
 
-// --------------------------------------------------------
-// Globaler API-Rate-Limiter (Schritt 29)
-// Verhindert Brute-Force und DoS auf allen API-Endpunkten.
-// Login hat einen eigenen, strengeren Limiter (auth.js).
-// --------------------------------------------------------
-const apiLimiter = rateLimit({
-  windowMs: 60_000,         // 1 Minute
-  max: 300,                 // 300 Requests/Minute pro IP (großzügig für Familien-App)
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many requests. Please wait a moment.', code: 429 },
-  skip: (req) => req.path === '/health', // Health-Check ausgenommen
-});
+// Globaler API-Rate-Limiter auf alle /api/-Endpunkte (Definition siehe oben).
 app.use('/api/', apiLimiter);
 
 // --------------------------------------------------------
@@ -269,7 +273,8 @@ function sendOpenApi(req, res) {
 }
 
 app.get('/api/v1/openapi.json', requireAuth, requireAdmin, sendOpenApi);
-app.get('/openapi.json', requireAuth, requireAdmin, sendOpenApi);
+// /openapi.json liegt außerhalb von /api/, daher Rate-Limiter explizit als Route-Middleware.
+app.get('/openapi.json', apiLimiter, requireAuth, requireAdmin, sendOpenApi);
 
 // Alle weiteren API-Routen erfordern Authentifizierung + CSRF-Schutz
 app.use('/api/v1', requireAuth);

@@ -138,5 +138,35 @@ test('parseVTODO: ignoriert VEVENT-Komponenten', () => {
   assert(parseVTODO(ics).length === 0, 'should not parse VEVENT as VTODO');
 });
 
+// --- ReDoS-Härtung der Parameter-Parsing-Regexes (CodeQL js/redos, Alert #10) ---
+// Bösartige DUE/DTSTART-Zeile: viele ';' ohne abschließendes ':' lösen beim
+// anfälligen Muster /((?:;[^:]*)*)/ katastrophales Backtracking aus.
+function elapsed(fn) {
+  const t = process.hrtime.bigint();
+  fn();
+  return Number(process.hrtime.bigint() - t) / 1e6; // ms
+}
+
+test('parseVTODO: bösartige DUE-Parameter verursachen kein ReDoS', () => {
+  const evil = 'BEGIN:VCALENDAR\r\nBEGIN:VTODO\r\nUID:redos@x\r\nSUMMARY:X\r\nDUE'
+    + ';'.repeat(28) + '\r\nEND:VTODO\r\nEND:VCALENDAR';
+  const ms = elapsed(() => parseVTODO(evil));
+  assert(ms < 200, `DUE-Parsing dauerte ${ms.toFixed(1)} ms (ReDoS-Verdacht)`);
+});
+
+test('parseICS: bösartige DTSTART-Parameter verursachen kein ReDoS', () => {
+  const evil = 'BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nUID:redos@x\r\nSUMMARY:X\r\nDTSTART'
+    + ';'.repeat(28) + '\r\nEND:VEVENT\r\nEND:VCALENDAR';
+  const ms = elapsed(() => parseICS(evil));
+  assert(ms < 200, `DTSTART-Parsing dauerte ${ms.toFixed(1)} ms (ReDoS-Verdacht)`);
+});
+
+test('parseVTODO: gültige DUE mit mehreren Parametern wird weiter korrekt geparst', () => {
+  const ics = 'BEGIN:VCALENDAR\r\nBEGIN:VTODO\r\nUID:due-params@x\r\nSUMMARY:X\r\n'
+    + 'DUE;X-FOO=bar;TZID=Europe/Berlin:20260615T140000\r\nEND:VTODO\r\nEND:VCALENDAR';
+  const [t] = parseVTODO(ics);
+  assert(t.due === '2026-06-15T12:00:00Z', `due: ${t.due}`);  // 14:00 Berlin = 12:00 UTC
+});
+
 console.log(`\n${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);
