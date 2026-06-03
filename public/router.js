@@ -17,6 +17,7 @@ import { NAV_ICONS } from '/nav-icons.js';
 // --------------------------------------------------------
 const ROUTES = [
   { path: '/login',    page: '/pages/login.js',    requiresAuth: false, module: null        },
+  { path: '/setup',    page: '/pages/setup.js',    requiresAuth: false, module: null        },
   { path: '/',         page: '/pages/dashboard.js', requiresAuth: true, module: 'dashboard' },
   { path: '/tasks',    page: '/pages/tasks.js',     requiresAuth: true, module: 'tasks'     },
   { path: '/shopping', page: '/pages/shopping.js',  requiresAuth: true, module: 'shopping'  },
@@ -134,6 +135,8 @@ let _moduleRefreshTimer = null;
 // Gesetzt wenn auth:expired waehrend einer laufenden Navigation feuert.
 // Die Weiterleitung zu /login wird nach Abschluss der Navigation nachgeholt.
 let _pendingLoginRedirect = false;
+// First-Run: true wenn noch kein Account existiert (aus /version beim Boot).
+let _setupRequired = false;
 
 // --------------------------------------------------------
 // Router
@@ -212,9 +215,9 @@ function updateBranding(path = currentPath) {
   }
 
   const loginTitle = document.querySelector('.login-hero__title');
-  if (path === '/login' && loginTitle) loginTitle.textContent = appName;
+  if ((path === '/login' || path === '/setup') && loginTitle) loginTitle.textContent = appName;
 
-  document.title = path === '/login'
+  document.title = (path === '/login' || path === '/setup')
     ? appName
     : `${routeTitle(path || '/')} · ${appName}`;
 
@@ -236,7 +239,7 @@ function returnFocus(target) {
 }
 
 function focusMainContentAfterNavigation(path) {
-  if (path === '/login') return;
+  if (path === '/login' || path === '/setup') return;
   const main = document.getElementById('main-content');
   if (!main || typeof main.focus !== 'function') return;
   requestAnimationFrame(() => {
@@ -294,6 +297,7 @@ async function navigate(path, userOrPushState = true, pushState = true) {
     // Überlastung: navigate(path, user) nach Login vs navigate(path, false) beim Init
     if (typeof userOrPushState === 'object' && userOrPushState !== null) {
       currentUser = userOrPushState;
+      _setupRequired = false;
       await syncPreferencesOnce();
       startThirdPartyModulePolling();
       // currentUser kann während des await oben auf null gesetzt worden sein
@@ -310,6 +314,22 @@ async function navigate(path, userOrPushState = true, pushState = true) {
     const previousPath = currentPath;
     const basePath = path.split('?')[0];
     currentPath = basePath;
+
+    // First-Run-Weiche: Solange kein Account existiert und niemand eingeloggt ist,
+    // alle Routen außer /setup auf /setup umleiten.
+    if (_setupRequired && !currentUser && basePath !== '/setup') {
+      currentPath = null;
+      isNavigating = false;
+      navigate('/setup');
+      return;
+    }
+    // Setup bereits erledigt -> /setup ist nicht mehr erreichbar.
+    if (!_setupRequired && basePath === '/setup') {
+      currentPath = null;
+      isNavigating = false;
+      navigate('/login');
+      return;
+    }
 
     let route = allRoutes().find((r) => r.path === basePath) ?? ROUTES.find((r) => r.path === '/');
 
@@ -348,7 +368,7 @@ async function navigate(path, userOrPushState = true, pushState = true) {
         // der finally soll keinen zweiten Aufruf starten (würde isNavigating=true setzen,
         // während die Login-Seite rendert, und so post-login navigate blockieren).
         _pendingLoginRedirect = false;
-        navigate('/login');
+        navigate(_setupRequired ? '/setup' : '/login');
         return;
       }
     }
@@ -1980,6 +2000,14 @@ if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
     }
     
     await initI18n();
+    try {
+      const v = await api.get('/version');
+      _setupRequired = v?.setup_required === true;
+      if (v?.version) setAppVersion(v.version);
+      if (v?.app_name) setAppName(v.app_name);
+    } catch {
+      _setupRequired = false; // Fail-safe: kein Setup erzwingen
+    }
     navigate(location.pathname, false);
   } catch (err) {
     console.error('[Router] Initialisierung fehlgeschlagen:', err);
