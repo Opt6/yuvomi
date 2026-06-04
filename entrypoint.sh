@@ -1,9 +1,15 @@
 #!/bin/sh
 # Entrypoint: Volume-Permissions zur Laufzeit korrigieren, dann als node-User starten.
 # Notwendig, weil Docker beim Mounten eines named Volume die Image-Permissions überschreibt.
-# Der chown läuft nur als root: TrueNAS setzt Ownership optional über einen eigenen
-# Permissions-Container (568:568) und startet den App-Container dann ohne root —
-# in diesem Fall wird der chown übersprungen.
+#
+# Bei root-Start (normales Docker/Compose): Ownership der Volumes korrigieren und via
+# gosu zum unprivilegierten node-User wechseln.
+# Bei non-root-Start (z. B. TrueNAS startet den Container als 568:568, nachdem ein
+# eigener Permissions-Container die Volumes bereits gechownt hat): direkt als der
+# zugewiesene User starten — gosu wäre hier ohnehin nicht möglich.
 set -e
-[ "$(id -u)" = "0" ] && chown -R node:node /data /backups /app/modules
-exec gosu node "$@"
+if [ "$(id -u)" = "0" ]; then
+  chown -R node:node /data /backups /app/modules
+  exec gosu node "$@"
+fi
+exec "$@"
