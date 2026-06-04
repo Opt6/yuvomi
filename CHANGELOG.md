@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.60.11] - 2026-06-04
+
+### Fixed
+- `SESSION_SECURE` now defaults to `false` so that direct HTTP deployments (TrueNAS, bare Docker, Podman without a reverse proxy) work out of the box. Previously the default was `true`, which caused login to return 200 but every subsequent request to return 401 because the browser silently dropped the `Secure` cookie over plain HTTP. Set `SESSION_SECURE=true` in your `.env` when running behind an HTTPS reverse proxy (Caddy, Nginx, Traefik). Docker Compose and Podman Compose deployments are unaffected — all Compose files already injected `SESSION_SECURE=false` via `${SESSION_SECURE:-false}` and continue to behave identically.
+
 ## [0.60.10] - 2026-06-04
 
 ### Added
