@@ -53,18 +53,6 @@ jobs:
           echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
           echo "catalog=$(node -p "require('./deploy/truenas/catalog-version.json').version")" >> "$GITHUB_OUTPUT"
 
-      - name: Commit catalog-version.json back to Oikos
-        env:
-          CATALOG: ${{ steps.gen.outputs.catalog }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          if ! git diff --quiet -- deploy/truenas/catalog-version.json; then
-            git add deploy/truenas/catalog-version.json
-            git commit -m "chore(truenas): bump catalog version to $CATALOG [skip ci]"
-            git push origin HEAD:main
-          fi
-
       - name: Push fork branch
         id: push
         working-directory: truenas-apps
@@ -82,6 +70,19 @@ jobs:
           git commit -m "fix(oikos): bump to v$VERSION"
           git push origin community/oikos
           echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit catalog-version.json back to Oikos
+        if: steps.push.outputs.changed == 'true'
+        env:
+          CATALOG: ${{ steps.gen.outputs.catalog }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- deploy/truenas/catalog-version.json; then
+            git add deploy/truenas/catalog-version.json
+            git commit -m "chore(truenas): bump catalog version to $CATALOG [skip ci]"
+            git push origin HEAD:main
+          fi
 
       - name: Open or update PR
         if: steps.push.outputs.changed == 'true'

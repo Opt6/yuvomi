@@ -4,6 +4,8 @@ import { assertValidSemver, bumpVersion, substitute, runGenerate } from '../tool
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 // Baut ein minimales sourceDir + outDir im tmp und liefert die Pfade.
 function makeFixture() {
@@ -81,6 +83,10 @@ test('runGenerate rendert Versionsfelder und kopiert statische Dateien', () => {
     readFileSync(join(outDir, 'questions.yaml'), 'utf8'),
     readFileSync(join(sourceDir, 'questions.yaml'), 'utf8'),
   );
+  assert.equal(
+    readFileSync(join(outDir, 'templates', 'docker-compose.yaml'), 'utf8'),
+    readFileSync(join(sourceDir, 'templates', 'docker-compose.yaml'), 'utf8'),
+  );
   assert.ok(existsSync(join(outDir, 'templates', 'docker-compose.yaml')));
   assert.ok(existsSync(join(outDir, 'templates', 'test_values', 'basic-values.yaml')));
 
@@ -119,4 +125,17 @@ test('runGenerate wirft bei fehlender version in catalog-version.json', () => {
     () => runGenerate({ sourceDir, outDir, pkgVersion: '0.61.0', bump: 'patch' }),
     /catalog-version\.json/,
   );
+});
+
+test('CLI ohne --out schlägt mit klarer Meldung fehl', () => {
+  const cliPath = fileURLToPath(new URL('../tools/truenas/generate.mjs', import.meta.url));
+  let threw = false;
+  try {
+    execFileSync(process.execPath, [cliPath], { stdio: 'pipe' });
+  } catch (err) {
+    threw = true;
+    const stderr = String(err.stderr || '');
+    assert.match(stderr, /--out <dir> ist erforderlich/);
+  }
+  assert.ok(threw, 'CLI hätte fehlschlagen müssen');
 });
