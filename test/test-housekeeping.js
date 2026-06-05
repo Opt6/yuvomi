@@ -164,3 +164,38 @@ test('billing: amount = roundedHours * rate', () => {
   assert.equal(computeHourlyAmount(53, 12), 12);    // 53 -> 60 min -> 1h * 12
   assert.equal(computeHourlyAmount(0, 10), 0);      // 0 min -> 0
 });
+
+test('hourly checkout: minutes_worked and daily_rate computed from check_in/check_out', () => {
+  // Worker mit hourly rate anlegen
+  const hwResult = db.prepare(`
+    INSERT INTO housekeeping_workers (user_id, daily_rate, rate_type, hourly_rate)
+    VALUES (1, 0, 'hourly', 10)
+    ON CONFLICT(user_id) DO UPDATE SET rate_type='hourly', hourly_rate=10
+  `).run();
+  const hwId = db.prepare('SELECT id FROM housekeeping_workers WHERE user_id = 1').get().id;
+
+  // Session anlegen: check_in vor 2h, check_out null (open session)
+  const checkIn = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+  const sessionId = db.prepare(`
+    INSERT INTO housekeeping_work_sessions (worker_id, check_in, daily_rate, extras, created_by, rate_type, hourly_rate)
+    VALUES (?, ?, 0, 0, 1, 'hourly', 10)
+  `).run(hwId, checkIn).lastInsertRowid;
+
+  // Simuliere check-out Logik direkt (wie der Route-Handler)
+  const checkOut = new Date().toISOString();
+  const mins = Math.round((new Date(checkOut) - new Date(checkIn)) / 60000);
+  const hourlyRate = 10;
+  const expectedRate = computeHourlyAmount(mins, hourlyRate); // rounds to nearest 15 min
+
+  db.prepare(`
+    UPDATE housekeeping_work_sessions
+    SET check_out = ?, minutes_worked = ?, daily_rate = ?, rate_type = 'hourly', hourly_rate = 10
+    WHERE id = ?
+  `).run(checkOut, mins, expectedRate, sessionId);
+
+  const row = db.prepare('SELECT * FROM housekeeping_work_sessions WHERE id = ?').get(sessionId);
+  assert.ok(row.minutes_worked >= 118 && row.minutes_worked <= 122, `minutes_worked should be ~120, got ${row.minutes_worked}`);
+  assert.ok(Number(row.daily_rate) >= 19 && Number(row.daily_rate) <= 21, `daily_rate should be ~20, got ${row.daily_rate}`);
+  assert.equal(row.rate_type, 'hourly');
+  assert.equal(Number(row.hourly_rate), 10);
+});

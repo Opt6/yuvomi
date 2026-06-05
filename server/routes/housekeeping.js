@@ -92,6 +92,9 @@ function publicSession(row) {
     paid_at: row.paid_at ?? null,
     created_at: row.created_at,
     updated_at: row.updated_at,
+    rate_type: row.rate_type || 'daily',
+    hourly_rate: Number(row.hourly_rate || 0),
+    minutes_worked: row.minutes_worked ?? null,
   };
 }
 
@@ -681,6 +684,8 @@ router.post('/work-sessions/check-in', (req, res) => {
     if (vWorkerId.error) return res.status(400).json({ error: vWorkerId.error, code: 400 });
     const worker = loadWorkerById(vWorkerId.value);
     if (!worker) return res.status(404).json({ error: 'Housekeeper not found.', code: 404 });
+    const workerRateType = worker.rate_type || 'daily';
+    const workerHourlyRate = worker.hourly_rate ?? 0;
     const context = localDayContext(req.body);
     if (loadTodaySession(worker.id, context)) return res.status(409).json({ error: 'A visit is already recorded today for this housekeeper.', code: 409 });
 
@@ -704,9 +709,9 @@ router.post('/work-sessions/check-in', (req, res) => {
         ? createPaymentTask(db.get(), worker, checkIn, totalAmount, actorId, vPaymentTitle.value, vPaymentDescription.value, context.localDate)
         : null;
       return db.get().prepare(`
-        INSERT INTO housekeeping_work_sessions (worker_id, check_in, check_out, daily_rate, extras, calendar_event_id, payment_task_id, created_by)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `).run(worker.id, checkIn, null, vDailyRate.value, vExtras.value ?? 0, eventId, taskId, actorId);
+        INSERT INTO housekeeping_work_sessions (worker_id, check_in, check_out, daily_rate, extras, calendar_event_id, payment_task_id, created_by, rate_type, hourly_rate)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(worker.id, checkIn, null, vDailyRate.value, vExtras.value ?? 0, eventId, taskId, actorId, workerRateType, workerHourlyRate);
     })();
     const row = db.get().prepare('SELECT * FROM housekeeping_work_sessions WHERE id = ?').get(result.lastInsertRowid);
     res.status(201).json({ data: publicSession(row), summary: monthlySummary() });
@@ -771,10 +776,19 @@ router.put('/visits/:id', (req, res) => {
     const vReceiptId = req.body.receipt_document_id !== undefined && req.body.receipt_document_id !== null && req.body.receipt_document_id !== ''
       ? validateId(req.body.receipt_document_id, 'receipt_document_id')
       : { value: null, error: null };
+    const vMinutesWorked = existing.rate_type === 'hourly' && req.body.minutes_worked !== undefined
+      ? num(req.body.minutes_worked, 'minutes_worked')
+      : { value: null, error: null };
+    if (vMinutesWorked.error) return res.status(400).json({ error: vMinutesWorked.error, code: 400 });
     const errors = collectErrors([vDate, vDailyRate, vExtras, vEventTitle, vPaymentTitle, vPaymentDescription, vReceiptId]);
     if (errors.length) return res.status(400).json({ error: errors.join(' '), code: 400 });
     if (vDailyRate.value < 0 || (vExtras.value ?? 0) < 0) {
       return res.status(400).json({ error: 'Amounts must be greater than or equal to zero.', code: 400 });
+    }
+
+    let effectiveDailyRate = vDailyRate.value;
+    if (existing.rate_type === 'hourly' && vMinutesWorked.value !== null) {
+      effectiveDailyRate = computeHourlyAmount(vMinutesWorked.value, existing.hourly_rate || 0);
     }
 
     const originalTime = existing.check_in?.slice(11) || '09:00:00.000Z';
@@ -783,14 +797,15 @@ router.put('/visits/:id', (req, res) => {
     db.get().transaction(() => {
       db.get().prepare(`
         UPDATE housekeeping_work_sessions
-        SET check_in = ?, check_out = ?, daily_rate = ?, extras = ?, receipt_document_id = ?
+        SET check_in = ?, check_out = ?, daily_rate = ?, extras = ?, receipt_document_id = ?, minutes_worked = ?
         WHERE id = ?
       `).run(
         checkIn,
         checkIn,
-        vDailyRate.value,
+        effectiveDailyRate,
         vExtras.value ?? 0,
         req.body.receipt_document_id !== undefined ? vReceiptId.value : existing.receipt_document_id,
+        vMinutesWorked.value !== null ? vMinutesWorked.value : existing.minutes_worked,
         existing.id,
       );
       updateVisitLinks(
@@ -798,7 +813,7 @@ router.put('/visits/:id', (req, res) => {
         existing,
         worker,
         checkIn,
-        vDailyRate.value,
+        effectiveDailyRate,
         vExtras.value ?? 0,
         vEventTitle.value,
         vPaymentTitle.value,
@@ -865,12 +880,23 @@ router.post('/work-sessions/check-out', (req, res) => {
     }
 
     const checkOut = nowIso();
+    const worker = session.worker_id ? loadWorkerById(session.worker_id) : null;
+    let updateRate = session.daily_rate;
+    let minutesWorked = session.minutes_worked ?? null;
+    let sessionRateType = session.rate_type || 'daily';
+    let sessionHourlyRate = session.hourly_rate ?? 0;
+    if (worker?.rate_type === 'hourly') {
+      sessionRateType = 'hourly';
+      sessionHourlyRate = worker.hourly_rate;
+      minutesWorked = minutesBetween(session.check_in, checkOut);
+      updateRate = computeHourlyAmount(minutesWorked ?? 0, worker.hourly_rate);
+    }
     db.get().transaction(() => {
       db.get().prepare(`
         UPDATE housekeeping_work_sessions
-        SET check_out = ?, extras = ?
+        SET check_out = ?, extras = ?, daily_rate = ?, minutes_worked = ?, rate_type = ?, hourly_rate = ?
         WHERE id = ?
-      `).run(checkOut, vExtras.value ?? session.extras, session.id);
+      `).run(checkOut, vExtras.value ?? session.extras, updateRate, minutesWorked, sessionRateType, sessionHourlyRate, session.id);
     })();
     const row = db.get().prepare('SELECT * FROM housekeeping_work_sessions WHERE id = ?').get(session.id);
     res.json({ data: publicSession(row), summary: monthlySummary(row.check_in.slice(0, 7)) });
