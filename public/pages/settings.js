@@ -580,12 +580,12 @@ export async function render(container, { user }) {
             </div>
             ${googleStatus.configured ? `
               ${googleStatus.connected && user?.role === 'admin' ? `
-                <div class="form-group settings-google-calendar">
-                  <label class="form-label" for="google-calendar-select">${t('settings.googleCalendarSelect')}</label>
-                  <select class="form-input" id="google-calendar-select" disabled>
-                    <option>${t('common.loading')}</option>
-                  </select>
-                  <p class="form-hint">${t('settings.googleCalendarSelectHint')}</p>
+                <div class="form-group settings-google-calendars">
+                  <label class="form-label">${t('settings.googleCalendarsSelect')}</label>
+                  <div class="google-calendars-list" id="google-calendars-list">
+                    <p class="form-hint">${t('common.loading')}</p>
+                  </div>
+                  <p class="form-hint">${t('settings.googleCalendarsSelectHint')}</p>
                 </div>
                 <div class="form-group">
                   <label class="toggle-row">
@@ -1879,43 +1879,61 @@ function bindEvents(container, user, users, categories, icsSubscriptions, apiTok
     });
   }
 
-  // Google Kalenderauswahl (Admin) – Liste laden und Wechsel verarbeiten
-  const googleCalSelect = container.querySelector('#google-calendar-select');
-  if (googleCalSelect) {
+  // Google Kalenderauswahl (Admin) – Mehrkalender-Checkboxliste laden + togglen
+  const googleListEl = container.querySelector('#google-calendars-list');
+  if (googleListEl) {
+    // Toggle-Handler wird pro Checkbox gebunden, nachdem die Liste async geladen ist.
+    const bindGoogleToggle = (checkbox) => {
+      checkbox.addEventListener('change', async () => {
+        const calendarId = checkbox.dataset.calendarId;
+        const enabled = checkbox.checked;
+        try {
+          await api.patch('/calendar/google/calendars', { calendarId, enabled });
+          window.oikos?.showToast(
+            enabled ? t('settings.calendarEnabled') : t('settings.calendarDisabled'),
+            'success'
+          );
+        } catch (err) {
+          checkbox.checked = !enabled; // revert on failure
+          window.oikos?.showToast(err.message, 'danger');
+        }
+      });
+    };
+
     (async () => {
       try {
         const { data } = await api.get('/calendar/google/calendars');
-        googleCalSelect.replaceChildren();
-        for (const cal of data) {
-          const opt = document.createElement('option');
-          opt.value = cal.id;
-          opt.textContent = cal.primary ? `${cal.summary} (${t('settings.googleCalendarPrimary')})` : cal.summary;
-          if (cal.selected) opt.selected = true;
-          googleCalSelect.appendChild(opt);
+        const calendars = data || [];
+        googleListEl.replaceChildren();
+        for (const cal of calendars) {
+          const label = document.createElement('label');
+          label.className = 'caldav-calendar-item';
+
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.className = 'google-calendar-checkbox';
+          cb.dataset.calendarId = cal.id;
+          cb.checked = !!cal.enabled;
+
+          const dot = document.createElement('span');
+          dot.className = 'caldav-calendar-color';
+          dot.style.backgroundColor = cal.backgroundColor || 'var(--color-accent)';
+
+          const name = document.createElement('span');
+          name.className = 'caldav-calendar-name';
+          name.textContent = cal.summary || cal.id;
+
+          label.append(cb, dot, name);
+          googleListEl.appendChild(label);
+          bindGoogleToggle(cb);
         }
-        googleCalSelect.disabled = false;
       } catch (err) {
-        const opt = document.createElement('option');
-        opt.textContent = err.message;
-        googleCalSelect.replaceChildren(opt);
+        const p = document.createElement('p');
+        p.className = 'form-hint';
+        p.textContent = err.message;
+        googleListEl.replaceChildren(p);
       }
     })();
-
-    let currentCalId = null;
-    googleCalSelect.addEventListener('focus', () => { currentCalId = googleCalSelect.value; });
-    googleCalSelect.addEventListener('change', async () => {
-      const calendarId = googleCalSelect.value;
-      googleCalSelect.disabled = true;
-      try {
-        await api.put('/calendar/google/calendar', { calendarId });
-        window.oikos?.showToast(t('settings.calendarSwitched'), 'success');
-      } catch (err) {
-        window.oikos?.showToast(err.message, 'danger');
-        if (currentCalId) googleCalSelect.value = currentCalId;
-      } finally {
-        googleCalSelect.disabled = false;
-      }
-    });
   }
 
   const googleReadonlyCb = container.querySelector('#google-readonly-cb');
