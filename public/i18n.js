@@ -244,6 +244,11 @@ function toTimeParts(value) {
   const raw = String(value).trim();
   if (!raw) return null;
 
+  if (/^\d{1,2}$/.test(raw)) {
+    const hour = Number(raw);
+    return (hour >= 0 && hour <= 23) ? { hour, minute: 0 } : null;
+  }
+
   if (/^\d{1,2}:\d{2}$/.test(raw)) {
     const [hour, minute] = raw.split(':').map(Number);
     if (hour >= 0 && hour < 24 && minute >= 0 && minute < 60) {

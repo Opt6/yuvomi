@@ -28,7 +28,7 @@ global.localStorage = {
   removeItem: (key) => dateStore.delete(key),
 };
 
-const { parseDateInput, isDateInputValid } = await import('../public/i18n.js');
+const { parseDateInput, isDateInputValid, parseTimeInput, formatTimeInput } = await import('../public/i18n.js');
 
 test('stagger: setzt opacity:0 auf alle Elemente', () => {
   const els = [{ style: {} }, { style: {} }, { style: {} }];
@@ -105,4 +105,25 @@ test('deleteWithUndo: übergibt onUndo an showToast', async () => {
   assert.ok(capturedUndo, 'showToast muss eine Undo-Funktion erhalten haben');
   await capturedUndo();
   assert.equal(undoCalled, true);
+});
+
+test('parseTimeInput: bare hour (24 h) expands to HH:00', () => {
+  localStorage.setItem('oikos-time-format', '24h');
+  assert.equal(parseTimeInput('15'), '15:00');
+  assert.equal(parseTimeInput('9'),  '09:00');
+  assert.equal(parseTimeInput('0'),  '00:00');
+  assert.equal(parseTimeInput('23'), '23:00');
+});
+
+test('parseTimeInput: bare hour out-of-range returns empty string', () => {
+  localStorage.setItem('oikos-time-format', '24h');
+  assert.equal(parseTimeInput('24'), '');
+  assert.equal(parseTimeInput('99'), '');
+});
+
+test('formatTimeInput: bare hour (12 h) formats with AM/PM', () => {
+  localStorage.setItem('oikos-time-format', '12h');
+  assert.equal(formatTimeInput('9'),  '9:00 AM');
+  assert.equal(formatTimeInput('15'), '3:00 PM');
+  localStorage.setItem('oikos-time-format', '24h');
 });
