@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.61.1] - 2026-06-05
+
+### Fixed
+- The CalDAV calendar selected under "Sync to CalDAV" when creating or editing an event is now persisted (#241). The create and update endpoints previously dropped `target_caldav_account_id` and `target_caldav_calendar_url`, so the selection reset to "Local" after saving and the event was never synced to the CalDAV server. Invalid account IDs are now rejected with a 400 instead of being silently ignored.
+
 ## [0.61.0] - 2026-06-05
 
 ### Added

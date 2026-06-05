@@ -89,6 +89,29 @@ function parseAttachment(dataUrl) {
   return { name: null, mime, size: buffer.length, data: base64 };
 }
 
+// CalDAV-Ziel eines Events validieren (Issue #241). Liefert {value, error}
+// im Stil der validate.js-Helfer, damit collectErrors 400 statt 500 erzeugt.
+// Leere/fehlende account_id bedeutet "Lokal" (kein Outbound-Sync).
+function caldavTarget(body) {
+  const rawId  = body.target_caldav_account_id;
+  const rawUrl = body.target_caldav_calendar_url;
+  if (rawId === null || rawId === undefined || rawId === '') {
+    return { value: { accountId: null, calendarUrl: null }, error: null };
+  }
+  const accountId = typeof rawId === 'number' ? rawId : parseInt(rawId, 10);
+  if (!Number.isInteger(accountId) || accountId < 1) {
+    return { value: null, error: 'target_caldav_account_id: ungültige Konto-ID.' };
+  }
+  const calendarUrl = typeof rawUrl === 'string' ? rawUrl.trim() : '';
+  if (!calendarUrl) {
+    return { value: null, error: 'target_caldav_calendar_url: fehlt für CalDAV-Ziel.' };
+  }
+  if (calendarUrl.length > 2048) {
+    return { value: null, error: 'target_caldav_calendar_url: zu lang.' };
+  }
+  return { value: { accountId, calendarUrl }, error: null };
+}
+
 function ensureDocumentFolder(database, name, actorId) {
   const folderName = typeof name === 'string' ? name.trim() : '';
   if (!folderName) return null;
@@ -634,7 +657,8 @@ router.post('/', (req, res) => {
     const vIcon  = eventIcon(req.body.icon);
     const vLoc   = str(req.body.location, 'Ort', { max: MAX_TITLE, required: false });
     const vRrule = rrule(req.body.recurrence_rule, 'Wiederholung');
-    const errors = collectErrors([vTitle, vDesc, vStart, vEnd, vColor, vLoc, vRrule]);
+    const vCaldav = caldavTarget(req.body);
+    const errors = collectErrors([vTitle, vDesc, vStart, vEnd, vColor, vLoc, vRrule, vCaldav]);
     if (errors.length) return res.status(400).json({ error: errors.join(' '), code: 400 });
     if (!vIcon) return res.status(400).json({ error: 'icon: invalid calendar event icon.', code: 400 });
 
@@ -650,8 +674,9 @@ router.post('/', (req, res) => {
         INSERT INTO calendar_events
           (title, description, start_datetime, end_datetime, all_day,
            location, color, icon, assigned_to, created_by, recurrence_rule,
-           attachment_name, attachment_mime, attachment_size, attachment_data, attachment_document_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+           attachment_name, attachment_mime, attachment_size, attachment_data, attachment_document_id,
+           target_caldav_account_id, target_caldav_calendar_url)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).run(
         vTitle.value, vDesc.value,
         vStart.value, vEnd.value,
@@ -662,7 +687,9 @@ router.post('/', (req, res) => {
         attachment.mime,
         attachment.size,
         attachment.data,
-        documentId
+        documentId,
+        vCaldav.value.accountId,
+        vCaldav.value.calendarUrl
       );
       setEventAssignments(db.get(), result.lastInsertRowid, userIds);
       return result.lastInsertRowid;
@@ -707,6 +734,11 @@ router.put('/:id', (req, res) => {
     if (req.body.color          !== undefined) checks.push(color(req.body.color, 'Farbe'));
     if (req.body.location       !== undefined) checks.push(str(req.body.location, 'Ort', { max: MAX_TITLE, required: false }));
     if (req.body.recurrence_rule !== undefined) checks.push(rrule(req.body.recurrence_rule, 'Wiederholung'));
+    // CalDAV-Ziel nur prüfen, wenn der Client es mitschickt; sonst bestehenden Wert behalten.
+    const caldavProvided = req.body.target_caldav_account_id !== undefined
+      || req.body.target_caldav_calendar_url !== undefined;
+    const vCaldav = caldavProvided ? caldavTarget(req.body) : null;
+    if (vCaldav) checks.push(vCaldav);
     const errors = collectErrors(checks);
     if (errors.length) return res.status(400).json({ error: errors.join(' '), code: 400 });
     const vIcon = req.body.icon !== undefined ? eventIcon(req.body.icon) : event.icon;
@@ -732,6 +764,9 @@ router.put('/:id', (req, res) => {
 
     const userModified = event.external_source !== 'local' ? 1 : event.user_modified;
 
+    const caldavAccountId = vCaldav ? vCaldav.value.accountId : event.target_caldav_account_id;
+    const caldavCalendarUrl = vCaldav ? vCaldav.value.calendarUrl : event.target_caldav_calendar_url;
+
     db.get().transaction(() => {
       const documentId = req.body.attachment_data
         ? createAttachmentDocument(db.get(), attachment, req.body, event.created_by)
@@ -753,6 +788,8 @@ router.put('/:id', (req, res) => {
             attachment_size  = ?,
             attachment_data  = ?,
             attachment_document_id = ?,
+            target_caldav_account_id   = ?,
+            target_caldav_calendar_url = ?,
             user_modified   = ?
         WHERE id = ?
       `).run(
@@ -771,6 +808,8 @@ router.put('/:id', (req, res) => {
         attachment.size,
         attachment.data,
         documentId,
+        caldavAccountId,
+        caldavCalendarUrl,
         userModified,
         id
       );
