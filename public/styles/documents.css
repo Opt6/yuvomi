@@ -9,22 +9,8 @@
   margin: 0 auto;
 }
 
-.documents-toolbar {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border-top: 3px solid var(--module-accent);
-  border-bottom: 1px solid var(--color-border);
-  background-color: var(--color-surface);
-}
-
-.documents-toolbar__title {
-  font-size: var(--text-lg);
-  font-weight: var(--font-weight-bold);
-  flex: 0 0 auto;
-}
-
+/* Gerüst (Shell + Titel) jetzt geteilt via .page-toolbar in layout.css.
+ * Damit wird der Documents-Kopf wie alle anderen sticky und nutzt --color-bg. */
 .documents-toolbar__search {
   position: relative;
   flex: 1;
@@ -429,7 +415,7 @@
     flex-wrap: wrap;
   }
 
-  .documents-toolbar__title {
+  .documents-toolbar .page-toolbar__title {
     width: 100%;
   }
 

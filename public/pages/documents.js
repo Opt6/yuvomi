@@ -52,8 +52,8 @@ export async function render(container) {
   container.replaceChildren();
   container.insertAdjacentHTML('beforeend', `
     <div class="documents-page">
-      <div class="documents-toolbar">
-        <h1 class="documents-toolbar__title">${t('documents.title')}</h1>
+      <div class="page-toolbar documents-toolbar">
+        <h1 class="page-toolbar__title">${t('documents.title')}</h1>
         <div class="documents-toolbar__search">
           <i data-lucide="search" class="documents-toolbar__search-icon" aria-hidden="true"></i>
           <input class="documents-toolbar__search-input" id="documents-search" type="search" placeholder="${t('documents.searchPlaceholder')}" autocomplete="off">

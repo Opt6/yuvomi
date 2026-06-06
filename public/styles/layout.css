@@ -679,6 +679,57 @@ html.fab-anim-done .page-fab {
   }
 }
 
+/* ================================================================
+ * Geteilte Page-Toolbar (Modul-Kopf)
+ *
+ * Vereinheitlicht NUR das Gerüst aller Modul-Köpfe (Höhe, Padding,
+ * Akzent-/Trennrand, Sticky-Verhalten, Titel-Typografie), damit der
+ * Kopf beim Modulwechsel nicht „springt". Modul-spezifischer Inhalt
+ * (Suche, Filter-Chips, Views, Monats-Nav, Tabs) lebt weiter in den
+ * Modul-CSS-Dateien als direkte Flex-Children dieser Shell.
+ * ================================================================ */
+.page-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: 3px solid var(--module-accent);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  /* Wirkt nur in Flex-Spalten-Pages (Notizen/Kalender), verhindert dort
+   * das Stauchen des Kopfes; in Block-Pages ist es ein No-op. */
+  flex-shrink: 0;
+}
+
+.page-toolbar__title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.page-toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  /* Drängt die Aktionen an den rechten Rand, wenn kein wachsender
+   * Mittelteil (z.B. Suche mit flex:1) vorhanden ist. */
+  margin-left: auto;
+}
+
+@media (max-width: 640px) {
+  .page-toolbar {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .page-toolbar__title {
+    font-size: var(--text-base);
+  }
+}
+
 /* Toolbar-"Neu"-Buttons überall verstecken - FAB übernimmt.
  * Gemeinsame Klasse statt ID-Liste (Audit 1.9): neue Module ergänzen nur die
  * Klasse an ihrem Toolbar-Button, statt diesen Selektor erweitern zu müssen. */

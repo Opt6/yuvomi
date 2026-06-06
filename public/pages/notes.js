@@ -61,8 +61,8 @@ export async function render(container, { user }) {
   container.replaceChildren();
   container.insertAdjacentHTML('beforeend', `
     <div class="notes-page">
-      <div class="notes-toolbar">
-        <h1 class="notes-toolbar__title">${t('notes.title')}</h1>
+      <div class="page-toolbar notes-toolbar">
+        <h1 class="page-toolbar__title">${t('notes.title')}</h1>
         <div class="notes-toolbar__search">
           <i data-lucide="search" class="notes-toolbar__search-icon" aria-hidden="true"></i>
           <input type="search" id="notes-search" class="notes-toolbar__search-input"

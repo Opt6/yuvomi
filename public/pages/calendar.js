@@ -749,7 +749,7 @@ export async function render(container, { user }) {
   container.replaceChildren();
   container.insertAdjacentHTML('beforeend', `
     <div class="calendar-page" id="calendar-page">
-      <div class="cal-toolbar" id="cal-toolbar"></div>
+      <div class="page-toolbar cal-toolbar" id="cal-toolbar"></div>
       <div id="cal-body" style="flex:1;display:flex;flex-direction:column;overflow:hidden;"></div>
       <button class="page-fab" id="fab-new-event" aria-label="${t('calendar.newEvent')}">
         <i data-lucide="plus" class="icon-xl" aria-hidden="true"></i>

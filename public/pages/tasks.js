@@ -1776,9 +1776,9 @@ export async function render(container, { user }) {
   container.replaceChildren();
   container.insertAdjacentHTML('beforeend', `
     <div class="tasks-page">
-      <div class="tasks-toolbar">
-        <h1 class="tasks-toolbar__title">${t('tasks.title')}</h1>
-        <div class="tasks-toolbar__actions">
+      <div class="page-toolbar tasks-toolbar">
+        <h1 class="page-toolbar__title">${t('tasks.title')}</h1>
+        <div class="page-toolbar__actions">
           <details class="tasks-toolbar__secondary">
             <summary class="btn btn--ghost btn--icon tasks-toolbar__secondary-trigger"
                      title="${t('nav.more')}" aria-label="${t('nav.more')}">
