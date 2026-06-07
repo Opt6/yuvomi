@@ -700,10 +700,6 @@
 /* --------------------------------------------------------
  * Essen-Widget (Slot-Grid)
  * -------------------------------------------------------- */
-.widget--meals {
-  overflow: visible;
-}
-
 .meal-slots {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
