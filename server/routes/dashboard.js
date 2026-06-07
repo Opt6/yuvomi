@@ -12,6 +12,21 @@ import { getUpcomingEvents } from '../services/calendar-events.js';
 
 const log = createLogger('Dashboard');
 
+const ASSIGNED_USERS_SQL = `(
+  SELECT json_group_array(json_object(
+    'id', u.id, 'display_name', u.display_name, 'color', u.avatar_color,
+    'avatar_data', u.avatar_data
+  ))
+  FROM task_assignments ta JOIN users u ON u.id = ta.user_id
+  WHERE ta.task_id = t.id
+) AS assigned_users_json`;
+
+function addAssignedUsers(task) {
+  task.assigned_users = task.assigned_users_json ? JSON.parse(task.assigned_users_json) : [];
+  delete task.assigned_users_json;
+  return task;
+}
+
 const router = express.Router();
 
 /**
@@ -62,6 +77,7 @@ router.get('/', (req, res) => {
     const nowIso = `${todayStr}T${now.toISOString().slice(11, 19)}`;
     result.urgentTasks = d.prepare(`
       SELECT t.*, u.display_name AS assigned_name, u.avatar_color AS assigned_color,
+        ${ASSIGNED_USERS_SQL},
         CASE WHEN t.due_date IS NULL THEN NULL
              ELSE t.due_date || 'T' || COALESCE(t.due_time, '23:59:59')
         END AS __due_sort
@@ -77,7 +93,7 @@ router.get('/', (req, res) => {
           WHEN 'low' THEN 3 ELSE 4
         END ASC
       LIMIT 5
-    `).all({ now: nowIso }).map(({ __due_sort, ...task }) => task);
+    `).all({ now: nowIso }).map(({ __due_sort, ...task }) => addAssignedUsers(task));
   } catch (err) {
     log.error('urgentTasks error:', err.message);
     result.urgentTasks = [];

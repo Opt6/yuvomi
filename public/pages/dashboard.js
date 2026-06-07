@@ -8,6 +8,7 @@ import { api } from '/api.js';
 import { t, formatDate, formatTime, getLocale } from '/i18n.js';
 import { esc, fmtLocation, renderMarkdownLight } from '/utils/html.js';
 import { openModal, closeModal } from '/components/modal.js';
+import { renderAvatarStack } from '/components/user-multi-select.js';
 
 // Hält den AbortController des aktuellen FAB-Listeners - wird bei jedem render() erneuert.
 let _fabController = null;
@@ -420,13 +421,7 @@ function renderUrgentTasks(tasks) {
           <div class="task-item__title">${esc(t.title)}</div>
           ${due ? `<div class="task-item__meta ${due.overdue ? 'task-item__meta--overdue' : ''} ${due.soon ? 'task-item__meta--soon' : ''}">${due.text}</div>` : ''}
         </div>
-        ${t.assigned_color ? `
-          <div class="task-item__avatar" style="background-color:${esc(t.assigned_color)}"
-               title="${esc(t.assigned_name)}">
-            ${t.assigned_avatar
-              ? `<img src="${esc(t.assigned_avatar)}" alt="${esc(t.assigned_name || '')}" loading="lazy">`
-              : esc(initials(t.assigned_name || ''))}
-          </div>` : ''}
+        ${renderAvatarStack(t.assigned_users ?? [], { size: 28 })}
       </div>
     `;
   }).join('');

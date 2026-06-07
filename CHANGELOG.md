@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.8] - 2026-06-07
+
+### Fixed
+- Dashboard tasks widget now renders all assigned users instead of only the first assignee. The server payload includes the full `assigned_users` array via the `task_assignments` join, and the client renders it with the shared `renderAvatarStack` component.
+
 ## [0.65.7] - 2026-06-07
 
 ### Added
