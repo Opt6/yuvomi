@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.18] - 2026-06-08
+
+### Changed
+- README redesigned as a visual landing page: stats bar (14 modules, 18 languages, 0 trackers, AES-256, MIT), side-by-side desktop + mobile PWA hero screenshot, six-module screenshot gallery with dark/light mode support, emoji-icon module table, structured NAS platform table (TrueNAS SCALE, Umbrel, Unraid), and Podman added to the tech stack badge row.
+
 ## [0.65.17] - 2026-06-08
 
 ### Added
