@@ -141,13 +141,15 @@
   background-color: var(--color-bg);
 }
 
-.app-content:focus {
-  outline: none;
-}
-
+/* #main-content wird nach jeder Navigation programmatisch fokussiert, damit
+ * Tastatur-/Screenreader-Fokus in die neue Seite springt (Skip-Link-Muster).
+ * Das ist ein Region-Fokus-Ziel, kein interaktives Element — es darf keinen
+ * sichtbaren Rahmen zeigen. Beim ersten Laden (ohne vorherige Pointer-
+ * Interaktion) würde der Browser den programmatischen Fokus sonst als
+ * :focus-visible werten und ein Outline um den ganzen Inhaltsbereich zeichnen. */
+.app-content:focus,
 .app-content:focus-visible {
-  outline: 2px solid var(--active-module-accent, var(--color-accent));
-  outline-offset: -2px;
+  outline: none;
 }
 
 /* Sidebar auf Mobile verstecken */

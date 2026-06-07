@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.5] - 2026-06-07
+
+### Fixed
+- Dashboard no longer shows a stray accent-colored frame around the content area on first load. The main content region is programmatically focused after navigation (a skip-link accessibility pattern); on the initial load the browser treated this as `:focus-visible` and drew a 2px inset outline around the whole content area, which vanished after the first module switch. The non-interactive region focus target no longer renders a visible outline.
+
 ## [0.65.4] - 2026-06-07
 
 ### Fixed
