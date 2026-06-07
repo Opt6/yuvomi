@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.3] - 2026-06-07
+
+### Security
+- Documented the Umbrel first-run exposure: with the Umbrel reverse-proxy auth disabled (`PROXY_AUTH_ADD: "false"`), Oikos's unauthenticated bootstrap endpoint that creates the first admin is reachable by any LAN/Tor client until setup is completed. Added a caveat to `deploy/umbrel/docker-compose.yml` and the Umbrel README advising owners to finish setup immediately after install.
+
 ## [0.65.2] - 2026-06-07
 
 ### Security

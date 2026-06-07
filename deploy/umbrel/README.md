@@ -29,6 +29,12 @@ or get the digest with
   prevents a double sign-in. `APP_PORT: 3000` is where Oikos listens inside the
   container; the manifest `port:` is `8181` — a free port (the linter rejects
   collisions; 8090 was taken by Urbit). Reviewers may still reassign it.
+  **Security note:** with proxy auth off, Oikos's unauthenticated first-run
+  bootstrap (`POST /api/v1/auth/setup`, which creates the first admin while the
+  users table is empty) is reachable by any LAN/Tor-accessible client until the
+  owner completes setup. The window is short and rate-limited (`loginLimiter`),
+  matching Immich's accepted first-run model, but **finish setup immediately
+  after install** so no one else can claim the admin account.
 - **`SESSION_SECRET=${APP_SEED}`** — Umbrel provides a deterministic per-app secret,
   so no interactive installer step is needed.
 - **No `user:` override** — the image entrypoint runs as root only to chown the
