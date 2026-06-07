@@ -216,7 +216,7 @@ export async function render(container, { user }) {
   let users           = [];
   let googleStatus    = { configured: false, connected: false, lastSync: null };
   let appleStatus     = { configured: false, lastSync: null };
-  let prefs           = { visible_meal_types: ['breakfast', 'lunch', 'dinner', 'snack'], currency: 'EUR', date_format: 'mdy', time_format: '24h', app_name: DEFAULT_APP_NAME, disabled_modules: [], module_order: [], housekeeping_payment_tasks: false };
+  let prefs           = { visible_meal_types: ['breakfast', 'lunch', 'dinner', 'snack'], currency: 'EUR', date_format: 'mdy', time_format: '24h', app_name: DEFAULT_APP_NAME, disabled_modules: [], module_order: [], housekeeping_payment_tasks: false, weather_provider: null, weather_lat: null, weather_lon: null, weather_city: '', weather_units: 'metric' };
   let categories      = [];
   let icsSubscriptions = [];
   let apiTokens       = [];
@@ -410,6 +410,66 @@ export async function render(container, { user }) {
             <div class="settings-modules-list settings-modules-list--sortable" id="module-toggles">
               ${activeModuleRowsHtml(prefs, thirdPartyModules)}
             </div>
+          </div>
+        </section>
+        ` : ''}
+
+        ${user?.role === 'admin' ? `
+        <section class="settings-section" id="weather-section">
+          <h2 class="settings-section__title">${t('settings.sectionWeather')}</h2>
+          <div class="settings-card" id="weather-card">
+            <h3 class="settings-card__title">${t('settings.weatherTitle')}</h3>
+            <p class="settings-card-description">${t('settings.weatherDescription')}</p>
+
+            <div class="settings-sync-info" style="margin-bottom:var(--space-3)">
+              <span class="form-label">${t('settings.weatherActiveProvider')}</span>
+              <span id="weather-provider-status" class="settings-sync-info__status ${prefs.weather_provider === 'open-meteo' ? 'settings-sync-info__status--connected' : ''}">
+                ${prefs.weather_provider === 'open-meteo'
+                  ? t('settings.weatherProviderOpenMeteo')
+                  : prefs.weather_provider === 'openweathermap'
+                    ? t('settings.weatherProviderOwm')
+                    : t('settings.weatherProviderNone')}
+              </span>
+            </div>
+
+            <form class="settings-form settings-form--compact" id="weather-form" novalidate autocomplete="off">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="weather-lat">${t('settings.weatherLatLabel')}</label>
+                  <input class="form-input" type="number" id="weather-lat" step="any" min="-90" max="90"
+                    value="${esc(prefs.weather_lat ?? '')}"
+                    placeholder="${t('settings.weatherLatPlaceholder')}" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="weather-lon">${t('settings.weatherLonLabel')}</label>
+                  <input class="form-input" type="number" id="weather-lon" step="any" min="-180" max="180"
+                    value="${esc(prefs.weather_lon ?? '')}"
+                    placeholder="${t('settings.weatherLonPlaceholder')}" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="weather-city">${t('settings.weatherCityLabel')}</label>
+                <input class="form-input" type="text" id="weather-city" maxlength="100"
+                  value="${esc(prefs.weather_city ?? '')}"
+                  placeholder="${t('settings.weatherCityPlaceholder')}" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="weather-units">${t('settings.weatherUnitsLabel')}</label>
+                <select class="form-input" id="weather-units">
+                  <option value="metric"${(prefs.weather_units ?? 'metric') === 'metric' ? ' selected' : ''}>${t('settings.weatherUnitsMetric')}</option>
+                  <option value="imperial"${prefs.weather_units === 'imperial' ? ' selected' : ''}>${t('settings.weatherUnitsImperial')}</option>
+                </select>
+              </div>
+              <p class="form-hint">${t('settings.weatherCoordHint')}</p>
+              <p class="form-hint">${t('settings.weatherSwitchHint')}</p>
+              <div id="weather-form-error" class="form-error" hidden></div>
+              <div class="settings-form-actions">
+                <button type="submit" class="btn btn--primary">${t('settings.weatherSave')}</button>
+                ${prefs.weather_provider === 'open-meteo' ? `
+                  <button type="button" class="btn btn--danger" id="weather-remove-btn">${t('settings.weatherRemove')}</button>
+                ` : ''}
+              </div>
+            </form>
           </div>
         </section>
         ` : ''}
@@ -1723,6 +1783,59 @@ function bindEvents(container, user, users, categories, icsSubscriptions, apiTok
         housekeepingPaymentTasks.checked = !housekeepingPaymentTasks.checked;
       }
     });
+  }
+
+  // ── Weather config (admin) ────────────────────────────────────────────────
+  const weatherForm = container.querySelector('#weather-form');
+  if (weatherForm) {
+    weatherForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const lat   = container.querySelector('#weather-lat').value.trim();
+      const lon   = container.querySelector('#weather-lon').value.trim();
+      const city  = container.querySelector('#weather-city').value.trim();
+      const units = container.querySelector('#weather-units').value;
+      const errEl = container.querySelector('#weather-form-error');
+      errEl.hidden = true;
+
+      if (!lat || !lon) {
+        errEl.textContent = `${t('settings.weatherLatLabel')} / ${t('settings.weatherLonLabel')}`;
+        errEl.hidden = false;
+        return;
+      }
+
+      try {
+        await api.put('/preferences', {
+          weather_lat:      lat,
+          weather_lon:      lon,
+          weather_city:     city,
+          weather_units:    units,
+          weather_provider: 'open-meteo',
+        });
+        window.oikos?.showToast(t('settings.weatherSaved'), 'success');
+        // Seite neu rendern, damit der Status (aktiver Anbieter) + der
+        // Deaktivieren-Button aktualisiert werden. settings.js importiert kein
+        // navigate; daher der globale Router wie bei den anderen Handlern.
+        window.oikos?.navigate('/settings');
+      } catch (err) {
+        errEl.textContent = err.message ?? t('common.errorGeneric');
+        errEl.hidden = false;
+      }
+    });
+
+    const removeBtn = container.querySelector('#weather-remove-btn');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', async () => {
+        try {
+          // weather_provider auf null setzt auf Auto-Detect (env) zurück; die
+          // gespeicherten Koordinaten bleiben erhalten, werden aber ignoriert.
+          await api.put('/preferences', { weather_provider: null });
+          window.oikos?.showToast(t('settings.weatherRemoved'), 'success');
+          window.oikos?.navigate('/settings');
+        } catch (err) {
+          window.oikos?.showToast(err.message ?? t('common.errorGeneric'), 'danger');
+        }
+      });
+    }
   }
 
   const appNameForm = container.querySelector('#app-name-form');
