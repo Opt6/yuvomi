@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.4] - 2026-06-07
+
+### Fixed
+- Umbrel Catalog Publish workflow: the "Resolve multi-arch image digest" step ran under `set -euo pipefail`, so the first `docker buildx imagetools inspect` miss (image not yet published) tripped `set -e` and aborted the 40× retry loop after ~2s instead of waiting for the image. The command substitution now tolerates a transient miss (`|| true`), so the loop retries as intended.
+
 ## [0.65.3] - 2026-06-07
 
 ### Security
