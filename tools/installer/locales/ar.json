@@ -32,17 +32,18 @@
   },
   "weather": {
     "title": "أداة الطقس",
-    "subtitle": "اعرض الطقس المباشر على لوحة التحكم. يتطلب مفتاح API مجانيًا من OpenWeatherMap.",
+    "subtitle": "طقس مباشر على لوحة التحكم — مجاني، بدون حساب، بدون مفتاح API.",
     "enable": "تفعيل أداة الطقس",
-    "keyLabel": "مفتاح API",
-    "keyOpt": "(الباقة المجانية)",
-    "keyHint": "احصل على واحد مجانًا من {{link}}",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "المدينة",
+    "latLabel": "خط العرض",
+    "lonLabel": "خط الطول",
+    "coordHint": "ابحث عن الإحداثيات على openstreetmap.org أو خرائط Google.",
+    "cityLabel": "اسم المدينة (اختياري)",
     "unitsLabel": "الوحدات",
-    "unitsMetric": "مترية (°C)",
-    "unitsImperial": "إمبراطورية (°F)",
-    "errKey": "مفتاح API مطلوب عند تفعيل الطقس."
+    "unitsMetric": "متري (°C)",
+    "unitsImperial": "إمبراطوري (°F)",
+    "errCoords": "خط العرض وخط الطول مطلوبان.",
+    "errLat": "خط عرض غير صالح (–90 إلى 90).",
+    "errLon": "خط طول غير صالح (–180 إلى 180)."
   },
   "calendar": {
     "title": "مزامنة التقويم",

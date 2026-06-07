@@ -32,17 +32,18 @@
   },
   "weather": {
     "title": "Wetter-Widget",
-    "subtitle": "Zeige Live-Wetter auf deinem Dashboard. Erfordert einen kostenlosen OpenWeatherMap-API-Schlüssel.",
+    "subtitle": "Live-Wetter auf dem Dashboard — kostenlos, kein Account, kein API-Schlüssel.",
     "enable": "Wetter-Widget aktivieren",
-    "keyLabel": "API-Schlüssel",
-    "keyOpt": "(kostenlose Stufe)",
-    "keyHint": "Hol dir kostenlos einen bei {{link}}",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "Stadt",
+    "latLabel": "Breitengrad",
+    "lonLabel": "Längengrad",
+    "coordHint": "Koordinaten auf openstreetmap.org oder Google Maps suchen.",
+    "cityLabel": "Ortsname (optional)",
     "unitsLabel": "Einheiten",
     "unitsMetric": "Metrisch (°C)",
     "unitsImperial": "Imperial (°F)",
-    "errKey": "Ein API-Schlüssel ist erforderlich, wenn das Wetter aktiviert ist."
+    "errCoords": "Breitengrad und Längengrad sind erforderlich.",
+    "errLat": "Ungültiger Breitengrad (–90 bis 90).",
+    "errLon": "Ungültiger Längengrad (–180 bis 180)."
   },
   "calendar": {
     "title": "Kalender-Synchronisation",

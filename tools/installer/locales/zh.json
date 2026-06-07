@@ -32,17 +32,18 @@
   },
   "weather": {
     "title": "天气小组件",
-    "subtitle": "在您的仪表板上显示实时天气。需要免费的 OpenWeatherMap API 密钥。",
+    "subtitle": "在仪表板上显示实时天气 — 免费、无需账户、无需API密钥。",
     "enable": "启用天气小组件",
-    "keyLabel": "API 密钥",
-    "keyOpt": "（免费套餐）",
-    "keyHint": "前往 {{link}} 免费获取一个",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "城市",
+    "latLabel": "纬度",
+    "lonLabel": "经度",
+    "coordHint": "在openstreetmap.org或Google地图上查找坐标。",
+    "cityLabel": "城市名称（可选）",
     "unitsLabel": "单位",
-    "unitsMetric": "公制（°C）",
-    "unitsImperial": "英制（°F）",
-    "errKey": "启用天气时需要 API 密钥。"
+    "unitsMetric": "公制 (°C)",
+    "unitsImperial": "英制 (°F)",
+    "errCoords": "纬度和经度为必填项。",
+    "errLat": "纬度无效（–90 至 90）。",
+    "errLon": "经度无效（–180 至 180）。"
   },
   "calendar": {
     "title": "日历同步",

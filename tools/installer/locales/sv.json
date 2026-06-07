@@ -31,18 +31,19 @@
     "errBoth": "Båda nycklarna krävs."
   },
   "weather": {
-    "title": "Väderwidget",
-    "subtitle": "Visa väder i realtid på din instrumentpanel. Kräver en gratis API-nyckel från OpenWeatherMap.",
-    "enable": "Aktivera väderwidget",
-    "keyLabel": "API-nyckel",
-    "keyOpt": "(gratisnivå)",
-    "keyHint": "Skaffa en gratis på {{link}}",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "Stad",
+    "title": "Väder-widget",
+    "subtitle": "Liveväder på instrumentpanelen — gratis, inget konto, ingen API-nyckel.",
+    "enable": "Aktivera väder-widget",
+    "latLabel": "Latitud",
+    "lonLabel": "Longitud",
+    "coordHint": "Hitta koordinater på openstreetmap.org eller Google Maps.",
+    "cityLabel": "Stadsnamn (valfritt)",
     "unitsLabel": "Enheter",
-    "unitsMetric": "Metriska (°C)",
-    "unitsImperial": "Imperiella (°F)",
-    "errKey": "En API-nyckel krävs när vädret är aktiverat."
+    "unitsMetric": "Metriskt (°C)",
+    "unitsImperial": "Imperialt (°F)",
+    "errCoords": "Latitud och longitud krävs.",
+    "errLat": "Ogiltig latitud (–90 till 90).",
+    "errLon": "Ogiltig longitud (–180 till 180)."
   },
   "calendar": {
     "title": "Kalendersynkronisering",

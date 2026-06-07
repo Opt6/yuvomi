@@ -32,17 +32,18 @@
   },
   "weather": {
     "title": "Weather Widget",
-    "subtitle": "Show live weather on your dashboard. Requires a free OpenWeatherMap API key.",
+    "subtitle": "Live weather on the dashboard — free, no account, no API key.",
     "enable": "Enable weather widget",
-    "keyLabel": "API Key",
-    "keyOpt": "(free tier)",
-    "keyHint": "Get one free at {{link}}",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "City",
+    "latLabel": "Latitude",
+    "lonLabel": "Longitude",
+    "coordHint": "Find coordinates on openstreetmap.org or Google Maps.",
+    "cityLabel": "City name (optional)",
     "unitsLabel": "Units",
     "unitsMetric": "Metric (°C)",
     "unitsImperial": "Imperial (°F)",
-    "errKey": "API key is required when weather is enabled."
+    "errCoords": "Latitude and longitude are required.",
+    "errLat": "Invalid latitude (–90 to 90).",
+    "errLon": "Invalid longitude (–180 to 180)."
   },
   "calendar": {
     "title": "Calendar Sync",

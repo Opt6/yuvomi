@@ -31,18 +31,19 @@
     "errBoth": "Her iki anahtar da gereklidir."
   },
   "weather": {
-    "title": "Hava Durumu Widget'ı",
-    "subtitle": "Panonuzda canlı hava durumunu gösterin. Ücretsiz bir OpenWeatherMap API anahtarı gerektirir.",
+    "title": "Hava Durumu Widget",
+    "subtitle": "Panelde canlı hava durumu — ücretsiz, hesap yok, API anahtarı yok.",
     "enable": "Hava durumu widget'ını etkinleştir",
-    "keyLabel": "API Anahtarı",
-    "keyOpt": "(ücretsiz katman)",
-    "keyHint": "{{link}} adresinden ücretsiz bir tane edinin",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "Şehir",
+    "latLabel": "Enlem",
+    "lonLabel": "Boylam",
+    "coordHint": "Koordinatları openstreetmap.org veya Google Maps'te bulun.",
+    "cityLabel": "Şehir adı (isteğe bağlı)",
     "unitsLabel": "Birimler",
     "unitsMetric": "Metrik (°C)",
-    "unitsImperial": "İngiliz (°F)",
-    "errKey": "Hava durumu etkinleştirildiğinde API anahtarı gereklidir."
+    "unitsImperial": "İngiliz birimi (°F)",
+    "errCoords": "Enlem ve boylam gereklidir.",
+    "errLat": "Geçersiz enlem (–90 ile 90 arası).",
+    "errLon": "Geçersiz boylam (–180 ile 180 arası)."
   },
   "calendar": {
     "title": "Takvim Senkronizasyonu",

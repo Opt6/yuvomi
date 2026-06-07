@@ -31,18 +31,19 @@
     "errBoth": "Entrambe le chiavi sono obbligatorie."
   },
   "weather": {
-    "title": "Widget meteo",
-    "subtitle": "Mostra il meteo in tempo reale sulla tua dashboard. Richiede una chiave API gratuita di OpenWeatherMap.",
-    "enable": "Attiva il widget meteo",
-    "keyLabel": "Chiave API",
-    "keyOpt": "(piano gratuito)",
-    "keyHint": "Ottienine una gratis su {{link}}",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "Città",
+    "title": "Widget Meteo",
+    "subtitle": "Meteo in tempo reale nella dashboard — gratuito, senza account, senza chiave API.",
+    "enable": "Attiva widget meteo",
+    "latLabel": "Latitudine",
+    "lonLabel": "Longitudine",
+    "coordHint": "Trova le coordinate su openstreetmap.org o Google Maps.",
+    "cityLabel": "Nome città (opzionale)",
     "unitsLabel": "Unità",
-    "unitsMetric": "Metriche (°C)",
-    "unitsImperial": "Imperiali (°F)",
-    "errKey": "La chiave API è obbligatoria quando il meteo è attivato."
+    "unitsMetric": "Metrico (°C)",
+    "unitsImperial": "Imperiale (°F)",
+    "errCoords": "Latitudine e longitudine sono obbligatorie.",
+    "errLat": "Latitudine non valida (–90 a 90).",
+    "errLon": "Longitudine non valida (–180 a 180)."
   },
   "calendar": {
     "title": "Sincronizzazione calendario",

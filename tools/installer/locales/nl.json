@@ -31,18 +31,19 @@
     "errBoth": "Beide sleutels zijn vereist."
   },
   "weather": {
-    "title": "Weerwidget",
-    "subtitle": "Toon live weer op je dashboard. Vereist een gratis OpenWeatherMap API-sleutel.",
-    "enable": "Weerwidget inschakelen",
-    "keyLabel": "API-sleutel",
-    "keyOpt": "(gratis abonnement)",
-    "keyHint": "Haal er gratis een op bij {{link}}",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "Stad",
+    "title": "Weer-widget",
+    "subtitle": "Live weer op het dashboard — gratis, geen account, geen API-sleutel.",
+    "enable": "Weer-widget inschakelen",
+    "latLabel": "Breedtegraad",
+    "lonLabel": "Lengtegraad",
+    "coordHint": "Vind coördinaten op openstreetmap.org of Google Maps.",
+    "cityLabel": "Plaatsnaam (optioneel)",
     "unitsLabel": "Eenheden",
     "unitsMetric": "Metrisch (°C)",
     "unitsImperial": "Imperiaal (°F)",
-    "errKey": "Een API-sleutel is vereist als het weer is ingeschakeld."
+    "errCoords": "Breedtegraad en lengtegraad zijn vereist.",
+    "errLat": "Ongeldige breedtegraad (–90 tot 90).",
+    "errLon": "Ongeldige lengtegraad (–180 tot 180)."
   },
   "calendar": {
     "title": "Kalendersynchronisatie",

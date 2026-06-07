@@ -31,18 +31,19 @@
     "errBoth": "Les deux clés sont requises."
   },
   "weather": {
-    "title": "Widget météo",
-    "subtitle": "Affichez la météo en direct sur votre tableau de bord. Nécessite une clé d'API OpenWeatherMap gratuite.",
+    "title": "Widget Météo",
+    "subtitle": "Météo en direct sur le tableau de bord — gratuit, sans compte, sans clé API.",
     "enable": "Activer le widget météo",
-    "keyLabel": "Clé d'API",
-    "keyOpt": "(offre gratuite)",
-    "keyHint": "Obtenez-en une gratuitement sur {{link}}",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "Ville",
+    "latLabel": "Latitude",
+    "lonLabel": "Longitude",
+    "coordHint": "Trouvez vos coordonnées sur openstreetmap.org ou Google Maps.",
+    "cityLabel": "Nom de la ville (optionnel)",
     "unitsLabel": "Unités",
-    "unitsMetric": "Métriques (°C)",
-    "unitsImperial": "Impériales (°F)",
-    "errKey": "Une clé d'API est requise lorsque la météo est activée."
+    "unitsMetric": "Métrique (°C)",
+    "unitsImperial": "Impérial (°F)",
+    "errCoords": "La latitude et la longitude sont requises.",
+    "errLat": "Latitude invalide (–90 à 90).",
+    "errLon": "Longitude invalide (–180 à 180)."
   },
   "calendar": {
     "title": "Synchronisation du calendrier",

@@ -32,17 +32,18 @@
   },
   "weather": {
     "title": "Widget počasí",
-    "subtitle": "Zobraz živé počasí na svém přehledu. Vyžaduje bezplatný API klíč OpenWeatherMap.",
+    "subtitle": "Živé počasí na nástěnce — zdarma, bez účtu, bez API klíče.",
     "enable": "Povolit widget počasí",
-    "keyLabel": "API klíč",
-    "keyOpt": "(bezplatný plán)",
-    "keyHint": "Získej ho zdarma na {{link}}",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "Město",
+    "latLabel": "Zeměpisná šířka",
+    "lonLabel": "Zeměpisná délka",
+    "coordHint": "Souřadnice najdete na openstreetmap.org nebo Google Maps.",
+    "cityLabel": "Název města (nepovinné)",
     "unitsLabel": "Jednotky",
     "unitsMetric": "Metrické (°C)",
     "unitsImperial": "Imperiální (°F)",
-    "errKey": "API klíč je povinný, pokud je počasí povoleno."
+    "errCoords": "Zeměpisná šířka a délka jsou povinné.",
+    "errLat": "Neplatná zeměpisná šířka (–90 až 90).",
+    "errLon": "Neplatná zeměpisná délka (–180 až 180)."
   },
   "calendar": {
     "title": "Synchronizace kalendáře",

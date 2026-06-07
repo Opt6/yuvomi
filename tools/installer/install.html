@@ -188,7 +188,7 @@
       <div class="card-head">
         <div class="step-tag"></div>
         <h1 tabindex="-1" data-i18n="weather.title">Weather Widget</h1>
-        <p data-i18n="weather.subtitle">Show live weather on your dashboard. Requires a free OpenWeatherMap API key.</p>
+        <p data-i18n="weather.subtitle">Show live weather on your dashboard. No account or API key needed.</p>
       </div>
       <div class="card-body">
         <div class="field">
@@ -196,13 +196,17 @@
         </div>
         <div id="wea-fields" style="display:none">
           <div class="field">
-            <label for="wea-key"><span data-i18n="weather.keyLabel">API Key</span> <span class="opt" data-i18n="weather.keyOpt">(free tier)</span></label>
-            <input type="text" id="wea-key" placeholder="your_api_key">
-            <div class="hint" id="wea-hint">Get one free at <a href="https://openweathermap.org/api" target="_blank" rel="noopener">openweathermap.org/api</a></div>
+            <label for="wea-lat" data-i18n="weather.latLabel">Latitude</label>
+            <input type="number" id="wea-lat" step="any" min="-90" max="90" placeholder="52.52">
           </div>
           <div class="field">
-            <label for="wea-city" data-i18n="weather.cityLabel">City</label>
-            <input type="text" id="wea-city" value="Berlin">
+            <label for="wea-lon" data-i18n="weather.lonLabel">Longitude</label>
+            <input type="number" id="wea-lon" step="any" min="-180" max="180" placeholder="13.41">
+            <div class="hint" data-i18n="weather.coordHint">Find your coordinates on openstreetmap.org or Google Maps.</div>
+          </div>
+          <div class="field">
+            <label for="wea-city" data-i18n="weather.cityLabel">City name (optional)</label>
+            <input type="text" id="wea-city" placeholder="Berlin">
           </div>
           <div class="field">
             <label for="wea-units" data-i18n="weather.unitsLabel">Units</label>
@@ -479,12 +483,6 @@ NUMBERED_STEPS.forEach((name, i) => {
 
 // Strings mit eingebetteten Links/Code: innerHTML-frei über applyRich
 // zusammensetzen, damit die Wortstellung je Sprache erhalten bleibt.
-const owmLink = document.createElement('a');
-owmLink.href = 'https://openweathermap.org/api';
-owmLink.target = '_blank'; owmLink.rel = 'noopener';
-owmLink.textContent = t('weather.keyHintLink');
-applyRich($('wea-hint'), 'weather.keyHint', { link: owmLink });
-
 const gcalLink = document.createElement('a');
 gcalLink.href = 'https://console.cloud.google.com';
 gcalLink.target = '_blank'; gcalLink.rel = 'noopener';
@@ -503,8 +501,7 @@ let currentStep = 0;
 const S = {
   host: 'localhost', port: '3000', tz: '',
   SESSION_SECRET: '', DB_ENCRYPTION_KEY: '',
-  OPENWEATHER_API_KEY: '', OPENWEATHER_CITY: 'Berlin',
-  OPENWEATHER_UNITS: 'metric', OPENWEATHER_LANG: 'de',
+  WEATHER_LAT: '', WEATHER_LON: '', WEATHER_CITY: '', WEATHER_UNITS: 'metric',
   GOOGLE_CLIENT_ID: '', GOOGLE_CLIENT_SECRET: '', GOOGLE_REDIRECT_URI: '',
   APPLE_USERNAME: '', APPLE_APP_SPECIFIC_PASSWORD: '', APPLE_CALDAV_URL: '',
   SESSION_SECURE: '', TRUST_PROXY: '',
@@ -631,13 +628,18 @@ $('wea-enable').addEventListener('change', function() {
 
 $('wea-next').addEventListener('click', () => {
   if ($('wea-enable').checked) {
-    const k = $('wea-key').value.trim();
-    if (!k) { showErr('wea-err', t('weather.errKey')); return; }
-    S.OPENWEATHER_API_KEY = k;
-    S.OPENWEATHER_CITY = $('wea-city').value.trim() || 'Berlin';
-    S.OPENWEATHER_UNITS = $('wea-units').value;
+    const lat = $('wea-lat').value.trim();
+    const lon = $('wea-lon').value.trim();
+    if (!lat || !lon) { showErr('wea-err', t('weather.errCoords')); return; }
+    const latN = parseFloat(lat), lonN = parseFloat(lon);
+    if (isNaN(latN) || latN < -90 || latN > 90)   { showErr('wea-err', t('weather.errLat')); return; }
+    if (isNaN(lonN) || lonN < -180 || lonN > 180) { showErr('wea-err', t('weather.errLon')); return; }
+    S.WEATHER_LAT   = String(latN);
+    S.WEATHER_LON   = String(lonN);
+    S.WEATHER_CITY  = $('wea-city').value.trim();
+    S.WEATHER_UNITS = $('wea-units').value;
   } else {
-    S.OPENWEATHER_API_KEY = '';
+    S.WEATHER_LAT = ''; S.WEATHER_LON = ''; S.WEATHER_CITY = ''; S.WEATHER_UNITS = 'metric';
   }
   showErr('wea-err', '');
   $('gcal-redirect-hint').textContent =
@@ -693,7 +695,9 @@ $('adv-next').addEventListener('click', () => {
   $('rv-host').textContent    = S.host;
   $('rv-port').textContent    = S.port;
   $('rv-tz').textContent      = S.tz;
-  $('rv-weather').textContent = S.OPENWEATHER_API_KEY ? t('review.weatherEnabled', { city: S.OPENWEATHER_CITY }) : '-';
+  $('rv-weather').textContent = S.WEATHER_LAT
+    ? t('review.weatherEnabled', { city: S.WEATHER_CITY || `${S.WEATHER_LAT}, ${S.WEATHER_LON}` })
+    : '-';
   $('rv-google').textContent  = S.GOOGLE_CLIENT_ID ? t('review.configured') : '-';
   $('rv-apple').textContent   = S.APPLE_USERNAME || '-';
 
@@ -705,8 +709,8 @@ $('rev-next').addEventListener('click', async () => {
   btn.disabled = true; btn.textContent = t('review.saving');
   const env = {
     SESSION_SECRET: S.SESSION_SECRET, DB_ENCRYPTION_KEY: S.DB_ENCRYPTION_KEY,
-    OPENWEATHER_API_KEY: S.OPENWEATHER_API_KEY, OPENWEATHER_CITY: S.OPENWEATHER_CITY,
-    OPENWEATHER_UNITS: S.OPENWEATHER_UNITS, OPENWEATHER_LANG: S.OPENWEATHER_LANG,
+    WEATHER_LAT: S.WEATHER_LAT, WEATHER_LON: S.WEATHER_LON,
+    WEATHER_CITY: S.WEATHER_CITY, WEATHER_UNITS: S.WEATHER_UNITS,
     GOOGLE_CLIENT_ID: S.GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET: S.GOOGLE_CLIENT_SECRET,
     GOOGLE_REDIRECT_URI: S.GOOGLE_REDIRECT_URI,
     APPLE_USERNAME: S.APPLE_USERNAME, APPLE_APP_SPECIFIC_PASSWORD: S.APPLE_APP_SPECIFIC_PASSWORD,

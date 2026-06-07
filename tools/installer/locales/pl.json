@@ -31,18 +31,19 @@
     "errBoth": "Oba klucze są wymagane."
   },
   "weather": {
-    "title": "Widżet pogody",
-    "subtitle": "Wyświetlaj pogodę na żywo na pulpicie. Wymaga bezpłatnego klucza API OpenWeatherMap.",
-    "enable": "Włącz widżet pogody",
-    "keyLabel": "Klucz API",
-    "keyOpt": "(plan bezpłatny)",
-    "keyHint": "Zdobądź go bezpłatnie na {{link}}",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "Miasto",
+    "title": "Widget pogodowy",
+    "subtitle": "Pogoda na żywo na pulpicie — bezpłatnie, bez konta, bez klucza API.",
+    "enable": "Włącz widget pogodowy",
+    "latLabel": "Szerokość geograficzna",
+    "lonLabel": "Długość geograficzna",
+    "coordHint": "Znajdź współrzędne na openstreetmap.org lub Google Maps.",
+    "cityLabel": "Nazwa miasta (opcjonalnie)",
     "unitsLabel": "Jednostki",
     "unitsMetric": "Metryczne (°C)",
     "unitsImperial": "Imperialne (°F)",
-    "errKey": "Klucz API jest wymagany, gdy pogoda jest włączona."
+    "errCoords": "Szerokość i długość geograficzna są wymagane.",
+    "errLat": "Nieprawidłowa szerokość geograficzna (–90 do 90).",
+    "errLon": "Nieprawidłowa długość geograficzna (–180 do 180)."
   },
   "calendar": {
     "title": "Synchronizacja kalendarza",

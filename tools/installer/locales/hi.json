@@ -32,17 +32,18 @@
   },
   "weather": {
     "title": "मौसम विजेट",
-    "subtitle": "अपने डैशबोर्ड पर लाइव मौसम दिखाएँ। इसके लिए एक मुफ़्त OpenWeatherMap API कुंजी आवश्यक है।",
+    "subtitle": "डैशबोर्ड पर लाइव मौसम — मुफ्त, कोई खाता नहीं, कोई API कुंजी नहीं।",
     "enable": "मौसम विजेट सक्षम करें",
-    "keyLabel": "API कुंजी",
-    "keyOpt": "(मुफ़्त स्तर)",
-    "keyHint": "{{link}} पर मुफ़्त में एक प्राप्त करें",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "शहर",
+    "latLabel": "अक्षांश",
+    "lonLabel": "देशांतर",
+    "coordHint": "openstreetmap.org या Google Maps पर निर्देशांक खोजें।",
+    "cityLabel": "शहर का नाम (वैकल्पिक)",
     "unitsLabel": "इकाइयाँ",
     "unitsMetric": "मीट्रिक (°C)",
-    "unitsImperial": "इम्पीरियल (°F)",
-    "errKey": "मौसम सक्षम होने पर API कुंजी आवश्यक है।"
+    "unitsImperial": "इंपीरियल (°F)",
+    "errCoords": "अक्षांश और देशांतर आवश्यक हैं।",
+    "errLat": "अमान्य अक्षांश (–90 से 90)।",
+    "errLon": "अमान्य देशांतर (–180 से 180)।"
   },
   "calendar": {
     "title": "कैलेंडर सिंक",

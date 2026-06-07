@@ -28,7 +28,7 @@ test('sanitizeEnv lehnt Werte mit Newline/Carriage-Return ab', () => {
 });
 
 test('sanitizeEnv überspringt leere und null-Werte', () => {
-  const r = sanitizeEnv({ SESSION_SECRET: 'x', OPENWEATHER_API_KEY: '', GOOGLE_CLIENT_ID: null });
+  const r = sanitizeEnv({ SESSION_SECRET: 'x', WEATHER_LAT: '', GOOGLE_CLIENT_ID: null });
   assert.equal(r.ok, true);
   assert.deepEqual(Object.keys(r.env), ['SESSION_SECRET']);
 });

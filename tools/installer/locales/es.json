@@ -31,18 +31,19 @@
     "errBoth": "Ambas claves son obligatorias."
   },
   "weather": {
-    "title": "Widget del tiempo",
-    "subtitle": "Muestra el tiempo en directo en tu panel. Requiere una clave de API gratuita de OpenWeatherMap.",
-    "enable": "Activar el widget del tiempo",
-    "keyLabel": "Clave de API",
-    "keyOpt": "(plan gratuito)",
-    "keyHint": "Obtén una gratis en {{link}}",
-    "keyHintLink": "openweathermap.org/api",
-    "cityLabel": "Ciudad",
+    "title": "Widget de clima",
+    "subtitle": "Clima en vivo en el panel — gratis, sin cuenta, sin clave API.",
+    "enable": "Activar widget de clima",
+    "latLabel": "Latitud",
+    "lonLabel": "Longitud",
+    "coordHint": "Encuentra coordenadas en openstreetmap.org o Google Maps.",
+    "cityLabel": "Nombre de ciudad (opcional)",
     "unitsLabel": "Unidades",
-    "unitsMetric": "Métricas (°C)",
-    "unitsImperial": "Imperiales (°F)",
-    "errKey": "La clave de API es obligatoria cuando el tiempo está activado."
+    "unitsMetric": "Métrico (°C)",
+    "unitsImperial": "Imperial (°F)",
+    "errCoords": "La latitud y la longitud son obligatorias.",
+    "errLat": "Latitud no válida (–90 a 90).",
+    "errLon": "Longitud no válida (–180 a 180)."
   },
   "calendar": {
     "title": "Sincronización de calendario",
