@@ -2210,6 +2210,10 @@ html.fab-anim-done .page-fab {
   .swipe-row::after { display: none; }
 }
 
+@media (min-width: 1024px) {
+  .swipe-row::after { display: none; }
+}
+
 /* Gemeinsam: Erledigt / Abhaken (Swipe nach links) */
 .swipe-reveal--done {
   right: 0;

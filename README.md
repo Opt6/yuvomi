@@ -11,6 +11,9 @@
     <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%E2%89%A522-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js ≥22"></a>
     <img src="https://img.shields.io/badge/PWA-ready-5A0FC8?style=flat-square&logo=pwa&logoColor=white" alt="PWA">
     <a href="https://github.com/ulsklyc/oikos/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" alt="PRs Welcome"></a>
+    <a href="https://apps.truenas.com/catalog/oikos_community/"><img src="https://img.shields.io/badge/TrueNAS-0095D5?style=flat-square&logo=truenas&logoColor=white" alt="TrueNAS SCALE"></a>
+    <a href="https://ca.unraid.net/apps/oikos-0s9fwat1sxc881"><img src="https://img.shields.io/badge/Unraid-F1A208?style=flat-square&logo=unraid&logoColor=white" alt="Unraid"></a>
+    <img src="https://img.shields.io/badge/Umbrel-241E22?style=flat-square&logo=umbrel&logoColor=white" alt="Umbrel">
   </p>
 
   <p>

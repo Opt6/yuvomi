@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.27] - 2026-06-08
+
+### Added
+- README badges for TrueNAS SCALE, Unraid, and Umbrel with links to their respective app store pages.
+
+### Fixed
+- Shopping list: swipe-affordance chevron (›) no longer overlaps the delete button on desktop — the chevron hint is now hidden at ≥1024 px where the explicit delete button is used instead.
+
 ## [0.65.26] - 2026-06-08
 
 ### Changed
