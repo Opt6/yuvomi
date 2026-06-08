@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.34] - 2026-06-08
+
+### Added
+- Vietnamese (`vi`) translation — all UI strings are fully localized, including the web installer wizard and CLI installer.
+- VND (Vietnamese Đồng) added to the supported currencies list in Settings → Budget.
+
 ## [0.65.33] - 2026-06-08
 
 ### Fixed
