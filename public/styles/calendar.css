@@ -1201,7 +1201,7 @@
 .agenda-holiday {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1h);
+  gap: var(--space-2);
   font-size: var(--text-xs);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
@@ -1232,7 +1232,7 @@
 .cal-toolbar__layer-btn {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1h);
+  gap: var(--space-2);
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-full);
   border: 1px solid color-mix(in srgb, var(--layer-color) 40%, transparent);

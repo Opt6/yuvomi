@@ -621,6 +621,24 @@ router.post('/subscriptions/:id/sync', async (req, res) => {
   }
 });
 
+// ---------------------------------------------------------------------------
+// GET /api/v1/calendar/holidays?from=YYYY-MM-DD&to=YYYY-MM-DD
+// Muss VOR /:id stehen, damit "holidays" nicht als ID-Parameter interpretiert wird.
+// ---------------------------------------------------------------------------
+router.get('/holidays', (req, res) => {
+  try {
+    const { from, to } = req.query;
+    if (!from || !to || !/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) {
+      return res.status(400).json({ error: 'Query params from and to (YYYY-MM-DD) required.', code: 400 });
+    }
+    const data = holidays.getForRange(from, to);
+    res.json({ data });
+  } catch (err) {
+    log.error('GET /holidays', err);
+    res.status(500).json({ error: 'Interner Fehler.', code: 500 });
+  }
+});
+
 // --------------------------------------------------------
 // GET /api/v1/calendar/:id
 // Einzelnen Termin abrufen.
@@ -1086,23 +1104,4 @@ router.get('/caldav/reminders/status', (req, res) => {
 });
 
 export const __test = { googleTarget };
-
-// ---------------------------------------------------------------------------
-// GET /api/v1/calendar/holidays?from=YYYY-MM-DD&to=YYYY-MM-DD
-// Returns holiday entries from the local cache for the configured country.
-// ---------------------------------------------------------------------------
-router.get('/holidays', (req, res) => {
-  try {
-    const { from, to } = req.query;
-    if (!from || !to || !/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) {
-      return res.status(400).json({ error: 'Query params from and to (YYYY-MM-DD) required.', code: 400 });
-    }
-    const data = holidays.getForRange(from, to);
-    res.json({ data });
-  } catch (err) {
-    log.error('GET /holidays', err);
-    res.status(500).json({ error: 'Interner Fehler.', code: 500 });
-  }
-});
-
 export default router;

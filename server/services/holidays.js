@@ -38,19 +38,27 @@ async function apiFetch(path) {
 
 /**
  * Alle verfügbaren Länder abrufen.
- * @returns {Promise<Array<{isoCode, name}>>}
+ * @returns {Promise<Array<{isoCode: string, name: string}>>}
  */
 async function getCountries() {
-  return apiFetch('/Countries');
+  const raw = await apiFetch('/Countries');
+  return (raw ?? []).map((c) => ({
+    isoCode: c.isoCode,
+    name: resolveName(c.name),
+  })).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /**
  * Unterteilungen (Bundesländer etc.) für ein Land abrufen.
  * @param {string} countryIsoCode z.B. 'DE'
- * @returns {Promise<Array<{code, shortName, name}>>}
+ * @returns {Promise<Array<{isoCode: string, name: string}>>}
  */
 async function getSubdivisions(countryIsoCode) {
-  return apiFetch(`/Subdivisions?countryIsoCode=${encodeURIComponent(countryIsoCode)}`);
+  const raw = await apiFetch(`/Subdivisions?countryIsoCode=${encodeURIComponent(countryIsoCode)}`);
+  return (raw ?? []).map((s) => ({
+    isoCode: s.isoCode ?? s.code,
+    name: resolveName(s.name) || s.shortName || s.isoCode || s.code,
+  })).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /**
@@ -116,8 +124,13 @@ async function sync() {
   const showPublic  = db.get().prepare("SELECT value FROM sync_config WHERE key='holiday_show_public'").get()?.value === '1';
   const showSchool  = db.get().prepare("SELECT value FROM sync_config WHERE key='holiday_show_school'").get()?.value === '1';
 
-  if (!country || (!showPublic && !showSchool)) {
-    log.info('No holiday country configured or both layers disabled – skipping sync.');
+  if (!country) {
+    log.info('No holiday country configured – skipping sync.');
+    return { synced: 0 };
+  }
+
+  if (!showPublic && !showSchool) {
+    log.info('Both holiday layers disabled – skipping sync.');
     return { synced: 0 };
   }
 

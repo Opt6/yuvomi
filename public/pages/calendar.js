@@ -573,9 +573,15 @@ function getMonthRange(dateStr) {
   const d     = new Date(dateStr + 'T00:00:00');
   const year  = d.getFullYear();
   const month = d.getMonth();
-  const from  = `${year}-${pad(month + 1)}-01`;
-  // Extra Tage für Kalenderraster (6 Wochen × 7 = 42 Tage)
-  const to    = addDays(from, 41);
+  // Start des Monats, dann bis auf den Montag zurückgehen (Kalenderraster)
+  const firstOfMonth = new Date(year, month, 1);
+  let startOffset = firstOfMonth.getDay() - 1; // Montag = 0
+  if (startOffset < 0) startOffset = 6;        // Sonntag → 6
+  const gridStart = new Date(firstOfMonth);
+  gridStart.setDate(gridStart.getDate() - startOffset);
+  const from = isoDate(gridStart);
+  // 42 Tage (6 Wochen) abdecken
+  const to   = addDays(from, 41);
   return { from, to };
 }
 
@@ -736,6 +742,7 @@ async function loadRange(from, to) {
     state.events   = evRes.data;
     state.tasks    = filterTasksForCalendar(taskRes.data ?? []);
     state.holidays = holRes.data ?? [];
+    console.debug('[Calendar] holidays loaded:', state.holidays.length, state.holidays);
   } catch (err) {
     console.error('[Calendar] loadRange Fehler:', err);
     state.events   = [];

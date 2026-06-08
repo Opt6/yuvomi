@@ -2053,6 +2053,25 @@ function bindEvents(container, user, users, categories, icsSubscriptions, apiTok
       }
       syncBtn.disabled = true;
       try {
+        // Einstellungen zuerst speichern, damit sync() die aktuellen Werte liest.
+        // Wenn noch kein Toggle aktiviert ist, Public Holidays automatisch einschalten.
+        const showPublicCbEl  = container.querySelector('#holiday-show-public');
+        const showSchoolCbEl  = container.querySelector('#holiday-show-school');
+        const noneEnabled = !showPublicCbEl?.checked && !showSchoolCbEl?.checked;
+        if (noneEnabled && showPublicCbEl) {
+          showPublicCbEl.checked = true;
+          const pubGrp = container.querySelector('#holiday-public-color-group');
+          if (pubGrp) pubGrp.hidden = false;
+        }
+        await api.put('/preferences', {
+          holiday_country:      countrySelect.value || null,
+          holiday_subdivision:  subdivisionSelect.value || null,
+          holiday_show_public:  container.querySelector('#holiday-show-public')?.checked ?? false,
+          holiday_show_school:  container.querySelector('#holiday-show-school')?.checked ?? false,
+          holiday_public_color: container.querySelector('#holiday-public-color')?.value ?? '#FF3B30',
+          holiday_school_color: container.querySelector('#holiday-school-color')?.value ?? '#34C759',
+        });
+
         const res = await api.post('/preferences/holidays/sync', {});
         const lastSyncLabel = container.querySelector('#holiday-last-sync-label');
         if (lastSyncLabel && res.data?.last_sync) {
