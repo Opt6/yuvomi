@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.25] - 2026-06-08
+
+### Fixed
+- README module icons now render correctly — replaced blank PNGs (produced by a failed qlmanage render) with proper images generated via sharp.
+
 ## [0.65.24] - 2026-06-08
 
 ### Security
