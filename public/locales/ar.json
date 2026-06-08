@@ -65,7 +65,9 @@
     "section": {
       "household": "المنزل"
     },
-    "reminders": "التذكيرات"
+    "reminders": "التذكيرات",
+    "sidebarCollapse": "طيّ الشريط الجانبي",
+    "sidebarExpand": "توسيع الشريط الجانبي"
   },
   "dashboard": {
     "title": "لوحة التحكم",

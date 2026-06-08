@@ -65,7 +65,9 @@
     "section": {
       "household": "Huishouden"
     },
-    "reminders": "Herinneringen"
+    "reminders": "Herinneringen",
+    "sidebarCollapse": "Zijbalk inklappen",
+    "sidebarExpand": "Zijbalk uitklappen"
   },
   "dashboard": {
     "title": "Overzicht",

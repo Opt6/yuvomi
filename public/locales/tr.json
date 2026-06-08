@@ -65,7 +65,9 @@
     "section": {
       "household": "Ev"
     },
-    "reminders": "Hatırlatıcılar"
+    "reminders": "Hatırlatıcılar",
+    "sidebarCollapse": "Kenar çubuğunu daralt",
+    "sidebarExpand": "Kenar çubuğunu genişlet"
   },
   "dashboard": {
     "title": "Genel Bakış",

@@ -65,7 +65,9 @@
     "section": {
       "household": "Casa"
     },
-    "reminders": "Lembretes"
+    "reminders": "Lembretes",
+    "sidebarCollapse": "Recolher barra lateral",
+    "sidebarExpand": "Expandir barra lateral"
   },
   "dashboard": {
     "title": "Painel",

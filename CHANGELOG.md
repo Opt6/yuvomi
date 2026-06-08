@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.29] - 2026-06-08
+
+### Added
+- Desktop sidebar is now collapsible: a toggle button folds the navigation down to icon-only mode (56 px). Labels, the brand name, and the section heading are hidden; icons and tooltips remain. The collapsed state is persisted in `localStorage` and restored on reload. Toggling animates smoothly via the existing CSS width and margin transitions.
+
 ## [0.65.28] - 2026-06-08
 
 ### Added

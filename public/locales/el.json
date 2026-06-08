@@ -65,7 +65,9 @@
     "section": {
       "household": "Νοικοκυριό"
     },
-    "reminders": "Υπενθυμίσεις"
+    "reminders": "Υπενθυμίσεις",
+    "sidebarCollapse": "Σύμπτυξη πλευρικής στήλης",
+    "sidebarExpand": "Επέκταση πλευρικής στήλης"
   },
   "dashboard": {
     "title": "Επισκόπηση",

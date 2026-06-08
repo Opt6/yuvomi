@@ -65,7 +65,9 @@
     "section": {
       "household": "Casa"
     },
-    "reminders": "Promemoria"
+    "reminders": "Promemoria",
+    "sidebarCollapse": "Comprimi barra laterale",
+    "sidebarExpand": "Espandi barra laterale"
   },
   "dashboard": {
     "title": "Panoramica",

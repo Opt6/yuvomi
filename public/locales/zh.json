@@ -65,7 +65,9 @@
     "section": {
       "household": "家庭"
     },
-    "reminders": "提醒"
+    "reminders": "提醒",
+    "sidebarCollapse": "收起侧边栏",
+    "sidebarExpand": "展开侧边栏"
   },
   "dashboard": {
     "title": "概览",

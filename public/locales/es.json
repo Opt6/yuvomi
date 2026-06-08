@@ -65,7 +65,9 @@
     "section": {
       "household": "Hogar"
     },
-    "reminders": "Recordatorios"
+    "reminders": "Recordatorios",
+    "sidebarCollapse": "Contraer barra lateral",
+    "sidebarExpand": "Expandir barra lateral"
   },
   "dashboard": {
     "title": "Inicio",

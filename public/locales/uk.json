@@ -65,7 +65,9 @@
     "section": {
       "household": "Господарство"
     },
-    "reminders": "Нагадування"
+    "reminders": "Нагадування",
+    "sidebarCollapse": "Згорнути бічну панель",
+    "sidebarExpand": "Розгорнути бічну панель"
   },
   "dashboard": {
     "title": "Огляд",

@@ -65,7 +65,9 @@
     "section": {
       "household": "Household"
     },
-    "reminders": "Reminders"
+    "reminders": "Reminders",
+    "sidebarCollapse": "Collapse sidebar",
+    "sidebarExpand": "Expand sidebar"
   },
   "dashboard": {
     "title": "Overview",

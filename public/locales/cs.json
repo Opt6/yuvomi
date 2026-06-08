@@ -65,7 +65,9 @@
     "section": {
       "household": "Domácnost"
     },
-    "reminders": "Připomínky"
+    "reminders": "Připomínky",
+    "sidebarCollapse": "Sbalit postranní panel",
+    "sidebarExpand": "Rozbalit postranní panel"
   },
   "dashboard": {
     "title": "Přehled",

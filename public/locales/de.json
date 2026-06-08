@@ -65,7 +65,9 @@
     "section": {
       "household": "Haushalt"
     },
-    "reminders": "Erinnerungen"
+    "reminders": "Erinnerungen",
+    "sidebarCollapse": "Sidebar einklappen",
+    "sidebarExpand": "Sidebar ausklappen"
   },
   "search": {
     "title": "Suche",

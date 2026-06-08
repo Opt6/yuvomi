@@ -65,7 +65,9 @@
     "section": {
       "household": "घरेलू"
     },
-    "reminders": "रिमाइंडर"
+    "reminders": "रिमाइंडर",
+    "sidebarCollapse": "साइडबार समेटें",
+    "sidebarExpand": "साइडबार फैलाएं"
   },
   "dashboard": {
     "title": "डैशबोर्ड",

@@ -65,7 +65,9 @@
     "section": {
       "household": "家庭"
     },
-    "reminders": "リマインダー"
+    "reminders": "リマインダー",
+    "sidebarCollapse": "サイドバーを閉じる",
+    "sidebarExpand": "サイドバーを開く"
   },
   "dashboard": {
     "title": "ダッシュボード",

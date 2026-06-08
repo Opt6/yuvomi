@@ -65,7 +65,9 @@
     "section": {
       "household": "Hushåll"
     },
-    "reminders": "Påminnelser"
+    "reminders": "Påminnelser",
+    "sidebarCollapse": "Fäll ihop sidofältet",
+    "sidebarExpand": "Fäll ut sidofältet"
   },
   "dashboard": {
     "title": "Översikt",
