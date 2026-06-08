@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.65.26] - 2026-06-08
+
+### Changed
+- README module icons now use each module's accent color with white icon strokes at 64×64 px, matching the visual style of the GitHub Pages landing page.
+
 ## [0.65.25] - 2026-06-08
 
 ### Fixed
