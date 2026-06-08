@@ -36,7 +36,8 @@
     "errorServer": "服务器错误。请稍后重试。",
     "errorTimeout": "连接超时。请重试。",
     "requiredFields": "请填写所有必填字段。",
-    "invalidInput": "输入无效。"
+    "invalidInput": "输入无效。",
+    "togglePasswordVisibility": "显示/隐藏密码"
   },
   "nav": {
     "dashboard": "概览",

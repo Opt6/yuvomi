@@ -36,7 +36,8 @@
     "errorServer": "خطأ في الخادم. يرجى المحاولة لاحقاً.",
     "errorTimeout": "استغرق الاتصال وقتاً طويلاً. يرجى المحاولة مجدداً.",
     "requiredFields": "يرجى ملء جميع الحقول المطلوبة.",
-    "invalidInput": "إدخال غير صالح."
+    "invalidInput": "إدخال غير صالح.",
+    "togglePasswordVisibility": "إظهار/إخفاء كلمة المرور"
   },
   "nav": {
     "dashboard": "لوحة التحكم",

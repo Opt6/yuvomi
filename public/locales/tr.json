@@ -36,7 +36,8 @@
     "errorServer": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
     "errorTimeout": "Bağlantı çok uzun sürdü. Lütfen tekrar deneyin.",
     "requiredFields": "Lütfen tüm zorunlu alanları doldurun.",
-    "invalidInput": "Geçersiz giriş."
+    "invalidInput": "Geçersiz giriş.",
+    "togglePasswordVisibility": "Şifreyi göster/gizle"
   },
   "nav": {
     "dashboard": "Genel Bakış",

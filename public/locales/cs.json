@@ -36,7 +36,8 @@
     "errorServer": "Chyba serveru. Zkuste to prosím později znovu.",
     "errorTimeout": "Připojení trvalo příliš dlouho. Zkuste to prosím znovu.",
     "requiredFields": "Vyplňte prosím všechna povinná pole.",
-    "invalidInput": "Neplatný vstup."
+    "invalidInput": "Neplatný vstup.",
+    "togglePasswordVisibility": "Zobrazit/skrýt heslo"
   },
   "nav": {
     "dashboard": "Přehled",

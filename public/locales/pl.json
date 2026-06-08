@@ -36,7 +36,8 @@
     "errorServer": "Błąd serwera. Spróbuj ponownie później.",
     "errorTimeout": "Połączenie trwało zbyt długo. Spróbuj ponownie.",
     "requiredFields": "Wypełnij wszystkie wymagane pola.",
-    "invalidInput": "Nieprawidłowe dane."
+    "invalidInput": "Nieprawidłowe dane.",
+    "togglePasswordVisibility": "Pokaż/ukryj hasło"
   },
   "nav": {
     "dashboard": "Pulpit",

@@ -36,7 +36,8 @@
     "errorServer": "Server error. Please try again later.",
     "errorTimeout": "The connection took too long. Please try again.",
     "requiredFields": "Please fill in all required fields.",
-    "invalidInput": "Invalid input."
+    "invalidInput": "Invalid input.",
+    "togglePasswordVisibility": "Toggle password visibility"
   },
   "nav": {
     "dashboard": "Overview",

@@ -36,7 +36,8 @@
     "errorServer": "Serverfehler. Bitte versuche es später erneut.",
     "errorTimeout": "Die Verbindung hat zu lange gedauert. Bitte erneut versuchen.",
     "requiredFields": "Bitte alle Pflichtfelder ausfüllen.",
-    "invalidInput": "Ungültige Eingabe."
+    "invalidInput": "Ungültige Eingabe.",
+    "togglePasswordVisibility": "Passwort anzeigen/verbergen"
   },
   "nav": {
     "dashboard": "Übersicht",

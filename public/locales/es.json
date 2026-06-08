@@ -36,7 +36,8 @@
     "errorServer": "Error del servidor. Por favor, inténtalo más tarde.",
     "errorTimeout": "La conexión tardó demasiado. Por favor, inténtalo de nuevo.",
     "requiredFields": "Completa todos los campos obligatorios.",
-    "invalidInput": "Entrada no válida."
+    "invalidInput": "Entrada no válida.",
+    "togglePasswordVisibility": "Mostrar/ocultar contraseña"
   },
   "nav": {
     "dashboard": "Inicio",

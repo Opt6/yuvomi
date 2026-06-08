@@ -36,7 +36,8 @@
     "errorServer": "सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।",
     "errorTimeout": "कनेक्शन बहुत देर से हुआ। कृपया पुनः प्रयास करें।",
     "requiredFields": "कृपया सभी आवश्यक फ़ील्ड भरें.",
-    "invalidInput": "अमान्य इनपुट."
+    "invalidInput": "अमान्य इनपुट.",
+    "togglePasswordVisibility": "पासवर्ड दिखाएं/छिपाएं"
   },
   "nav": {
     "dashboard": "डैशबोर्ड",

@@ -36,7 +36,8 @@
     "errorServer": "Erreur serveur. Veuillez réessayer plus tard.",
     "errorTimeout": "La connexion a pris trop de temps. Veuillez réessayer.",
     "requiredFields": "Veuillez remplir tous les champs obligatoires.",
-    "invalidInput": "Saisie invalide."
+    "invalidInput": "Saisie invalide.",
+    "togglePasswordVisibility": "Afficher/masquer le mot de passe"
   },
   "nav": {
     "dashboard": "Accueil",

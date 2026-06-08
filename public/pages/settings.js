@@ -953,7 +953,7 @@ export async function render(container, { user }) {
           <!-- WebDAV Backup Target -->
           <div class="settings-card settings-card--backup" id="backup-webdav-card">
             <h3 class="settings-card__title">
-              <i data-lucide="cloud-upload" aria-hidden="true" style="display:inline-block;width:18px;height:18px;vertical-align:-3px;margin-right:var(--space-2);"></i>
+              <i data-lucide="cloud-upload" class="icon-sm" aria-hidden="true"></i>
               ${t('settings.backupWebdavTitle')}
             </h3>
             <p class="form-hint">${t('settings.backupWebdavHint')}</p>
@@ -984,7 +984,7 @@ export async function render(container, { user }) {
                     placeholder="${t('settings.backupWebdavPasswordPlaceholder')}" />
                   <button type="button" class="btn btn--icon btn--ghost settings-webdav-reveal-btn"
                     data-reveal-target="webdav-password" aria-label="${t('common.togglePasswordVisibility')}">
-                    <i data-lucide="eye" aria-hidden="true"></i>
+                    <i data-lucide="eye" class="icon-sm" aria-hidden="true"></i>
                   </button>
                 </div>
               </div>
