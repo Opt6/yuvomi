@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.69.0] - 2026-06-10
+
+### Added
+- **Documents — Paperless-ngx (DMS) integration**: admins can connect a Paperless-ngx document management system in Settings (server URL + API token, with a connection test). Multiple DMS accounts are supported.
+- **Link from DMS**: search a connected DMS and link existing documents into the Documents module as references — the binary stays in the DMS and is not duplicated. Previews and downloads of linked documents are proxied live from the DMS, while each document's family/restricted/private visibility is still enforced.
+- **Upload to DMS**: push a local document up into the connected DMS (asynchronous OCR ingestion); when several DMS accounts are configured, an account picker lets you choose the target.
+
+All DMS operations are admin-only, and the API token is never returned in responses. The integration uses a provider-pluggable adapter layer (Paperless-ngx is the first adapter) and requires no new environment variables — everything is configured in-app.
+
 ## [0.68.4] - 2026-06-09
 
 ### Fixed
