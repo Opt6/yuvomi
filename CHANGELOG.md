@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.6] - 2026-06-11
+
+### Changed
+- **Consistent Settings cards**: every card across the settings pages now shares one surface style. A few cards that still rendered with a translucent "glass" background have been brought in line so all cards match.
+
 ## [0.71.5] - 2026-06-11
 
 ### Fixed

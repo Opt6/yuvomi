@@ -121,14 +121,9 @@ function renderAccount(listEl, account, reload) {
 function renderPage(container) {
   container.replaceChildren();
   container.insertAdjacentHTML('beforeend', `
-    <header class="settings-leaf-header">
-      <h1 class="settings-leaf-header__title">${t('settings.pageDocumentDms')}</h1>
-      <p class="settings-leaf-header__description">${t('settings.pageDocumentDmsDescription')}</p>
-    </header>
-
     <section class="settings-section">
       <h2 class="settings-section__title">${t('settings.dmsTitle')}</h2>
-      <div class="settings-card settings-card--document-storage" id="dms-card">
+      <div class="settings-card" id="dms-card">
         <p class="settings-card-description">${t('settings.dmsDescription')}</p>
         <div class="dms-account-list" id="dms-account-list"></div>
         <div id="dms-add-host"></div>
