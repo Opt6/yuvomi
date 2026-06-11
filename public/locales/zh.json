@@ -1567,7 +1567,7 @@
         "title": "文档",
         "storageLocal": "本地",
         "storageWebdav": "WebDAV",
-        "storageDms": "DMS / Paperless",
+        "storageDms": "DMS",
         "storageDmsUnavailable": "DMS 不可用",
         "activeUploadTarget": "新文件将存储于：{{target}}",
         "addButton": "添加文档",

@@ -1747,7 +1747,7 @@
         "title": "Dokumenty",
         "storageLocal": "Místní",
         "storageWebdav": "WebDAV",
-        "storageDms": "DMS / Paperless",
+        "storageDms": "DMS",
         "storageDmsUnavailable": "DMS není dostupné",
         "activeUploadTarget": "Nové soubory budou uloženy do: {{target}}",
         "addButton": "Přidat dokument",

@@ -1578,7 +1578,7 @@
         "title": "Documenten",
         "storageLocal": "Lokaal",
         "storageWebdav": "WebDAV",
-        "storageDms": "DMS / Paperless",
+        "storageDms": "DMS",
         "storageDmsUnavailable": "DMS niet beschikbaar",
         "activeUploadTarget": "Nieuwe bestanden worden opgeslagen in: {{target}}",
         "addButton": "Document toevoegen",

@@ -1567,7 +1567,7 @@
         "title": "Belgeler",
         "storageLocal": "Yerel",
         "storageWebdav": "WebDAV",
-        "storageDms": "DMS / Paperless",
+        "storageDms": "DMS",
         "storageDmsUnavailable": "DMS kullanılamıyor",
         "activeUploadTarget": "Yeni dosyalar şurada saklanacak: {{target}}",
         "addButton": "Belge ekle",

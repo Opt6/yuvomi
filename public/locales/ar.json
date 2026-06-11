@@ -1567,7 +1567,7 @@
         "title": "المستندات",
         "storageLocal": "محلي",
         "storageWebdav": "WebDAV",
-        "storageDms": "DMS / Paperless",
+        "storageDms": "DMS",
         "storageDmsUnavailable": "نظام DMS غير متاح",
         "activeUploadTarget": "سيتم حفظ الملفات الجديدة في: {{target}}",
         "addButton": "إضافة مستند",

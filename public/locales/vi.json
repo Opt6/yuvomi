@@ -1578,7 +1578,7 @@
         "title": "Tài liệu",
         "storageLocal": "Cục bộ",
         "storageWebdav": "WebDAV",
-        "storageDms": "DMS / Paperless",
+        "storageDms": "DMS",
         "storageDmsUnavailable": "DMS không khả dụng",
         "activeUploadTarget": "Các tệp mới sẽ được lưu tại: {{target}}",
         "addButton": "Thêm tài liệu",

@@ -1567,7 +1567,7 @@
         "title": "Dokument",
         "storageLocal": "Lokalt",
         "storageWebdav": "WebDAV",
-        "storageDms": "DMS / Paperless",
+        "storageDms": "DMS",
         "storageDmsUnavailable": "DMS är inte tillgängligt",
         "activeUploadTarget": "Nya filer lagras i: {{target}}",
         "addButton": "Lägg till dokument",

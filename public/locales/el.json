@@ -1567,7 +1567,7 @@
         "title": "Έγγραφα",
         "storageLocal": "Τοπικά",
         "storageWebdav": "WebDAV",
-        "storageDms": "DMS / Paperless",
+        "storageDms": "DMS",
         "storageDmsUnavailable": "Το DMS δεν είναι διαθέσιμο",
         "activeUploadTarget": "Τα νέα αρχεία θα αποθηκεύονται σε: {{target}}",
         "addButton": "Προσθήκη εγγράφου",

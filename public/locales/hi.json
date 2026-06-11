@@ -1567,7 +1567,7 @@
         "title": "दस्तावेज़",
         "storageLocal": "स्थानीय",
         "storageWebdav": "WebDAV",
-        "storageDms": "DMS / Paperless",
+        "storageDms": "DMS",
         "storageDmsUnavailable": "DMS उपलब्ध नहीं",
         "activeUploadTarget": "नई फ़ाइलें यहाँ संग्रहीत होंगी: {{target}}",
         "addButton": "दस्तावेज़ जोड़ें",

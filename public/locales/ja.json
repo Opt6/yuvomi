@@ -1567,7 +1567,7 @@
         "title": "書類",
         "storageLocal": "ローカル",
         "storageWebdav": "WebDAV",
-        "storageDms": "DMS / Paperless",
+        "storageDms": "DMS",
         "storageDmsUnavailable": "DMS を利用できません",
         "activeUploadTarget": "新しいファイルの保存先: {{target}}",
         "addButton": "書類を追加",
