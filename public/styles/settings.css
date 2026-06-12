@@ -18,6 +18,10 @@
   margin: 0 auto;
 }
 
+.settings-page--leaf .settings-shell-header {
+  display: none;
+}
+
 /* --------------------------------------------------------
    Responsive Settings Shell
    -------------------------------------------------------- */

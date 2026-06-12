@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.31] - 2026-06-12
+
+### Changed
+- **App-wide typography now follows one responsive semantic hierarchy**: mobile and desktop use fixed hero, page, section, card, body, secondary, caption, and micro roles instead of drifting module-specific sizes. Oversized mobile headings were reduced, readable supporting text now starts at 14px, prose and inputs stay at 16px, document and split-expense headings are consistent, and Settings leaf pages show one clear primary title.
+
 ## [0.71.30] - 2026-06-12
 
 ### Changed

@@ -70,10 +70,6 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 20%, transparent);
 }
 
-@media (min-width: 1024px) {
-  .notes-toolbar__search-input { font-size: var(--text-sm); }
-}
-
 /* --------------------------------------------------------
  * Masonry-Grid
  * -------------------------------------------------------- */
@@ -173,7 +169,7 @@
 }
 
 .note-card__content {
-  font-size: var(--text-sm);
+  font-size: var(--type-body);
   line-height: var(--line-height-relaxed);
   color: inherit;
   opacity: 0.78;

@@ -1199,9 +1199,15 @@ Source of truth: `public/styles/tokens.css`. Key values (as of v0.55.10):
 ```
 
 ### Typography
-- System font stack, headings 600–700
-- Body: 16px, line-height 1.5
-- Caption: 13px, `var(--color-text-secondary)`
+- Plus Jakarta Sans is the single self-hosted UI family; headings use weight 600–700.
+- Hero: 24px mobile / 30px desktop, reserved for the dashboard greeting.
+- Page title: 22px mobile / 28px desktop, one primary title per page or settings leaf.
+- Section title: 18px; card title and body: 16px.
+- Secondary text and compact controls: 14px.
+- Caption/label: 12px for short navigation, badge, chip, kicker, and constrained calendar-grid text only.
+- Micro: 10px for numeric counters and notification indicators only.
+- Typography is assigned through semantic `--type-*` tokens. Hero and page-title roles switch at the 1024px breakpoint; app headings do not use fluid `clamp()` sizing.
+- Inputs and prose stay at 16px. Readable supporting text and interactive controls have a 14px minimum.
 
 ### Glass Layer (`public/styles/glass.css`)
 

@@ -315,13 +315,13 @@
 }
 
 .widget-greeting__title {
-  /* Fluid: 18px (375px viewport) → 24px (1440px viewport) */
-  font-size: var(--type-greeting-size);
+  font-size: var(--type-hero-mobile);
   font-weight: var(--font-weight-bold);
 }
 
 @media (min-width: 1024px) {
   .widget-greeting__title {
+    font-size: var(--type-hero-desktop);
     opacity: 0.85;
     white-space: nowrap;
     padding-top: 4px;
@@ -429,7 +429,7 @@
 }
 
 .widget__link {
-  font-size: var(--text-xs);
+  font-size: var(--type-secondary);
   color: var(--widget-accent, var(--color-accent));
   font-weight: var(--font-weight-medium);
   display: inline-flex;
@@ -641,7 +641,7 @@
 }
 
 .event-item__time {
-  font-size: var(--text-xs);
+  font-size: var(--type-secondary);
   color: var(--color-text-tertiary);
   margin-top: 1px;
   display: flex;
@@ -738,7 +738,7 @@
 }
 
 .meal-slot__title {
-  font-size: var(--text-xs);
+  font-size: var(--type-secondary);
   color: var(--color-text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -838,7 +838,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: var(--text-xs);
+  font-size: var(--type-secondary);
   color: var(--color-text-secondary);
   line-height: 1.4;
 }
@@ -910,7 +910,7 @@
 }
 
 .note-item__content {
-  font-size: var(--text-xs);
+  font-size: var(--type-secondary);
   color: var(--color-text-secondary);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -2580,7 +2580,7 @@ svg.weather-forecast__icon {
   border-radius: var(--radius-sm);
   background: color-mix(in srgb, var(--module-budget) 10%, transparent);
   color: var(--color-text-secondary);
-  font-size: var(--text-xs);
+  font-size: var(--type-secondary);
   line-height: 1.4;
 }
 

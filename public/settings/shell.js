@@ -247,10 +247,11 @@ function createOverviewHeader(title, description = null) {
 function renderDomainsOverview(content, domains) {
   const overview = document.createElement('section');
   overview.className = 'settings-mobile-overview';
-  overview.appendChild(createOverviewHeader(
-    t('settings.mobileOverviewTitle'),
-    t('settings.mobileOverviewDescription'),
-  ));
+
+  const description = document.createElement('p');
+  description.className = 'settings-mobile-overview__description';
+  description.textContent = t('settings.mobileOverviewDescription');
+  overview.appendChild(description);
 
   const links = document.createElement('div');
   links.className = 'settings-mobile-overview__links';
@@ -458,6 +459,9 @@ export async function renderSettingsShell(container, {
     // pro Render separat (nur im Content-Bereich) hydriert.
     hydrateIcons(navigation);
   }
+
+  const page = shell.closest('.settings-page');
+  page?.classList.toggle('settings-page--leaf', Boolean(activeLeaf));
 
   if (activeLeaf) {
     const domain = domains.find((entry) => entry.id === activeLeaf.domainId);
