@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.25] - 2026-06-12
+
+### Fixed
+- **Settings page no longer shifts horizontally when the scrollbar appears or disappears**: `.app-content` now declares `scrollbar-gutter: stable`, which pre-reserves the scrollbar lane at all times. Previously, toggling between long and short pages caused the entire content area to jump by the scrollbar width.
+
 ## [0.71.24] - 2026-06-12
 
 ### Fixed
