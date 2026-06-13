@@ -190,7 +190,7 @@
   background-color: var(--color-surface);
   color: var(--color-text-secondary);
   transition: all var(--transition-fast);
-  min-height: 32px;
+  min-height: var(--target-lg);
 }
 
 .filter-chip:hover:not(.filter-chip--active) {
@@ -253,7 +253,7 @@
   background-color: var(--color-surface);
   color: var(--color-text-secondary);
   transition: all var(--transition-fast);
-  min-height: 32px;
+  min-height: var(--target-lg);
   flex-shrink: 0;
 }
 
@@ -622,7 +622,9 @@
   height: 100%;
   background-color: var(--color-success);
   border-radius: var(--radius-full);
-  transition: width var(--transition-slow);
+  transform-origin: left;
+  transform: scaleX(var(--progress-scale, 0));
+  transition: transform var(--transition-slow);
 }
 
 .subtask-progress__text {

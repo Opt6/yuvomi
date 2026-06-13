@@ -303,6 +303,14 @@
   font-weight: var(--font-weight-semibold);
 }
 
+@media (max-width: 767px) {
+  .settings-breadcrumb__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-lg);
+  }
+}
+
 .settings-leaf {
   min-width: 0;
 }

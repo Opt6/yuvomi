@@ -136,7 +136,7 @@ function renderShell(container) {
   container.insertAdjacentHTML('beforeend', `
     <section class="housekeeping-page" aria-labelledby="housekeeping-title">
       <header class="page-toolbar housekeeping-toolbar">
-        <div class="page-toolbar__title" id="housekeeping-title">${esc(t('housekeeping.title'))}</div>
+        <h1 class="page-toolbar__title" id="housekeeping-title">${esc(t('housekeeping.title'))}</h1>
         <nav class="housekeeping-tabs" aria-label="${esc(t('housekeeping.bottomNav'))}">
           ${renderTabButton('dashboard', 'layout-dashboard', t('housekeeping.dashboard'))}
           ${renderTabButton('tasks', 'list-checks', t('housekeeping.tasks'))}

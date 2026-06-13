@@ -229,25 +229,31 @@
   --meal-breakfast:        var(--_meal-breakfast);       /* Morgensonne-Amber (= --color-warning, bewusster Share) */
   --_meal-breakfast-light: #FFF4D4;
   --meal-breakfast-light:  var(--_meal-breakfast-light);
-  --meal-lunch:            #2DA44E;
+  --_meal-lunch:           #1F7A3A;
+  --meal-lunch:            var(--_meal-lunch);
   --_meal-lunch-light:     #DAFBE1;
   --meal-lunch-light:      var(--_meal-lunch-light);
   --_meal-dinner:          #6c3aed;
   --meal-dinner:           var(--_meal-dinner);          /* Violet — Abend (= --color-accent) */
   --_meal-dinner-light:    #f5f3ff;
   --meal-dinner-light:     var(--_meal-dinner-light);
-  --meal-snack:            #C2410C;                      /* = --module-meals — Snack ist Sub-Domain */
+  --_meal-snack:           #C2410C;
+  --meal-snack:            var(--_meal-snack);           /* = --module-meals — Snack ist Sub-Domain */
   --_meal-snack-light:     #FFECE3;
   --meal-snack-light:      var(--_meal-snack-light);
 
   /* --------------------------------------------------------
    * 6. Farben - Prioritäten
    * -------------------------------------------------------- */
-  --color-priority-none:   var(--neutral-400);
-  --color-priority-low:    var(--neutral-500);
-  --color-priority-medium: #A16207;   /* Amber-700 — trennt von --color-warning + --module-meals */
-  --color-priority-high:   #C2410C;   /* = --module-meals (bewusster Share: „heiß") */
-  --color-priority-urgent: #B91C1C;   /* = --color-danger (bewusster Share: „gefährlich") */
+  --color-priority-none:     var(--neutral-400);
+  --_color-priority-low:     #5F5E5A;
+  --color-priority-low:      var(--_color-priority-low);
+  --_color-priority-medium:  #854D0E;
+  --color-priority-medium:   var(--_color-priority-medium);
+  --_color-priority-high:    #9A3412;
+  --color-priority-high:     var(--_color-priority-high);
+  --_color-priority-urgent:  #991B1B;
+  --color-priority-urgent:   var(--_color-priority-urgent);
 
   /* Hintergrundfarben für Priority-Badges */
   --_color-priority-none-bg:   rgba(142, 141, 137, 0.08);
@@ -650,11 +656,17 @@
 
     --_meal-breakfast:       #F59E0B;
     --_meal-breakfast-light: #332400;
+    --_meal-lunch:           #4ADE80;
     --_meal-lunch-light:     #1A3325;
     --_meal-dinner:          #a78bfa;
     --_meal-dinner-light:    #1e1040;
+    --_meal-snack:           #FB923C;
     --_meal-snack-light:     #3D2010;
 
+    --_color-priority-low:       #C8C7C3;
+    --_color-priority-medium:    #FBBF24;
+    --_color-priority-high:      #FB923C;
+    --_color-priority-urgent:    #FCA5A5;
     --_color-priority-none-bg:   rgba(142, 141, 137, 0.12);
     --_color-priority-low-bg:    rgba(142, 141, 137, 0.18);
     --_color-priority-medium-bg: rgba(230, 147, 10, 0.18);
@@ -766,12 +778,18 @@
     /* Mahlzeit-Typ */
     --_meal-breakfast:       #F59E0B;
     --_meal-breakfast-light: #332400;
+    --_meal-lunch:           #4ADE80;
     --_meal-lunch-light:     #1A3325;
     --_meal-dinner:          #a78bfa;   /* Violet-400 */
     --_meal-dinner-light:    #1e1040;
+    --_meal-snack:           #FB923C;
     --_meal-snack-light:     #3D2010;
 
     /* Priority-Badge Hintergründe */
+    --_color-priority-low:       #C8C7C3;
+    --_color-priority-medium:    #FBBF24;
+    --_color-priority-high:      #FB923C;
+    --_color-priority-urgent:    #FCA5A5;
     --_color-priority-none-bg:   rgba(142, 141, 137, 0.12);
     --_color-priority-low-bg:    rgba(142, 141, 137, 0.18);
     --_color-priority-medium-bg: rgba(230, 147, 10, 0.18);

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.37] - 2026-06-13
+
+### Changed
+- **Mobile controls are easier to operate**: task filters, Calendar's Today action, loan filters, and Settings breadcrumbs now use consistent touch-safe targets.
+- **Progress indicators animate without layout work**: Dashboard shopping progress and task subtask progress now use transform-based animation.
+
+### Fixed
+- **Shared dialogs and Housekeeping expose clearer semantics**: prompt and selection fields have accessible labels, and Housekeeping starts with a proper page heading.
+- **User-selected and semantic colors remain readable**: avatars choose a contrasting foreground automatically, while priority and meal labels meet WCAG AA contrast in light and dark themes.
+
 ## [0.71.36] - 2026-06-13
 
 ### Changed

@@ -234,7 +234,7 @@ function renderTaskCard(task, opts = {}) {
         <div class="subtask-progress" data-action="toggle-subtasks" data-id="${task.id}"
              aria-label="${t('tasks.subtaskToggle')}">
           <div class="subtask-progress__bar-wrap">
-            <div class="subtask-progress__bar-fill" style="width:${progress}%"></div>
+            <div class="subtask-progress__bar-fill" style="--progress-scale:${progress / 100}"></div>
           </div>
           <span class="subtask-progress__text">${task.subtask_done}/${task.subtask_total}</span>
         </div>` : ''}

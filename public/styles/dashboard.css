@@ -825,7 +825,9 @@
   height: 100%;
   background-color: var(--color-success);
   border-radius: var(--radius-full);
-  transition: width var(--transition-base);
+  transform-origin: left;
+  transform: scaleX(var(--progress-scale, 0));
+  transition: transform var(--transition-base);
 }
 
 .shopping-widget-list__items {

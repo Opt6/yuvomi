@@ -1856,6 +1856,27 @@ function contrastRatio(a, b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
+function parseCssRgb(value) {
+  const hex = String(value).trim().match(/^#([0-9a-f]{6})$/i);
+  if (hex) return [...hexToRgb(value), 1];
+
+  const rgba = String(value).trim().match(/^rgba?\(([^)]+)\)$/i);
+  assert.ok(rgba, `expected a hex, rgb, or rgba color, got: ${value}`);
+  const parts = rgba[1].split(',').map((part) => Number(part.trim()));
+  return [parts[0], parts[1], parts[2], parts[3] ?? 1];
+}
+
+function compositeColor(foreground, background) {
+  const [fr, fg, fb, fa] = parseCssRgb(foreground);
+  const [br, bg, bb] = parseCssRgb(background);
+  const channels = [
+    fr * fa + br * (1 - fa),
+    fg * fa + bg * (1 - fa),
+    fb * fa + bb * (1 - fa),
+  ];
+  return `#${channels.map((channel) => Math.round(channel).toString(16).padStart(2, '0')).join('')}`;
+}
+
 test('text/surface token pairs meet WCAG AA 4.5:1 in both themes', () => {
   const tokens = read('../public/styles/tokens.css');
   const rootBlock = tokens.match(/:root\s*\{([\s\S]*?)\n\}/);
@@ -1903,6 +1924,21 @@ test('shared modal centrally escapes title and select labels (audit 1.8)', () =>
   assert.match(src, /id="shared-modal-title">\$\{esc\(title\)\}/, 'modal title must be escaped');
   assert.match(src, /<option value="\$\{esc\(o\.value\)\}">\$\{esc\(o\.label\)\}/, 'select options must be escaped');
   assert.match(src, /import \{ esc \} from '\/utils\/html\.js'/, 'modal must import esc');
+});
+
+test('shared prompt and select dialogs expose persistent form labels', () => {
+  const src = read('../public/components/modal.js');
+
+  assert.match(
+    src,
+    /<label class="sr-only" for="prompt-modal-input">\$\{esc\(label\)\}<\/label>/,
+    'promptModal input needs a connected label',
+  );
+  assert.match(
+    src,
+    /<label class="sr-only" for="select-modal-input">\$\{esc\(label\)\}<\/label>/,
+    'selectModal control needs a connected label',
+  );
 });
 
 test('modal lifecycle uses an explicit state machine, not the old _isClosing flag (audit 1.5)', () => {
@@ -1982,6 +2018,26 @@ test('holiday chips derive readable ink from each configured color', () => {
   }
 });
 
+test('user-selected avatar colors derive readable text ink', () => {
+  const dashboard = read('../public/pages/dashboard.js');
+  const multiSelect = read('../public/components/user-multi-select.js');
+
+  assert.match(dashboard, /import \{ getReadableTextColor \} from '\/utils\/color\.js'/);
+  assert.match(
+    dashboard,
+    /color:\$\{getReadableTextColor\(u\.avatar_color \|\| '#64748b'\)\}/,
+  );
+  assert.match(multiSelect, /import \{ getReadableTextColor \} from '\/utils\/color\.js'/);
+  assert.match(
+    multiSelect,
+    /color:\$\{getReadableTextColor\(u\.color \?\? '#8E8E93'\)\}/,
+  );
+  assert.match(
+    multiSelect,
+    /color:\$\{getReadableTextColor\(u\.avatar_color \?\? '#8E8E93'\)\}/,
+  );
+});
+
 test('mobile meal actions remain visible and touch-safe after the full cascade', () => {
   const meals = read('../public/styles/meals.css');
 
@@ -2024,6 +2080,23 @@ test('audited profile, birthday, navigation, and budget controls meet mobile tou
     /@media \(max-width:\s*767px\)[\s\S]*\.contact-filter-chip\s*\{[\s\S]*min-height:\s*var\(--target-lg\)/,
   );
   assert.match(housekeeping, /\.housekeeping-log-action\s*\{[\s\S]*min-height:\s*var\(--target-lg\)/);
+});
+
+test('remaining audited mobile controls use 48px touch targets', () => {
+  const tasks = read('../public/styles/tasks.css');
+  const calendar = read('../public/styles/calendar.css');
+  const budget = read('../public/styles/budget.css');
+  const settings = read('../public/styles/settings.css');
+
+  assertRuleUsesToken(tasks, '.filter-toggle-btn', 'min-height', '--target-lg', '../public/styles/tasks.css');
+  assertRuleUsesToken(calendar, '.cal-toolbar__today', 'min-height', '--target-lg', '../public/styles/calendar.css');
+  assertRuleUsesToken(budget, '.budget-loans__filter', 'min-height', '--target-lg', '../public/styles/budget.css');
+  assertRuleUsesToken(budget, '.budget-loan-card__filter', 'width', '--target-lg', '../public/styles/budget.css');
+  assertRuleUsesToken(budget, '.budget-loan-card__filter', 'height', '--target-lg', '../public/styles/budget.css');
+  assert.match(
+    settings,
+    /@media \(max-width:\s*767px\)[\s\S]*\.settings-breadcrumb__link\s*\{[\s\S]*min-height:\s*var\(--target-lg\)/,
+  );
 });
 
 test('mobile contacts keep one primary action and disclose the rest through More', () => {
@@ -2082,6 +2155,51 @@ test('birthday and navigation headings keep a sequential hierarchy', () => {
   assert.doesNotMatch(navigation, /<h4 class="settings-navigation-group__title"/);
 });
 
+test('housekeeping exposes its page title as the primary heading', () => {
+  const housekeeping = read('../public/pages/housekeeping.js');
+
+  assert.match(housekeeping, /<h1 class="page-toolbar__title" id="housekeeping-title">/);
+  assert.doesNotMatch(housekeeping, /<div class="page-toolbar__title" id="housekeeping-title">/);
+});
+
+test('priority badges and meal labels meet WCAG AA contrast in both themes', () => {
+  const tokens = read('../public/styles/tokens.css');
+  const rootBlock = tokens.match(/:root\s*\{([\s\S]*?)\n\}/);
+  const darkBlock = tokens.match(/\n\[data-theme="dark"\]\s*\{([\s\S]*?)\n\}/);
+  assert.ok(rootBlock, 'expected a :root token block');
+  assert.ok(darkBlock, 'expected a [data-theme="dark"] block');
+
+  const light = parseTokenMap(rootBlock[1]);
+  const dark = new Map(light);
+  for (const [key, value] of parseTokenMap(darkBlock[1])) dark.set(key, value);
+
+  const pairs = [
+    ['--color-priority-low', '--color-priority-low-bg'],
+    ['--color-priority-medium', '--color-priority-medium-bg'],
+    ['--color-priority-high', '--color-priority-high-bg'],
+    ['--color-priority-urgent', '--color-priority-urgent-bg'],
+  ];
+
+  for (const [theme, map] of [['light', light], ['dark', dark]]) {
+    const surface = resolveColor('--color-surface-work', map);
+    for (const [foregroundToken, backgroundToken] of pairs) {
+      const foreground = resolveColor(foregroundToken, map);
+      const background = compositeColor(resolveColor(backgroundToken, map), surface);
+      const ratio = contrastRatio(foreground, background);
+      assert.ok(
+        ratio >= 4.5,
+        `${theme}: ${foregroundToken} on ${backgroundToken} is ${ratio.toFixed(2)}:1`,
+      );
+    }
+
+    for (const mealToken of ['--meal-breakfast', '--meal-lunch', '--meal-dinner', '--meal-snack']) {
+      const mealColor = resolveColor(mealToken, map);
+      const mealRatio = contrastRatio(mealColor, surface);
+      assert.ok(mealRatio >= 4.5, `${theme}: ${mealToken} is ${mealRatio.toFixed(2)}:1`);
+    }
+  }
+});
+
 test('budget bars animate with transforms instead of layout-driving widths', () => {
   const budgetPage = read('../public/pages/budget.js');
   const budgetCss = read('../public/styles/budget.css');
@@ -2092,6 +2210,29 @@ test('budget bars animate with transforms instead of layout-driving widths', () 
   assert.match(budgetPage, /style="--bar-scale:\$\{pct\s*\/\s*100\}"/);
   assert.match(budgetPage, /style="--bar-scale:\$\{paidPct\s*\/\s*100\}"/);
   assert.doesNotMatch(budgetPage, /style="width:\$\{(?:pct|paidPct)\}%/);
+});
+
+test('dashboard and task progress bars animate with transforms instead of widths', () => {
+  const dashboardPage = read('../public/pages/dashboard.js');
+  const dashboardCss = read('../public/styles/dashboard.css');
+  const tasksPage = read('../public/pages/tasks.js');
+  const tasksCss = read('../public/styles/tasks.css');
+
+  assert.match(
+    dashboardCss,
+    /\.shopping-widget-list__bar\s*\{[\s\S]*transform-origin:\s*left[\s\S]*transform:\s*scaleX\(var\(--progress-scale,\s*0\)\)[\s\S]*transition:\s*transform/,
+  );
+  assert.doesNotMatch(cssRuleBody(dashboardCss, '.shopping-widget-list__bar'), /transition:\s*width/);
+  assert.match(dashboardPage, /style="--progress-scale:\$\{progress\s*\/\s*100\}"/);
+  assert.doesNotMatch(dashboardPage, /shopping-widget-list__bar" style="width:/);
+
+  assert.match(
+    tasksCss,
+    /\.subtask-progress__bar-fill\s*\{[\s\S]*transform-origin:\s*left[\s\S]*transform:\s*scaleX\(var\(--progress-scale,\s*0\)\)[\s\S]*transition:\s*transform/,
+  );
+  assert.doesNotMatch(cssRuleBody(tasksCss, '.subtask-progress__bar-fill'), /transition:\s*width/);
+  assert.match(tasksPage, /style="--progress-scale:\$\{progress\s*\/\s*100\}"/);
+  assert.doesNotMatch(tasksPage, /subtask-progress__bar-fill" style="width:/);
 });
 
 test('toolbar "new" buttons are hidden via a shared class, not an ID list (audit 1.9)', () => {

@@ -6,6 +6,7 @@
 
 import { api } from '/api.js';
 import { t, formatDate, formatTime, getLocale } from '/i18n.js';
+import { getReadableTextColor } from '/utils/color.js';
 import { esc, fmtLocation, renderMarkdownLight } from '/utils/html.js';
 import { openModal, closeModal } from '/components/modal.js';
 import { renderAvatarStack } from '/components/user-multi-select.js';
@@ -558,7 +559,7 @@ function renderPinnedNotes(notes) {
 function renderFamilyWidget(users) {
   const visible = users.slice(0, 6);
   const avatars = visible.map((u) => `
-    <span class="family-widget-avatar" style="background:${esc(u.avatar_color || '#64748b')}" title="${esc(u.display_name)}">
+    <span class="family-widget-avatar" style="background:${esc(u.avatar_color || '#64748b')};color:${getReadableTextColor(u.avatar_color || '#64748b')}" title="${esc(u.display_name)}">
       ${u.avatar_data ? `<img src="${esc(u.avatar_data)}" alt="${esc(u.display_name)}" loading="lazy">` : esc(initials(u.display_name))}
     </span>
   `).join('');
@@ -804,7 +805,7 @@ function renderShoppingLists(lists) {
           <span class="shopping-widget-list__count">${list.total_count - list.open_count}/${list.total_count}</span>
         </div>
         <div class="shopping-widget-list__progress">
-          <div class="shopping-widget-list__bar" style="width:${progress}%"></div>
+          <div class="shopping-widget-list__bar" style="--progress-scale:${progress / 100}"></div>
         </div>
         <div class="shopping-widget-list__items">
           ${itemsHtml}

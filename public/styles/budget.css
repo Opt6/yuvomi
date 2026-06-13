@@ -333,7 +333,7 @@
 }
 
 .budget-loans__filter {
-  min-height: 30px;
+  min-height: var(--target-lg);
   padding: 0 var(--space-2);
   border: 0;
   border-radius: var(--radius-xs);
@@ -439,8 +439,8 @@
 }
 
 .budget-loan-card__filter {
-  width: 30px;
-  height: 30px;
+  width: var(--target-lg);
+  height: var(--target-lg);
   display: inline-flex;
   align-items: center;
   justify-content: center;

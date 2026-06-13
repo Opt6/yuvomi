@@ -74,6 +74,10 @@
 }
 
 .cal-toolbar__today {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--target-lg);
   font-size: var(--text-sm);
   color: var(--color-accent);
   font-weight: var(--font-weight-medium);
