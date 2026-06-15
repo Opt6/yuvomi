@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.48] - 2026-06-15
+
+### Added
+- **Password-strength meter in the web installer**: the admin-account step now shows a live weak/fair/strong indicator as you type the password.
+
+### Changed
+- **Web installer steps are now keyboard- and password-manager-friendly**: each step is a real form, so pressing Enter advances to the next step and browsers can offer to save the admin login. Every secret field (Google, Apple, and OIDC client secrets plus the confirm-password field) now has a show/hide toggle, the Review screen uses plain labels ("Session secret", "Database key") instead of raw environment-variable names, inputs use a 16px font so iOS Safari no longer zooms in on focus, and buttons meet the 48px mobile touch-target size. The container-start step now reassures that the first run downloads the image and can take a few minutes.
+
+### Fixed
+- **Web installer no longer draws a stray focus outline around each step heading when it loads.**
+
 ## [0.71.47] - 2026-06-15
 
 ### Changed

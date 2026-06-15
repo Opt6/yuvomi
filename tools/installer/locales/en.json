@@ -77,7 +77,9 @@
     "saving": "Saving …",
     "errSave": "Failed to save .env.",
     "weatherEnabled": "enabled ({{city}})",
-    "configured": "configured"
+    "configured": "configured",
+    "sessionSecret": "Session secret",
+    "dbKey": "Database key"
   },
   "docker": {
     "title": "Starting Yuvomi",
@@ -88,7 +90,8 @@
     "failed": "Container failed to start",
     "unknownError": "Unknown error",
     "toAdmin": "Continue to Admin Setup",
-    "retry": "Retry"
+    "retry": "Retry",
+    "firstRunHint": "The first start downloads the image — this can take a few minutes."
   },
   "admin": {
     "title": "Create Admin Account",
@@ -105,7 +108,10 @@
     "errUser": "Invalid username format (3–64 chars, letters/numbers/._-).",
     "errPass": "Password must be at least 8 characters.",
     "errMatch": "Passwords do not match.",
-    "errCreate": "Failed to create admin account."
+    "errCreate": "Failed to create admin account.",
+    "strengthWeak": "Weak",
+    "strengthFair": "Fair",
+    "strengthStrong": "Strong"
   },
   "done": {
     "title": "Yuvomi is ready!",

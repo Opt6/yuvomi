@@ -77,7 +77,9 @@
     "saving": "正在保存 …",
     "errSave": "无法保存 .env。",
     "weatherEnabled": "已启用（{{city}}）",
-    "configured": "已配置"
+    "configured": "已配置",
+    "sessionSecret": "会话密钥",
+    "dbKey": "数据库密钥"
   },
   "docker": {
     "title": "正在启动 Yuvomi",
@@ -88,7 +90,8 @@
     "failed": "容器启动失败",
     "unknownError": "未知错误",
     "toAdmin": "继续进行管理员设置",
-    "retry": "重试"
+    "retry": "重试",
+    "firstRunHint": "首次启动会下载镜像，这可能需要几分钟。"
   },
   "admin": {
     "title": "创建管理员账户",
@@ -105,7 +108,10 @@
     "errUser": "用户名格式无效（3–64 个字符，字母/数字/._-）。",
     "errPass": "密码必须至少为 8 个字符。",
     "errMatch": "两次输入的密码不一致。",
-    "errCreate": "无法创建管理员账户。"
+    "errCreate": "无法创建管理员账户。",
+    "strengthWeak": "弱",
+    "strengthFair": "中等",
+    "strengthStrong": "强"
   },
   "done": {
     "title": "Yuvomi 已就绪！",

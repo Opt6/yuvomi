@@ -77,7 +77,9 @@
     "saving": "Kaydediliyor …",
     "errSave": ".env kaydedilemedi.",
     "weatherEnabled": "etkin ({{city}})",
-    "configured": "yapılandırıldı"
+    "configured": "yapılandırıldı",
+    "sessionSecret": "Oturum sırrı",
+    "dbKey": "Veritabanı anahtarı"
   },
   "docker": {
     "title": "Yuvomi başlatılıyor",
@@ -88,7 +90,8 @@
     "failed": "Kapsayıcı başlatılamadı",
     "unknownError": "Bilinmeyen hata",
     "toAdmin": "Yönetici Kurulumuna devam et",
-    "retry": "Yeniden dene"
+    "retry": "Yeniden dene",
+    "firstRunHint": "İlk başlatma imajı indirir — bu birkaç dakika sürebilir."
   },
   "admin": {
     "title": "Yönetici Hesabı Oluştur",
@@ -105,7 +108,10 @@
     "errUser": "Geçersiz kullanıcı adı biçimi (3–64 karakter, harf/rakam/._-).",
     "errPass": "Parola en az 8 karakter olmalıdır.",
     "errMatch": "Parolalar eşleşmiyor.",
-    "errCreate": "Yönetici hesabı oluşturulamadı."
+    "errCreate": "Yönetici hesabı oluşturulamadı.",
+    "strengthWeak": "Zayıf",
+    "strengthFair": "Orta",
+    "strengthStrong": "Güçlü"
   },
   "done": {
     "title": "Yuvomi hazır!",

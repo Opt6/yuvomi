@@ -77,7 +77,9 @@
     "saving": "Đang lưu …",
     "errSave": "Không thể lưu .env.",
     "weatherEnabled": "đã bật ({{city}})",
-    "configured": "đã cấu hình"
+    "configured": "đã cấu hình",
+    "sessionSecret": "Khóa bí mật phiên",
+    "dbKey": "Khóa cơ sở dữ liệu"
   },
   "docker": {
     "title": "Đang khởi động Yuvomi",
@@ -88,7 +90,8 @@
     "failed": "Container không khởi động được",
     "unknownError": "Lỗi không xác định",
     "toAdmin": "Tiếp tục đến Cài đặt Admin",
-    "retry": "Thử lại"
+    "retry": "Thử lại",
+    "firstRunHint": "Lần khởi động đầu tiên sẽ tải image — quá trình này có thể mất vài phút."
   },
   "admin": {
     "title": "Tạo tài khoản Admin",
@@ -105,7 +108,10 @@
     "errUser": "Định dạng tên người dùng không hợp lệ (3–64 ký tự, chữ cái/số/._-).",
     "errPass": "Mật khẩu phải có ít nhất 8 ký tự.",
     "errMatch": "Mật khẩu không khớp.",
-    "errCreate": "Không thể tạo tài khoản admin."
+    "errCreate": "Không thể tạo tài khoản admin.",
+    "strengthWeak": "Yếu",
+    "strengthFair": "Trung bình",
+    "strengthStrong": "Mạnh"
   },
   "done": {
     "title": "Yuvomi đã sẵn sàng!",

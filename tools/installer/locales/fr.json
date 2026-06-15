@@ -77,7 +77,9 @@
     "saving": "Enregistrement …",
     "errSave": "Échec de l'enregistrement de .env.",
     "weatherEnabled": "activé ({{city}})",
-    "configured": "configuré"
+    "configured": "configuré",
+    "sessionSecret": "Secret de session",
+    "dbKey": "Clé de base de données"
   },
   "docker": {
     "title": "Démarrage d'Yuvomi",
@@ -88,7 +90,8 @@
     "failed": "Le conteneur n'a pas pu démarrer",
     "unknownError": "Erreur inconnue",
     "toAdmin": "Continuer vers la configuration de l'administrateur",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "firstRunHint": "Le premier démarrage télécharge l'image — cela peut prendre quelques minutes."
   },
   "admin": {
     "title": "Créer un compte administrateur",
@@ -105,7 +108,10 @@
     "errUser": "Format de nom d'utilisateur non valide (3–64 caractères, lettres/chiffres/._-).",
     "errPass": "Le mot de passe doit comporter au moins 8 caractères.",
     "errMatch": "Les mots de passe ne correspondent pas.",
-    "errCreate": "Échec de la création du compte administrateur."
+    "errCreate": "Échec de la création du compte administrateur.",
+    "strengthWeak": "Faible",
+    "strengthFair": "Moyen",
+    "strengthStrong": "Fort"
   },
   "done": {
     "title": "Yuvomi est prêt !",

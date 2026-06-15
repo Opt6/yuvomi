@@ -77,7 +77,9 @@
     "saving": "Sparar …",
     "errSave": "Det gick inte att spara .env.",
     "weatherEnabled": "aktiverat ({{city}})",
-    "configured": "konfigurerat"
+    "configured": "konfigurerat",
+    "sessionSecret": "Sessionshemlighet",
+    "dbKey": "Databasnyckel"
   },
   "docker": {
     "title": "Startar Yuvomi",
@@ -88,7 +90,8 @@
     "failed": "Det gick inte att starta containern",
     "unknownError": "Okänt fel",
     "toAdmin": "Fortsätt till administratörsinställning",
-    "retry": "Försök igen"
+    "retry": "Försök igen",
+    "firstRunHint": "Den första starten laddar ner avbildningen — det kan ta några minuter."
   },
   "admin": {
     "title": "Skapa administratörskonto",
@@ -105,7 +108,10 @@
     "errUser": "Ogiltigt format på användarnamn (3–64 tecken, bokstäver/siffror/._-).",
     "errPass": "Lösenordet måste vara minst 8 tecken.",
     "errMatch": "Lösenorden matchar inte.",
-    "errCreate": "Det gick inte att skapa administratörskontot."
+    "errCreate": "Det gick inte att skapa administratörskontot.",
+    "strengthWeak": "Svagt",
+    "strengthFair": "Medel",
+    "strengthStrong": "Starkt"
   },
   "done": {
     "title": "Yuvomi är klart!",

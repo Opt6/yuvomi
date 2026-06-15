@@ -106,7 +106,9 @@
     "saving": "Ukládá se …",
     "errSave": "Uložení .env se nezdařilo.",
     "weatherEnabled": "povoleno ({{city}})",
-    "configured": "nakonfigurováno"
+    "configured": "nakonfigurováno",
+    "sessionSecret": "Tajný klíč relace",
+    "dbKey": "Klíč databáze"
   },
   "docker": {
     "title": "Spouštění Yuvomi",
@@ -117,7 +119,8 @@
     "failed": "Kontejner se nepodařilo spustit",
     "unknownError": "Neznámá chyba",
     "toAdmin": "Pokračovat na nastavení správce",
-    "retry": "Zkusit znovu"
+    "retry": "Zkusit znovu",
+    "firstRunHint": "První spuštění stáhne obraz — může to trvat několik minut."
   },
   "admin": {
     "title": "Vytvoření účtu správce",
@@ -134,7 +137,10 @@
     "errUser": "Neplatný formát uživatelského jména (3–64 znaků, písmena/číslice/._-).",
     "errPass": "Heslo musí mít alespoň 8 znaků.",
     "errMatch": "Hesla se neshodují.",
-    "errCreate": "Nepodařilo se vytvořit účet správce."
+    "errCreate": "Nepodařilo se vytvořit účet správce.",
+    "strengthWeak": "Slabé",
+    "strengthFair": "Střední",
+    "strengthStrong": "Silné"
   },
   "done": {
     "title": "Yuvomi je připraven!",

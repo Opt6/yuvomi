@@ -77,7 +77,9 @@
     "saving": "Zapisywanie …",
     "errSave": "Nie udało się zapisać pliku .env.",
     "weatherEnabled": "włączone ({{city}})",
-    "configured": "skonfigurowano"
+    "configured": "skonfigurowano",
+    "sessionSecret": "Sekret sesji",
+    "dbKey": "Klucz bazy danych"
   },
   "docker": {
     "title": "Uruchamianie Yuvomi",
@@ -88,7 +90,8 @@
     "failed": "Nie udało się uruchomić kontenera",
     "unknownError": "Nieznany błąd",
     "toAdmin": "Przejdź do konfiguracji administratora",
-    "retry": "Spróbuj ponownie"
+    "retry": "Spróbuj ponownie",
+    "firstRunHint": "Pierwsze uruchomienie pobiera obraz — może to potrwać kilka minut."
   },
   "admin": {
     "title": "Utwórz konto administratora",
@@ -105,7 +108,10 @@
     "errUser": "Nieprawidłowy format nazwy użytkownika (3–64 znaki, litery/cyfry/._-).",
     "errPass": "Hasło musi mieć co najmniej 8 znaków.",
     "errMatch": "Hasła nie są zgodne.",
-    "errCreate": "Nie udało się utworzyć konta administratora."
+    "errCreate": "Nie udało się utworzyć konta administratora.",
+    "strengthWeak": "Słabe",
+    "strengthFair": "Średnie",
+    "strengthStrong": "Silne"
   },
   "done": {
     "title": "Yuvomi jest gotowy!",

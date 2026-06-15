@@ -77,7 +77,9 @@
     "saving": "保存中 …",
     "errSave": ".env の保存に失敗しました。",
     "weatherEnabled": "有効（{{city}}）",
-    "configured": "設定済み"
+    "configured": "設定済み",
+    "sessionSecret": "セッションシークレット",
+    "dbKey": "データベースキー"
   },
   "docker": {
     "title": "Yuvomi を起動しています",
@@ -88,7 +90,8 @@
     "failed": "コンテナの起動に失敗しました",
     "unknownError": "不明なエラー",
     "toAdmin": "管理者セットアップに進む",
-    "retry": "再試行"
+    "retry": "再試行",
+    "firstRunHint": "初回起動ではイメージをダウンロードします — 数分かかることがあります。"
   },
   "admin": {
     "title": "管理者アカウントを作成",
@@ -105,7 +108,10 @@
     "errUser": "ユーザー名の形式が無効です（3〜64 文字、英字/数字/._-）。",
     "errPass": "パスワードは 8 文字以上である必要があります。",
     "errMatch": "パスワードが一致しません。",
-    "errCreate": "管理者アカウントの作成に失敗しました。"
+    "errCreate": "管理者アカウントの作成に失敗しました。",
+    "strengthWeak": "弱い",
+    "strengthFair": "普通",
+    "strengthStrong": "強い"
   },
   "done": {
     "title": "Yuvomi の準備が整いました！",

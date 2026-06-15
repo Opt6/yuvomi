@@ -106,7 +106,9 @@
     "saving": "Wordt opgeslagen …",
     "errSave": "Opslaan van .env mislukt.",
     "weatherEnabled": "ingeschakeld ({{city}})",
-    "configured": "geconfigureerd"
+    "configured": "geconfigureerd",
+    "sessionSecret": "Sessiegeheim",
+    "dbKey": "Databasesleutel"
   },
   "docker": {
     "title": "Yuvomi wordt gestart",
@@ -117,7 +119,8 @@
     "failed": "Container kon niet worden gestart",
     "unknownError": "Onbekende fout",
     "toAdmin": "Doorgaan naar beheerdersinstelling",
-    "retry": "Opnieuw proberen"
+    "retry": "Opnieuw proberen",
+    "firstRunHint": "De eerste start downloadt de image — dit kan enkele minuten duren."
   },
   "admin": {
     "title": "Beheerdersaccount aanmaken",
@@ -134,7 +137,10 @@
     "errUser": "Ongeldig gebruikersnaamformaat (3–64 tekens, letters/cijfers/._-).",
     "errPass": "Het wachtwoord moet minimaal 8 tekens lang zijn.",
     "errMatch": "Wachtwoorden komen niet overeen.",
-    "errCreate": "Beheerdersaccount kon niet worden aangemaakt."
+    "errCreate": "Beheerdersaccount kon niet worden aangemaakt.",
+    "strengthWeak": "Zwak",
+    "strengthFair": "Redelijk",
+    "strengthStrong": "Sterk"
   },
   "done": {
     "title": "Yuvomi is klaar!",
