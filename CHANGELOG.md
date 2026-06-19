@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.74.7] - 2026-06-19
+
+### Added
+- **Automatic weather location updates:** an opt-in "Standort automatisch alle 30 Minuten aktualisieren" checkbox in Settings → Modules → Dashboard re-requests the browser's geolocation every 30 minutes while the dashboard is open, silently updating the saved coordinates (admin-only). Enabling it immediately triggers the existing one-time location request. A stale city label is cleared on each automatic update so the widget falls back to showing coordinates instead of an outdated city name after the location changes.
+
 ## [0.74.6] - 2026-06-19
 
 ### Added
