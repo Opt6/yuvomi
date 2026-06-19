@@ -22,7 +22,13 @@
     <a href="https://github.com/ulsklyc/yuvomi/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" alt="PRs Welcome"></a>
     <a href="https://apps.truenas.com/catalog/oikos_community/"><img src="https://img.shields.io/badge/TrueNAS-0095D5?style=flat-square&logo=truenas&logoColor=white" alt="TrueNAS SCALE"></a>
     <a href="https://ca.unraid.net/apps/oikos-0s9fwat1sxc881"><img src="https://img.shields.io/badge/Unraid-F1A208?style=flat-square&logo=unraid&logoColor=white" alt="Unraid"></a>
-    <img src="https://img.shields.io/badge/Umbrel-241E22?style=flat-square&logo=umbrel&logoColor=white" alt="Umbrel">
+    <a href="https://apps.umbrel.com/app/yuvomi">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://apps.umbrel.com/api/app/yuvomi/badge-dark.svg">
+        <source media="(prefers-color-scheme: light)" srcset="https://apps.umbrel.com/api/app/yuvomi/badge-light.svg">
+        <img src="https://apps.umbrel.com/api/app/yuvomi/badge-light.svg" alt="Get Yuvomi on umbrelOS">
+      </picture>
+    </a>
   </p>
 
   <p>
